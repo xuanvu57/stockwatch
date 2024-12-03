@@ -1,6 +1,6 @@
 ﻿namespace stockwatch.Configurations
 {
-    public static class LanguageRegistrator
+    public static class LanguageRegister
     {
         public static void SetLanguage()
         {

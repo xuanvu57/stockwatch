@@ -1,4 +1,6 @@
-﻿using stockwatch.Models;
+﻿using Microsoft.Extensions.Configuration;
+using stockwatch.Configurations.Models;
+using stockwatch.Models;
 using stockwatch.Models.StockWatchModels;
 using stockwatch.Repositories.Interfaces;
 using stockwatch.Resources.Strings;
@@ -8,16 +10,16 @@ namespace stockwatch
 {
     public partial class MainPage : ContentPage
     {
-        private const int timerSecondInterval = 15;
         private readonly IToastManagerService toastManagerService;
         private readonly IStockDataService stockDataService;
         private readonly IAnalyzorService stockAnalyzorService;
         private readonly IReferenceSymbolRepository referenceSymbolRepository;
-        readonly IDispatcherTimer timer;
 
-        ReferenceSymbolInfo? targetSymbol;
+        private readonly IDispatcherTimer timer;
+        private ReferenceSymbolInfo? targetSymbol;
 
         public MainPage(
+            IConfiguration configuration,
             IToastManagerService toastManagerService,
             IStockDataService stockDataService,
             IAnalyzorService stockAnalyzorService,
@@ -25,8 +27,10 @@ namespace stockwatch
         {
             InitializeComponent();
 
+            var scheduleSettings = configuration.GetRequiredSection(nameof(ScheduleSettings)).Get<ScheduleSettings>()!;
+
             timer = Application.Current!.Dispatcher.CreateTimer();
-            timer.Interval = TimeSpan.FromSeconds(timerSecondInterval);
+            timer.Interval = TimeSpan.FromSeconds(scheduleSettings.FetchDataIntervalInSecond);
             timer.Tick += OnTimerTick;
 
             this.toastManagerService = toastManagerService;

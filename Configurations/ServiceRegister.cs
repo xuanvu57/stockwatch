@@ -4,7 +4,7 @@ using static stockwatch.Constants.StockWatchEnums;
 
 namespace stockwatch.Configurations
 {
-    public static class ServiceRegistrator
+    public static class ServiceRegister
     {
         public static void RegisterDependencies(this IServiceCollection serviceCollection)
         {

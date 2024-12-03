@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace stockwatch.Configurations
 {
-    public static class AppSettingsRegistor
+    public static class AppSettingsRegister
     {
         public static void RegisterAppSettings(this MauiAppBuilder builder)
         {

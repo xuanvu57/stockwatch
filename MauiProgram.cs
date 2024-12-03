@@ -26,7 +26,7 @@ namespace stockwatch
             builder.Services.RegisterDependencies();
             builder.Services.AddScoped<MainPage>();
 
-            LanguageRegistrator.SetLanguage();
+            LanguageRegister.SetLanguage();
 
             return builder.Build();
         }
