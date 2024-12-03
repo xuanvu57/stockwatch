@@ -9,7 +9,7 @@ namespace Application.Services
     [DIService(DIServiceLifetime.Scoped)]
     public class AnalyzorService(IPushNotificationService pushNotificationService) : IAnalyzorService
     {
-        public async Task Analyze(SymbolInfo symbol, ReferenceSymbolInfo targetSymbol)
+        public async Task Analyze(SymbolInfo symbol, ReferenceSymbolEntity targetSymbol)
         {
             var floorPrice = targetSymbol.Price * (1 - (targetSymbol.FloorPrice / 100));
             var ceilingPrice = targetSymbol.Price * (1 + (targetSymbol.CeilingPrice / 100));

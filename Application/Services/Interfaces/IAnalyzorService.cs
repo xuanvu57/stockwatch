@@ -5,6 +5,6 @@ namespace Application.Services.Interfaces
 {
     public interface IAnalyzorService
     {
-        public Task Analyze(SymbolInfo symbol, ReferenceSymbolInfo targetSymbol);
+        public Task Analyze(SymbolInfo symbol, ReferenceSymbolEntity targetSymbol);
     }
 }
