@@ -16,7 +16,7 @@ namespace stockwatch
         private readonly IReferenceSymbolRepository referenceSymbolRepository;
 
         private readonly IDispatcherTimer timer;
-        private ReferenceSymbolInfo? targetSymbol;
+        private ReferenceSymbolEntity? targetSymbol;
 
         public MainPage(
             IConfiguration configuration,
@@ -94,7 +94,7 @@ namespace stockwatch
             return true;
         }
 
-        private void SetUIByReferenceSymbolInfo(ReferenceSymbolInfo? symbol)
+        private void SetUIByReferenceSymbolInfo(ReferenceSymbolEntity? symbol)
         {
             if (symbol is not null)
             {
@@ -105,13 +105,13 @@ namespace stockwatch
             }
         }
 
-        private ReferenceSymbolInfo CreateReferenceSymbolInfo()
+        private ReferenceSymbolEntity CreateReferenceSymbolInfo()
         {
             _ = decimal.TryParse(entReferencePrice.Text?.Replace(",", string.Empty) ?? "0", out var price);
             _ = decimal.TryParse(entCeilingPrice.Text?.Replace(",", string.Empty) ?? "0", out var ceilingPrice);
             _ = decimal.TryParse(entFloorPrice.Text?.Replace(",", string.Empty) ?? "0", out var floorPrice);
 
-            return new ReferenceSymbolInfo()
+            return new ReferenceSymbolEntity()
             {
                 SymbolId = entSymbol.Text,
                 Price = price,

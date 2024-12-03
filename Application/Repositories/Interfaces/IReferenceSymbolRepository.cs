@@ -4,7 +4,7 @@ namespace Application.Repositories.Interfaces
 {
     public interface IReferenceSymbolRepository
     {
-        public Task<ReferenceSymbolInfo?> Get();
-        public Task Save(ReferenceSymbolInfo symbol);
+        public Task<ReferenceSymbolEntity?> Get();
+        public Task Save(ReferenceSymbolEntity symbol);
     }
 }

@@ -11,12 +11,12 @@ namespace Infrastructure.Repositories
     [DIService(DIServiceLifetime.Scoped)]
     public class ReferenceSymbolRepository(IToastManagerService toastManagerService) : BaseFileRepository("ReferenceSymbol.json"), IReferenceSymbolRepository
     {
-        public async Task<ReferenceSymbolInfo?> Get()
+        public async Task<ReferenceSymbolEntity?> Get()
         {
             try
             {
                 var rawData = await File.ReadAllTextAsync(FilePath);
-                return JsonSerializer.Deserialize<ReferenceSymbolInfo>(rawData)!;
+                return JsonSerializer.Deserialize<ReferenceSymbolEntity>(rawData)!;
             }
             catch (Exception ex)
             {
@@ -25,7 +25,7 @@ namespace Infrastructure.Repositories
             }
         }
 
-        public async Task Save(ReferenceSymbolInfo symbol)
+        public async Task Save(ReferenceSymbolEntity symbol)
         {
             try
             {
