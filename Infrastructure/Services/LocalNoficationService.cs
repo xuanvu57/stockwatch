@@ -9,19 +9,19 @@ namespace Infrastructure.Services
     [DIService(DIServiceLifetime.Scoped)]
     public class LocalNoficationService : IPushNotificationService
     {
-        public async Task Notify(SymbolInfo symbol, NotificationTypes notificationType)
+        public async Task Notify(StockPriceData stockPrice, NotificationTypes notificationType)
         {
             var notificationId = 1000;
             var title = notificationType == NotificationTypes.Up ?
-                $"{symbol.SymbolId}'s price is UP over the expectation" :
-                $"{symbol.SymbolId}'s price is DOWN over the expectation";
+                $"{stockPrice.SymbolId}'s price is UP over the expectation" :
+                $"{stockPrice.SymbolId}'s price is DOWN over the expectation";
 
             var request = new NotificationRequest
             {
                 NotificationId = notificationId,
                 Title = title,
                 Subtitle = "You should be noticed",
-                Description = $"It was {symbol.Price:N2} at {DateTime.Now:HH:mm:ss}",
+                Description = $"It was {stockPrice.Price:N2} at {DateTime.Now:HH:mm:ss}",
                 Schedule = new NotificationRequestSchedule
                 {
                     NotifyTime = DateTime.Now.AddSeconds(1),

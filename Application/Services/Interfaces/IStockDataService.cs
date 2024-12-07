@@ -1,10 +1,9 @@
-﻿using Application.Dtos;
+﻿using Application.Dtos.Responses;
 
 namespace Application.Services.Interfaces
 {
     public interface IStockDataService
     {
-        public Task<StockWatchResponse> GetAll();
         public Task<StockWatchResponse> GetBySymbolId(string symbolId);
     }
 }

@@ -1,30 +1,24 @@
 ﻿using Application.Attributes;
 using Application.Dtos;
-using Application.Services.Interfaces;
+using Application.Repositories.Interfaces;
+using Application.Services.Abstracts;
 using Infrastructure.Clients.Ssi.Constants;
 using Infrastructure.Clients.Ssi.Interfaces;
+using Infrastructure.Clients.Ssi.Models;
 using static Domain.Constants.StockWatchEnums;
 
 namespace Infrastructure.Services
 {
     [DIService(DIServiceLifetime.Scoped)]
-    public class SsiStockDataService(ISsiClient ssiClient) : IStockDataService
+    public class SsiStockDataService(ISsiClient ssiClient, IPriceHistoryRepository priceHistoryRepository, ILatestPriceRepository latestPriceRepository) :
+        AbstractStockDataService(priceHistoryRepository, latestPriceRepository)
     {
-        public async Task<StockWatchResponse> GetAll()
+        override protected async Task<StockPriceData?> GetCurrentPriceBySymbolId(string symbolId)
         {
-            var symbols = await GetStockDataFromSsi(string.Empty);
-
-            return Convert(symbols);
+            return await GetStockDataFromSsi(symbolId);
         }
 
-        public async Task<StockWatchResponse> GetBySymbolId(string symbolId)
-        {
-            var symbols = await GetStockDataFromSsi(symbolId);
-
-            return Convert(symbols);
-        }
-
-        private async Task<IEnumerable<SymbolInfo>> GetStockDataFromSsi(string symbolId)
+        private async Task<StockPriceData?> GetStockDataFromSsi(string symbolId)
         {
             var currentDate = GetLatestAvailableDate();
 
@@ -32,36 +26,24 @@ namespace Infrastructure.Services
 
             if (stockData.Status == SsiConstants.ResponseStatus.Success)
             {
-                return stockData.Data!.Select(x => new SymbolInfo()
-                {
-                    SymbolId = x.Symbol,
-                    Price = decimal.Parse(x.RefPrice) + decimal.Parse(x.PriceChange)
-                });
+                var stockPrice = stockData.Data![0];
+
+                return Convert(stockPrice);
             }
 
-            return [];
+            return null;
         }
 
-        private static DateOnly GetLatestAvailableDate()
+        private static StockPriceData Convert(DailyStockPriceResponse stockPrice)
         {
-            var currentDate = DateTime.Now;
-
-            var latestAvailableDate = currentDate.DayOfWeek switch
+            return new()
             {
-                DayOfWeek.Saturday => currentDate.AddDays(-1),
-                DayOfWeek.Sunday => currentDate.AddDays(-2),
-                _ => currentDate
-            };
-
-            return DateOnly.FromDateTime(latestAvailableDate);
-        }
-
-        private static StockWatchResponse Convert(IEnumerable<SymbolInfo> symbols)
-        {
-            return new StockWatchResponse()
-            {
-                Time = DateTime.Now,
-                Symbols = symbols
+                SymbolId = stockPrice.Symbol,
+                Price = decimal.Parse(stockPrice.RefPrice) + decimal.Parse(stockPrice.PriceChange),
+                PriceChange = decimal.Parse(stockPrice.PriceChange),
+                PriceChangeInPercentage = decimal.Parse(stockPrice.PerPriceChange),
+                RefPrice = decimal.Parse(stockPrice.RefPrice),
+                AtTime = DateTime.Now
             };
         }
     }

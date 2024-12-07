@@ -54,8 +54,9 @@ namespace stockwatch
 
         private async void OnWatchButtonClicked(object sender, EventArgs e)
         {
-            if (!await IsValidate())
+            if (!AreValidInputs(out var errorMessage))
             {
+                await toastManagerService.Show(errorMessage);
                 return;
             }
 
@@ -76,21 +77,22 @@ namespace stockwatch
             btnWatch.IsEnabled = true;
         }
 
-        private async Task<bool> IsValidate()
+        private bool AreValidInputs(out string errorMessage)
         {
             if (string.IsNullOrWhiteSpace(entSymbol.Text))
             {
-                await toastManagerService.Show(AppResources.MSG_PleaseInputSymbol);
+                errorMessage = AppResources.MSG_PleaseInputSymbol;
                 return false;
             }
 
             var isNumber = decimal.TryParse(entReferencePrice.Text?.Replace(",", string.Empty) ?? "0", out var price);
             if (!isNumber || price <= 0)
             {
-                await toastManagerService.Show(AppResources.MSG_PleaseInputValidPrice);
+                errorMessage = AppResources.MSG_PleaseInputValidPrice;
                 return false;
             }
 
+            errorMessage = string.Empty;
             return true;
         }
 
@@ -99,9 +101,11 @@ namespace stockwatch
             if (symbol is not null)
             {
                 entSymbol.Text = symbol.SymbolId;
-                entReferencePrice.Text = symbol.Price.ToString();
-                entCeilingPrice.Text = symbol.CeilingPrice.ToString();
-                entFloorPrice.Text = symbol.FloorPrice.ToString();
+                entReferencePrice.Text = symbol.InitializedPrice.ToString();
+                entCeilingPrice.Text = symbol.CeilingPricePercentage.ToString();
+                entFloorPrice.Text = symbol.FloorPricePercentage.ToString();
+
+                btnWatch.IsEnabled = false;
             }
         }
 
@@ -111,19 +115,19 @@ namespace stockwatch
             _ = decimal.TryParse(entCeilingPrice.Text?.Replace(",", string.Empty) ?? "0", out var ceilingPrice);
             _ = decimal.TryParse(entFloorPrice.Text?.Replace(",", string.Empty) ?? "0", out var floorPrice);
 
-            return new ReferenceSymbolEntity()
+            return new()
             {
                 SymbolId = entSymbol.Text,
-                Price = price,
-                CeilingPrice = ceilingPrice,
-                FloorPrice = floorPrice
+                InitializedPrice = price,
+                CeilingPricePercentage = ceilingPrice,
+                FloorPricePercentage = floorPrice
             };
         }
 
-        private void SetLatestDataForUI(StockWatchResponse stockData, SymbolInfo? symbol)
+        private void SetLatestDataForUI(StockPriceData? stockPrice, DateTime time)
         {
-            lblPrice.Text = symbol?.Price.ToString() ?? "N/A";
-            lblLatestDataAt.Text = stockData.Time.ToString("yyyy-MM-dd HH:mm:ss");
+            lblPrice.Text = stockPrice?.Price.ToString() ?? "N/A";
+            lblLatestDataAt.Text = time.ToString("yyyy-MM-dd HH:mm:ss");
         }
 
         private async Task DoApiExecution()
@@ -140,7 +144,7 @@ namespace stockwatch
                     await stockAnalyzorService.Analyze(stockData.Symbols.First(), targetSymbol);
                 }
 
-                SetLatestDataForUI(stockData, stockData.Symbols.FirstOrDefault());
+                SetLatestDataForUI(stockData.Symbols.FirstOrDefault(), stockData.Time);
             }
             catch (Exception ex)
             {
