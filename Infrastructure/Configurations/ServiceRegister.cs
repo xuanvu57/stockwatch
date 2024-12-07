@@ -3,18 +3,17 @@ using Infrastructure.Services;
 using System.Reflection;
 using static Domain.Constants.StockWatchEnums;
 
-namespace stockwatch.Configurations
+namespace Infrastructure.Configurations
 {
     public static class ServiceRegister
     {
         public static void RegisterDependencies(this IServiceCollection serviceCollection)
         {
-            var assembly1 = typeof(MauiProgram).Assembly;
-            var assembly2 = typeof(DIServiceAttribute).Assembly;
-            var assembly3 = typeof(ToastManagerService).Assembly;
+            var applicationAssembly = typeof(DIServiceAttribute).Assembly;
+            var infrastructureAssembly = typeof(ToastManagerService).Assembly;
 
             serviceCollection.Scan(scrutor => scrutor
-                .FromAssemblies(assembly1, assembly2, assembly3)
+                .FromAssemblies(applicationAssembly, infrastructureAssembly)
 
                 .AddClasses(x => x
                     .Where(type => type

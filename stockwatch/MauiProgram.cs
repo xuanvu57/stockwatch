@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui;
+using Infrastructure.Configurations;
 using Microsoft.Extensions.Logging;
 using stockwatch.Configurations;
 
@@ -23,6 +24,7 @@ namespace stockwatch
             builder.Logging.AddDebug();
 #endif
 
+            builder.Services.RegisterLogger();
             builder.Services.RegisterDependencies();
             builder.Services.AddScoped<MainPage>();
 

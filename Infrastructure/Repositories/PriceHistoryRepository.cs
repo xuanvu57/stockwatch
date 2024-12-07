@@ -2,12 +2,14 @@
 using Application.Repositories.Interfaces;
 using Domain.Entities;
 using Infrastructure.Repositories.Bases;
+using Microsoft.Extensions.Logging;
+using System.Text.Json;
 using static Domain.Constants.StockWatchEnums;
 
 namespace Infrastructure.Repositories
 {
     [DIService(DIServiceLifetime.Scoped)]
-    public class PriceHistoryRepository() : BaseFileRepository("PriceHistory.json"), IPriceHistoryRepository
+    public class PriceHistoryRepository(ILogger<PriceHistoryRepository> logger) : BaseFileRepository("PriceHistory.json"), IPriceHistoryRepository
     {
         public async Task<IList<PriceHistoryEntity>> Get(int symbolId, DateTime fromTime, DateTime toTime)
         {
@@ -16,9 +18,17 @@ namespace Infrastructure.Repositories
             return await Task.FromResult(prices);
         }
 
-        public Task Save(PriceHistoryEntity priceHistory)
+        public async Task Save(PriceHistoryEntity priceHistory)
         {
-            return Task.CompletedTask;
+            try
+            {
+                var serializedData = JsonSerializer.Serialize(priceHistory);
+                await File.WriteAllLinesAsync(FilePath, [serializedData]);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"Error in saving {nameof(PriceHistoryEntity)}");
+            }
         }
     }
 }

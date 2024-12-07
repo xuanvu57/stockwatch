@@ -76,7 +76,6 @@
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-		<PackageReference Include="Scrutor" Version="5.0.2" />
 	</ItemGroup>
 
 	<ItemGroup Condition="( '$(TargetFramework)' == 'net8.0-android' )">

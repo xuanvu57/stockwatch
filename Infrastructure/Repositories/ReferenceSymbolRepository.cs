@@ -3,13 +3,14 @@ using Application.Repositories.Interfaces;
 using Application.Services.Interfaces;
 using Domain.Entities;
 using Infrastructure.Repositories.Bases;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using static Domain.Constants.StockWatchEnums;
 
 namespace Infrastructure.Repositories
 {
     [DIService(DIServiceLifetime.Scoped)]
-    public class ReferenceSymbolRepository(IToastManagerService toastManagerService) : BaseFileRepository("ReferenceSymbol.json"), IReferenceSymbolRepository
+    public class ReferenceSymbolRepository(ILogger<ReferenceSymbolRepository> logger, IToastManagerService toastManagerService) : BaseFileRepository("ReferenceSymbol.json"), IReferenceSymbolRepository
     {
         public async Task<ReferenceSymbolEntity?> Get()
         {
@@ -20,6 +21,8 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
+                logger.LogError(ex, $"Error in getting {nameof(ReferenceSymbolEntity)}");
+
                 await toastManagerService.Show($"Cannot read data, {ex.Message}");
                 return null;
             }
@@ -34,6 +37,8 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
+                logger.LogError(ex, $"Error in saving {nameof(ReferenceSymbolEntity)}");
+
                 await toastManagerService.Show($"Cannot write data, {ex.Message}");
             }
         }
