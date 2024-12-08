@@ -19,7 +19,7 @@ namespace Infrastructure.Clients.Ssi.Extensions
                 return responseData;
             }
 
-            throw new SsiException(response.StatusCode.ToString());
+            throw new SsiException($"There is an error with {response.StatusCode}");
         }
 
         public static async Task<AccessTokenResponse> ConvertToAuthenticationResponse(this HttpResponseMessage response)
@@ -35,7 +35,7 @@ namespace Infrastructure.Clients.Ssi.Extensions
                 }
             }
 
-            throw new SsiException(response.StatusCode.ToString());
+            throw new SsiException($"There is an error with {response.StatusCode}");
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Application.Services.Abstracts
             }
             else
             {
-                stockPriceData = ConvertFromLatestStockPrice(latestPriceInMemory);
+                stockPriceData = StockPriceData.ConvertFromLatestStockPrice(latestPriceInMemory);
             }
 
             return ConvertToResponse(stockPriceData);
@@ -34,35 +34,21 @@ namespace Application.Services.Abstracts
 
         private async Task SaveStockPrice(StockPriceData stockPriceData)
         {
-            await priceHistoryRepository.Save(new()
-            {
-                SymbolId = stockPriceData.SymbolId,
-                Price = stockPriceData.Price,
-                PriceChange = stockPriceData.RefPrice is null ? null : stockPriceData.Price - stockPriceData.RefPrice.Value,
-                PriceChangeInPercentage = stockPriceData.RefPrice is null ? null : ((stockPriceData.Price / stockPriceData.RefPrice.Value) - 1),
-                RefPrice = stockPriceData.RefPrice,
-                AtTime = stockPriceData.AtTime,
-                HighestPrice = stockPriceData.HighestPrice,
-                LowestPrice = stockPriceData.LowestPrice
-            });
+            var priceHistory = stockPriceData.ToPriceHistoryEntity();
+
+            await priceHistoryRepository.Save(priceHistory);
 
             await UpdateLatestPrice(stockPriceData);
         }
 
         private async Task UpdateLatestPrice(StockPriceData stockPriceData)
         {
-            if (stockPriceData.RefPrice is null)
-            {
-                return;
-            }
+            var latestPricess = stockPriceData.ToLatestPriceEntity();
 
-            await latestPriceRepository.Save(new()
+            if (latestPricess is not null)
             {
-                SymbolId = stockPriceData.SymbolId,
-                Price = stockPriceData.Price,
-                RefPrice = stockPriceData.RefPrice.Value,
-                AtTime = stockPriceData.AtTime,
-            });
+                await latestPriceRepository.Save(latestPricess);
+            }
         }
 
         private static bool HasPriceChanged(StockPriceData stockPrice, LatestPriceEntity? latestPrice)
@@ -71,20 +57,6 @@ namespace Application.Services.Abstracts
                 return true;
 
             return stockPrice.Price != latestPrice.Price;
-        }
-
-        private static StockPriceData? ConvertFromLatestStockPrice(LatestPriceEntity? latestPrice)
-        {
-            return latestPrice is null ?
-                null :
-                new()
-                {
-                    SymbolId = latestPrice.SymbolId,
-                    Price = latestPrice.Price,
-                    HighestPrice = 0,
-                    LowestPrice = 0,
-                    AtTime = latestPrice.AtTime,
-                };
         }
 
         private static StockWatchResponse ConvertToResponse(StockPriceData? stockPrice)
