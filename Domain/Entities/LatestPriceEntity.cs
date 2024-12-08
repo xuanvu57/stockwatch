@@ -4,7 +4,6 @@ namespace Domain.Entities
 {
     public record LatestPriceEntity : StockPriceBaseEntity
     {
-        public decimal PriceChange { get; init; }
-        public decimal PriceChangeInPercentage { get; init; }
+        public decimal RefPrice { get; init; }
     }
 }

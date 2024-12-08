@@ -7,9 +7,16 @@
     Shell.FlyoutBehavior="Disabled"
     Title="stockwatch">
 
-    <ShellContent
-        Title="My Stock"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
-
+    <TabBar>
+        <ShellContent
+            Title="My symbol"
+            Icon="my_stock.png"
+            ContentTemplate="{DataTemplate local:MainPage}"
+            Route="MainPage" />
+        <ShellContent
+            Title="Potential symbols"
+            Icon="find_stock.png"
+            ContentTemplate="{DataTemplate local:FindPotentialSymbol}"
+            Route="FindPotentialSymbol" />
+    </TabBar>
 </Shell>

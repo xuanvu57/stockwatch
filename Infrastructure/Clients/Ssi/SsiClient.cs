@@ -33,14 +33,62 @@ namespace Infrastructure.Clients.Ssi
                 FromDate = fromDate.ToString("dd/MM/yyyy"),
                 ToDate = toDate.ToString("dd/MM/yyyy"),
                 Symbol = symbol,
-                PageIndex = pageIndex,
-                PageSize = pageSize
+                PageIndex = pageIndex ?? SsiConstants.Request.DefaultPageIndex,
+                PageSize = pageSize ?? SsiConstants.Request.DefaultPageSize
             };
 
             var parameters = RequestSerializer.Serialize(request, RequestInputTypes.Parameter);
             var response = await client.GetAsync($"{SsiConstants.Endpoints.DailyStockPrice}?{parameters}");
 
             return await response.ConvertToBaseResponse<DailyStockPriceResponse[]>();
+        }
+
+        public async Task<BaseResponse<IntradayOhlcResponse[]>> IntradayOhlc(DateOnly fromDate, DateOnly toDate, string symbol = "", int? pageIndex = null, int? pageSize = null, bool ascending = false, int resolution = 1)
+        {
+            var request = new IntradayOhlcRequest()
+            {
+                FromDate = fromDate.ToString("dd/MM/yyyy"),
+                ToDate = toDate.ToString("dd/MM/yyyy"),
+                Symbol = symbol,
+                PageIndex = pageIndex ?? SsiConstants.Request.DefaultPageIndex,
+                PageSize = pageSize ?? SsiConstants.Request.DefaultPageSize,
+                Ascending = ascending,
+                Resolution = resolution
+            };
+
+            var parameters = RequestSerializer.Serialize(request, RequestInputTypes.Parameter);
+            var response = await client.GetAsync($"{SsiConstants.Endpoints.IntradayOhlc}?{parameters}");
+
+            return await response.ConvertToBaseResponse<IntradayOhlcResponse[]>();
+        }
+
+        public async Task<BaseResponse<DailyOhlcResponse[]>> DailyOhlc(DateOnly fromDate, DateOnly toDate, string symbol = "", int? pageIndex = null, int? pageSize = null, bool ascending = false)
+        {
+            var request = new IntradayOhlcRequest()
+            {
+                FromDate = fromDate.ToString("dd/MM/yyyy"),
+                ToDate = toDate.ToString("dd/MM/yyyy"),
+                Symbol = symbol,
+                PageIndex = pageIndex ?? SsiConstants.Request.DefaultPageIndex,
+                PageSize = pageSize ?? SsiConstants.Request.DefaultPageSize,
+                Ascending = ascending
+            };
+
+            var parameters = RequestSerializer.Serialize(request, RequestInputTypes.Parameter);
+            var response = await client.GetAsync($"{SsiConstants.Endpoints.DailyOhlc}?{parameters}");
+
+            return await response.ConvertToBaseResponse<DailyOhlcResponse[]>();
+        }
+
+        private async Task<BaseResponse<T>> HandleException<T>(Exception ex) where T : class
+        {
+            var response = new BaseResponse<T>()
+            {
+                Message = ex.Message,
+                Status = SsiConstants.ResponseStatus.SsiClientException
+            };
+
+            return response;
         }
     }
 }

@@ -8,6 +8,8 @@
         {
             public const string AccessToken = "Market/AccessToken";
             public const string DailyStockPrice = "Market/DailyStockPrice";
+            public const string IntradayOhlc = "Market/IntradayOhlc";
+            public const string DailyOhlc = "Market/DailyOhlc";
         }
 
         public static class Request
@@ -18,6 +20,8 @@
 
         public static class ResponseStatus
         {
+            public const string SsiClientException = "SsiClientException";
+            public const string Exception = "Exception";
             public const string Success = "Success";
             public const string NotFound = "NoDataFound";
         }

@@ -1,6 +1,7 @@
 ﻿using Application.Attributes;
 using Application.Dtos;
 using Application.Repositories.Interfaces;
+using Application.Services;
 using Application.Services.Abstracts;
 using Infrastructure.Clients.Ssi.Constants;
 using Infrastructure.Clients.Ssi.Interfaces;
@@ -15,34 +16,54 @@ namespace Infrastructure.Services
     {
         override protected async Task<StockPriceData?> GetCurrentPriceBySymbolId(string symbolId)
         {
-            return await GetStockDataFromSsi(symbolId);
+            return await GetCurrentPriceBySymbolIdFromSsi(symbolId);
         }
 
-        private async Task<StockPriceData?> GetStockDataFromSsi(string symbolId)
+        private async Task<StockPriceData?> GetCurrentPriceBySymbolIdFromSsi(string symbolId)
         {
-            var currentDate = GetLatestAvailableDate();
+            var currentDate = StockRulesService.GetLatestAvailableDate();
 
-            var stockData = await ssiClient.DailyStockPrice(currentDate, currentDate, symbolId);
+            var intradayOhlc = await ssiClient.IntradayOhlc(currentDate, currentDate, symbol: symbolId, pageIndex: 1, pageSize: 1);
 
-            if (stockData.Status == SsiConstants.ResponseStatus.Success)
+            if (intradayOhlc.Status == SsiConstants.ResponseStatus.Success)
             {
-                var stockPrice = stockData.Data![0];
+                var refPrice = await GetReferencePrice(symbolId, currentDate);
 
-                return Convert(stockPrice);
+                return Convert(intradayOhlc.Data![0], refPrice);
             }
 
             return null;
         }
 
-        private static StockPriceData Convert(DailyStockPriceResponse stockPrice)
+        private async Task<decimal?> GetReferencePrice(string symbolId, DateOnly currentDate)
+        {
+            var latestPriceInMemory = await latestPriceRepository.Get(symbolId);
+
+            if (latestPriceInMemory is not null)
+            {
+                return latestPriceInMemory.RefPrice;
+            }
+
+            var dailyStockPrice = await ssiClient.DailyStockPrice(currentDate, currentDate, symbol: symbolId, pageIndex: 1, pageSize: 1);
+            if (dailyStockPrice.Status == SsiConstants.ResponseStatus.Success)
+            {
+                return decimal.Parse(dailyStockPrice.Data![0].RefPrice);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private static StockPriceData Convert(IntradayOhlcResponse intradayOhlcResponse, decimal? refPrice)
         {
             return new()
             {
-                SymbolId = stockPrice.Symbol,
-                Price = decimal.Parse(stockPrice.RefPrice) + decimal.Parse(stockPrice.PriceChange),
-                PriceChange = decimal.Parse(stockPrice.PriceChange),
-                PriceChangeInPercentage = decimal.Parse(stockPrice.PerPriceChange),
-                RefPrice = decimal.Parse(stockPrice.RefPrice),
+                SymbolId = intradayOhlcResponse.Symbol,
+                Price = intradayOhlcResponse.Value,
+                RefPrice = refPrice,
+                HighestPrice = intradayOhlcResponse.High,
+                LowestPrice = intradayOhlcResponse.Low,
                 AtTime = DateTime.Now
             };
         }

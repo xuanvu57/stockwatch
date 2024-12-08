@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="stockwatch.FindPotentialSymbol"
+             Title="Find potential symbols">
+    <VerticalStackLayout>
+        <HorizontalStackLayout>
+            <Label 
+                Text="Market"/>
+            <Picker
+                Title="Select a market"
+                SelectedItem="HOSE">
+                <Picker.Items>
+                    <x:String>HOSE</x:String>
+                    <x:String>HNX</x:String>
+                    <x:String>UPCOM</x:String>
+                    <x:String>DER</x:String>
+                    <x:String>BOND</x:String>
+                </Picker.Items>
+            </Picker>
+        </HorizontalStackLayout>
+        
+        
+    </VerticalStackLayout>
+</ContentPage>

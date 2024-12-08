@@ -72,7 +72,7 @@ namespace stockwatch
             await toastManagerService.Show($"Start following {targetSymbol.SymbolId}");
         }
 
-        private void OnEntSymbolTextChanged(object sender, TextChangedEventArgs e)
+        private void OnInputsTextChanged(object sender, TextChangedEventArgs e)
         {
             btnWatch.IsEnabled = true;
         }

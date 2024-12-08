@@ -8,6 +8,8 @@ namespace Application.Services.Abstracts
 {
     public abstract class AbstractStockDataService(IPriceHistoryRepository priceHistoryRepository, ILatestPriceRepository latestPriceRepository) : IStockDataService
     {
+        protected readonly ILatestPriceRepository latestPriceRepository = latestPriceRepository;
+
         public async Task<StockWatchResponse> GetBySymbolId(string symbolId)
         {
             var stockPriceData = await GetCurrentPriceBySymbolId(symbolId);
@@ -30,30 +32,18 @@ namespace Application.Services.Abstracts
 
         protected abstract Task<StockPriceData?> GetCurrentPriceBySymbolId(string symbolId);
 
-        protected static DateOnly GetLatestAvailableDate()
-        {
-            var currentDate = DateTime.Now;
-
-            var latestAvailableDate = currentDate.DayOfWeek switch
-            {
-                DayOfWeek.Saturday => currentDate.AddDays(-1),
-                DayOfWeek.Sunday => currentDate.AddDays(-2),
-                _ => currentDate
-            };
-
-            return DateOnly.FromDateTime(latestAvailableDate);
-        }
-
         private async Task SaveStockPrice(StockPriceData stockPriceData)
         {
             await priceHistoryRepository.Save(new()
             {
                 SymbolId = stockPriceData.SymbolId,
                 Price = stockPriceData.Price,
-                PriceChange = stockPriceData.PriceChange,
-                PriceChangeInPercentage = stockPriceData.PriceChangeInPercentage,
+                PriceChange = stockPriceData.RefPrice is null ? null : stockPriceData.Price - stockPriceData.RefPrice.Value,
+                PriceChangeInPercentage = stockPriceData.RefPrice is null ? null : ((stockPriceData.Price / stockPriceData.RefPrice.Value) - 1),
                 RefPrice = stockPriceData.RefPrice,
                 AtTime = stockPriceData.AtTime,
+                HighestPrice = stockPriceData.HighestPrice,
+                LowestPrice = stockPriceData.LowestPrice
             });
 
             await UpdateLatestPrice(stockPriceData);
@@ -61,12 +51,16 @@ namespace Application.Services.Abstracts
 
         private async Task UpdateLatestPrice(StockPriceData stockPriceData)
         {
+            if (stockPriceData.RefPrice is null)
+            {
+                return;
+            }
+
             await latestPriceRepository.Save(new()
             {
                 SymbolId = stockPriceData.SymbolId,
                 Price = stockPriceData.Price,
-                PriceChange = stockPriceData.PriceChange,
-                PriceChangeInPercentage = stockPriceData.PriceChangeInPercentage,
+                RefPrice = stockPriceData.RefPrice.Value,
                 AtTime = stockPriceData.AtTime,
             });
         }
@@ -81,19 +75,16 @@ namespace Application.Services.Abstracts
 
         private static StockPriceData? ConvertFromLatestStockPrice(LatestPriceEntity? latestPrice)
         {
-            if (latestPrice is not null)
-            {
-                return new()
+            return latestPrice is null ?
+                null :
+                new()
                 {
                     SymbolId = latestPrice.SymbolId,
                     Price = latestPrice.Price,
-                    PriceChange = latestPrice.PriceChange,
-                    PriceChangeInPercentage = latestPrice.PriceChangeInPercentage,
+                    HighestPrice = 0,
+                    LowestPrice = 0,
                     AtTime = latestPrice.AtTime,
                 };
-            }
-
-            return null;
         }
 
         private static StockWatchResponse ConvertToResponse(StockPriceData? stockPrice)
