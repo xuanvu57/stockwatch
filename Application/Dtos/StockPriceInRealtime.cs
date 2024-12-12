@@ -1,17 +1,14 @@
-﻿using Domain.Entities;
+﻿using Application.Services;
+using Domain.Entities;
 
 namespace Application.Dtos
 {
-    public record StockPriceData
+    public record StockPriceInRealtime : StockPriceBaseData
     {
-        public required string SymbolId { get; init; }
-        public decimal Price { get; init; }
         public decimal? RefPrice { get; init; }
         public DateTime AtTime { get; init; }
-        public decimal HighestPrice { get; init; }
-        public decimal LowestPrice { get; init; }
 
-        public static StockPriceData? ConvertFromLatestStockPrice(LatestPriceEntity? latestPrice)
+        public static StockPriceInRealtime? ConvertFromLatestStockPrice(LatestPriceEntity? latestPrice)
         {
             return latestPrice is null ?
                 null :
@@ -45,7 +42,7 @@ namespace Application.Dtos
                 SymbolId = SymbolId,
                 Price = Price,
                 PriceChange = RefPrice is null ? null : Price - RefPrice.Value,
-                PriceChangeInPercentage = RefPrice is null ? null : ((Price / RefPrice.Value) - 1),
+                PriceChangeInPercentage = RefPrice is null ? null : StockRulesService.CalculatePercentage(Price, RefPrice.Value),
                 RefPrice = RefPrice,
                 AtTime = AtTime,
                 HighestPrice = HighestPrice,

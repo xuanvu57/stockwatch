@@ -2,7 +2,7 @@
 
 namespace Application.Services.Interfaces
 {
-    public interface IStockDataService
+    public interface IRealtimePriceService
     {
         public Task<StockWatchResponse> GetBySymbolId(string symbolId);
     }

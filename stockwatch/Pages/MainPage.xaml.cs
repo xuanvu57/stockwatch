@@ -6,13 +6,13 @@ using Microsoft.Extensions.Configuration;
 using stockwatch.Configurations.Models;
 using stockwatch.Resources.Strings;
 
-namespace stockwatch
+namespace stockwatch.Pages
 {
     public partial class MainPage : ContentPage
     {
         private readonly IToastManagerService toastManagerService;
-        private readonly IStockDataService stockDataService;
-        private readonly IAnalyzorService stockAnalyzorService;
+        private readonly IRealtimePriceService stockDataService;
+        private readonly IMySymbolAnalyzingService stockAnalyzorService;
         private readonly IReferenceSymbolRepository referenceSymbolRepository;
 
         private readonly IDispatcherTimer timer;
@@ -21,8 +21,8 @@ namespace stockwatch
         public MainPage(
             IConfiguration configuration,
             IToastManagerService toastManagerService,
-            IStockDataService stockDataService,
-            IAnalyzorService stockAnalyzorService,
+            IRealtimePriceService stockDataService,
+            IMySymbolAnalyzingService stockAnalyzorService,
             IReferenceSymbolRepository referenceSymbolRepository)
         {
             InitializeComponent();
@@ -124,7 +124,7 @@ namespace stockwatch
             };
         }
 
-        private void SetLatestDataForUI(StockPriceData? stockPrice, DateTime time)
+        private void SetLatestDataForUI(StockPriceInRealtime? stockPrice, DateTime time)
         {
             lblPrice.Text = stockPrice?.Price.ToString() ?? "N/A";
             lblLatestDataAt.Text = time.ToString("yyyy-MM-dd HH:mm:ss");

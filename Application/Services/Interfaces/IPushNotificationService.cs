@@ -5,6 +5,6 @@ namespace Application.Services.Interfaces
 {
     public interface IPushNotificationService
     {
-        public Task Notify(StockPriceData stockPrice, NotificationTypes notificationType);
+        public Task Notify(StockPriceInRealtime stockPrice, NotificationTypes notificationType);
     }
 }

@@ -3,7 +3,7 @@
     x:Class="stockwatch.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:stockwatch"
+    xmlns:local="clr-namespace:stockwatch.Pages"
     Shell.FlyoutBehavior="Disabled"
     Title="stockwatch">
 
@@ -16,7 +16,7 @@
         <ShellContent
             Title="Potential symbols"
             Icon="find_stock.png"
-            ContentTemplate="{DataTemplate local:FindPotentialSymbol}"
+            ContentTemplate="{DataTemplate local:FindPotentialSymbolPage}"
             Route="FindPotentialSymbol" />
     </TabBar>
 </Shell>

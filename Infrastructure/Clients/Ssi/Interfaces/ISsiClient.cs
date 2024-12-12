@@ -4,6 +4,7 @@ namespace Infrastructure.Clients.Ssi.Interfaces
 {
     public interface ISsiClient
     {
+        public Task<BaseResponse<SecuritiesResponse[]>> Securities(string market = "", int? pageIndex = null, int? pageSize = null);
         public Task<BaseResponse<DailyStockPriceResponse[]>> DailyStockPrice(DateOnly fromDate, DateOnly toDate, string symbol = "", int? pageIndex = null, int? pageSize = null);
         public Task<BaseResponse<IntradayOhlcResponse[]>> IntradayOhlc(DateOnly fromDate, DateOnly toDate, string symbol = "", int? pageIndex = null, int? pageSize = null, bool ascending = false, int resolution = 1);
         public Task<BaseResponse<DailyOhlcResponse[]>> DailyOhlc(DateOnly fromDate, DateOnly toDate, string symbol = "", int? pageIndex = null, int? pageSize = null, bool ascending = false);

@@ -11,15 +11,15 @@ using static Domain.Constants.StockWatchEnums;
 namespace Infrastructure.Services
 {
     [DIService(DIServiceLifetime.Scoped)]
-    public class SsiStockDataService(ISsiClient ssiClient, IPriceHistoryRepository priceHistoryRepository, ILatestPriceRepository latestPriceRepository) :
-        AbstractStockDataService(priceHistoryRepository, latestPriceRepository)
+    public class SsiRealtimePriceService(ISsiClient ssiClient, IPriceHistoryRepository priceHistoryRepository, ILatestPriceRepository latestPriceRepository) :
+        AbstractRealtimePriceService(priceHistoryRepository, latestPriceRepository)
     {
-        override protected async Task<StockPriceData?> GetCurrentPriceBySymbolId(string symbolId)
+        override protected async Task<StockPriceInRealtime?> GetCurrentPriceBySymbolId(string symbolId)
         {
             return await GetCurrentPriceBySymbolIdFromSsi(symbolId);
         }
 
-        private async Task<StockPriceData?> GetCurrentPriceBySymbolIdFromSsi(string symbolId)
+        private async Task<StockPriceInRealtime?> GetCurrentPriceBySymbolIdFromSsi(string symbolId)
         {
             var currentDate = StockRulesService.GetLatestAvailableDate();
 
@@ -55,15 +55,15 @@ namespace Infrastructure.Services
             }
         }
 
-        private static StockPriceData Convert(IntradayOhlcResponse intradayOhlcResponse, decimal? refPrice)
+        private static StockPriceInRealtime Convert(IntradayOhlcResponse intradayOhlcResponse, decimal? refPrice)
         {
             return new()
             {
                 SymbolId = intradayOhlcResponse.Symbol,
-                Price = intradayOhlcResponse.Value,
+                Price = decimal.Parse(intradayOhlcResponse.Value),
                 RefPrice = refPrice,
-                HighestPrice = intradayOhlcResponse.High,
-                LowestPrice = intradayOhlcResponse.Low,
+                HighestPrice = decimal.Parse(intradayOhlcResponse.High),
+                LowestPrice = decimal.Parse(intradayOhlcResponse.Low),
                 AtTime = DateTime.Now
             };
         }

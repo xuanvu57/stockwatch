@@ -6,7 +6,7 @@ using Domain.Entities;
 
 namespace Application.Services.Abstracts
 {
-    public abstract class AbstractStockDataService(IPriceHistoryRepository priceHistoryRepository, ILatestPriceRepository latestPriceRepository) : IStockDataService
+    public abstract class AbstractRealtimePriceService(IPriceHistoryRepository priceHistoryRepository, ILatestPriceRepository latestPriceRepository) : IRealtimePriceService
     {
         protected readonly ILatestPriceRepository latestPriceRepository = latestPriceRepository;
 
@@ -24,15 +24,15 @@ namespace Application.Services.Abstracts
             }
             else
             {
-                stockPriceData = StockPriceData.ConvertFromLatestStockPrice(latestPriceInMemory);
+                stockPriceData = StockPriceInRealtime.ConvertFromLatestStockPrice(latestPriceInMemory);
             }
 
             return ConvertToResponse(stockPriceData);
         }
 
-        protected abstract Task<StockPriceData?> GetCurrentPriceBySymbolId(string symbolId);
+        protected abstract Task<StockPriceInRealtime?> GetCurrentPriceBySymbolId(string symbolId);
 
-        private async Task SaveStockPrice(StockPriceData stockPriceData)
+        private async Task SaveStockPrice(StockPriceInRealtime stockPriceData)
         {
             var priceHistory = stockPriceData.ToPriceHistoryEntity();
 
@@ -41,7 +41,7 @@ namespace Application.Services.Abstracts
             await UpdateLatestPrice(stockPriceData);
         }
 
-        private async Task UpdateLatestPrice(StockPriceData stockPriceData)
+        private async Task UpdateLatestPrice(StockPriceInRealtime stockPriceData)
         {
             var latestPricess = stockPriceData.ToLatestPriceEntity();
 
@@ -51,7 +51,7 @@ namespace Application.Services.Abstracts
             }
         }
 
-        private static bool HasPriceChanged(StockPriceData stockPrice, LatestPriceEntity? latestPrice)
+        private static bool HasPriceChanged(StockPriceInRealtime stockPrice, LatestPriceEntity? latestPrice)
         {
             if (latestPrice is null)
                 return true;
@@ -59,7 +59,7 @@ namespace Application.Services.Abstracts
             return stockPrice.Price != latestPrice.Price;
         }
 
-        private static StockWatchResponse ConvertToResponse(StockPriceData? stockPrice)
+        private static StockWatchResponse ConvertToResponse(StockPriceInRealtime? stockPrice)
         {
             return new()
             {

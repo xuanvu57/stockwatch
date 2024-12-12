@@ -7,9 +7,9 @@ using static Domain.Constants.StockWatchEnums;
 namespace Application.Services
 {
     [DIService(DIServiceLifetime.Scoped)]
-    public class AnalyzorService(IPushNotificationService pushNotificationService) : IAnalyzorService
+    public class MySymbolAnalyzingService(IPushNotificationService pushNotificationService) : IMySymbolAnalyzingService
     {
-        public async Task Analyze(StockPriceData stockPrice, ReferenceSymbolEntity targetSymbol)
+        public async Task Analyze(StockPriceInRealtime stockPrice, ReferenceSymbolEntity targetSymbol)
         {
             var floorPrice = targetSymbol.InitializedPrice * (1 - (targetSymbol.FloorPricePercentage / 100));
             var ceilingPrice = targetSymbol.InitializedPrice * (1 + (targetSymbol.CeilingPricePercentage / 100));

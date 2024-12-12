@@ -9,7 +9,7 @@ namespace Infrastructure.Services
     [DIService(DIServiceLifetime.Scoped)]
     public class LocalNoficationService : IPushNotificationService
     {
-        public async Task Notify(StockPriceData stockPrice, NotificationTypes notificationType)
+        public async Task Notify(StockPriceInRealtime stockPrice, NotificationTypes notificationType)
         {
             var notificationId = 1000;
             var title = notificationType == NotificationTypes.Up ?

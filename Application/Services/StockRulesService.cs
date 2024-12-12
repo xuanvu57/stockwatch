@@ -15,5 +15,7 @@
 
             return DateOnly.FromDateTime(latestAvailableDate);
         }
+
+        public static decimal CalculatePercentage(decimal currentValue, decimal referencedValue) => (100 * currentValue / referencedValue) - 100;
     }
 }

@@ -2,7 +2,7 @@
 {
     public record StockWatchResponse
     {
-        public required IEnumerable<StockPriceData> Symbols { get; init; }
+        public required IEnumerable<StockPriceInRealtime> Symbols { get; init; }
         public DateTime Time { get; init; }
     }
 }

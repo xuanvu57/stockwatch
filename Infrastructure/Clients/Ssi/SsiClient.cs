@@ -31,76 +31,77 @@ namespace Infrastructure.Clients.Ssi
 
         public async Task<BaseResponse<DailyStockPriceResponse[]>> DailyStockPrice(DateOnly fromDate, DateOnly toDate, string symbol = "", int? pageIndex = null, int? pageSize = null)
         {
-            try
+            var request = new DailyStockPriceRequest()
             {
-                var request = new DailyStockPriceRequest()
-                {
-                    FromDate = fromDate.ToString("dd/MM/yyyy"),
-                    ToDate = toDate.ToString("dd/MM/yyyy"),
-                    Symbol = symbol,
-                    PageIndex = pageIndex ?? SsiConstants.Request.DefaultPageIndex,
-                    PageSize = pageSize ?? SsiConstants.Request.DefaultPageSize
-                };
+                FromDate = fromDate.ToString("dd/MM/yyyy"),
+                ToDate = toDate.ToString("dd/MM/yyyy"),
+                Symbol = symbol,
+                PageIndex = pageIndex ?? SsiConstants.Request.DefaultPageIndex,
+                PageSize = pageSize ?? SsiConstants.Request.DefaultPageSize
+            };
 
-                var parameters = RequestSerializer.Serialize(request, RequestInputTypes.Parameter);
-                var response = await client.GetAsync($"{SsiConstants.Endpoints.DailyStockPrice}?{parameters}");
-
-                return await response.ConvertToBaseResponse<DailyStockPriceResponse[]>();
-            }
-            catch (Exception ex)
-            {
-                return HandleException<DailyStockPriceResponse[]>(ex);
-            }
+            return await ExecuteGetMethod<DailyStockPriceRequest, DailyStockPriceResponse[]>(request, SsiConstants.Endpoints.DailyStockPrice);
         }
 
         public async Task<BaseResponse<IntradayOhlcResponse[]>> IntradayOhlc(DateOnly fromDate, DateOnly toDate, string symbol = "", int? pageIndex = null, int? pageSize = null, bool ascending = false, int resolution = 1)
         {
-            try
+            var request = new IntradayOhlcRequest()
             {
-                var request = new IntradayOhlcRequest()
-                {
-                    FromDate = fromDate.ToString("dd/MM/yyyy"),
-                    ToDate = toDate.ToString("dd/MM/yyyy"),
-                    Symbol = symbol,
-                    PageIndex = pageIndex ?? SsiConstants.Request.DefaultPageIndex,
-                    PageSize = pageSize ?? SsiConstants.Request.DefaultPageSize,
-                    Ascending = ascending,
-                    Resolution = resolution
-                };
+                FromDate = fromDate.ToString("dd/MM/yyyy"),
+                ToDate = toDate.ToString("dd/MM/yyyy"),
+                Symbol = symbol,
+                PageIndex = pageIndex ?? SsiConstants.Request.DefaultPageIndex,
+                PageSize = pageSize ?? SsiConstants.Request.DefaultPageSize,
+                Ascending = ascending,
+                Resolution = resolution
+            };
 
-                var parameters = RequestSerializer.Serialize(request, RequestInputTypes.Parameter);
-                var response = await client.GetAsync($"{SsiConstants.Endpoints.IntradayOhlc}?{parameters}");
-
-                return await response.ConvertToBaseResponse<IntradayOhlcResponse[]>();
-            }
-            catch (Exception ex)
-            {
-                return HandleException<IntradayOhlcResponse[]>(ex);
-            }
+            return await ExecuteGetMethod<IntradayOhlcRequest, IntradayOhlcResponse[]>(request, SsiConstants.Endpoints.IntradayOhlc);
         }
 
         public async Task<BaseResponse<DailyOhlcResponse[]>> DailyOhlc(DateOnly fromDate, DateOnly toDate, string symbol = "", int? pageIndex = null, int? pageSize = null, bool ascending = false)
         {
+            var request = new DailyOhlcRequest()
+            {
+                FromDate = fromDate.ToString("dd/MM/yyyy"),
+                ToDate = toDate.ToString("dd/MM/yyyy"),
+                Symbol = symbol,
+                PageIndex = pageIndex ?? SsiConstants.Request.DefaultPageIndex,
+                PageSize = pageSize ?? SsiConstants.Request.DefaultPageSize,
+                Ascending = ascending
+            };
+
+            return await ExecuteGetMethod<DailyOhlcRequest, DailyOhlcResponse[]>(request, SsiConstants.Endpoints.DailyOhlc);
+        }
+
+        public async Task<BaseResponse<SecuritiesResponse[]>> Securities(string market = "", int? pageIndex = null, int? pageSize = null)
+        {
+            var request = new SecuritiesRequest()
+            {
+                Market = market,
+                PageIndex = pageIndex ?? SsiConstants.Request.DefaultPageIndex,
+                PageSize = pageSize ?? SsiConstants.Request.DefaultPageSize,
+            };
+
+            return await ExecuteGetMethod<SecuritiesRequest, SecuritiesResponse[]>(request, SsiConstants.Endpoints.Securities);
+        }
+
+        private async Task<BaseResponse<TResponse>> ExecuteGetMethod<TRequest, TResponse>(TRequest request, string endpoint)
+            where TRequest : class
+            where TResponse : class
+        {
             try
             {
-                var request = new IntradayOhlcRequest()
-                {
-                    FromDate = fromDate.ToString("dd/MM/yyyy"),
-                    ToDate = toDate.ToString("dd/MM/yyyy"),
-                    Symbol = symbol,
-                    PageIndex = pageIndex ?? SsiConstants.Request.DefaultPageIndex,
-                    PageSize = pageSize ?? SsiConstants.Request.DefaultPageSize,
-                    Ascending = ascending
-                };
+                await Task.Delay(TimeSpan.FromSeconds(SsiConstants.MinSecondBetweenApiCalls));
 
                 var parameters = RequestSerializer.Serialize(request, RequestInputTypes.Parameter);
-                var response = await client.GetAsync($"{SsiConstants.Endpoints.DailyOhlc}?{parameters}");
+                var response = await client.GetAsync($"{endpoint}?{parameters}");
 
-                return await response.ConvertToBaseResponse<DailyOhlcResponse[]>();
+                return await response.ConvertToBaseResponse<TResponse>();
             }
             catch (Exception ex)
             {
-                return HandleException<DailyOhlcResponse[]>(ex);
+                return HandleException<TResponse>(ex);
             }
         }
 
