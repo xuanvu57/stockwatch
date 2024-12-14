@@ -20,5 +20,12 @@
             Parameter,
             JsonBody
         }
+
+        public enum GroupPriceDataBy
+        {
+            Day,
+            Week,
+            Month
+        }
     }
 }

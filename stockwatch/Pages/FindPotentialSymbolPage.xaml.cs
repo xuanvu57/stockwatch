@@ -1,4 +1,5 @@
 using Application.Services.Interfaces;
+using static Domain.Constants.StockWatchEnums;
 
 namespace stockwatch.Pages;
 
@@ -19,13 +20,24 @@ public partial class FindPotentialSymbolPage : ContentPage
     private async void OnAnalyzeButtonClicked(object sender, EventArgs e)
     {
         var market = pckMarket.SelectedItem.ToString();
+        var groupBy = ConvertPeriodToGroupPriceData(pckGroupByPeriod.SelectedItem.ToString());
 
         await loadingService.Show();
 
-        var potentialSymbols = await potentialSymbolsAnalyzingService.Analyze(market!, 1, 2);
+        var potentialSymbols = await potentialSymbolsAnalyzingService.Analyze(market!, 1, 5, groupBy);
 
-        lblResult.Text = string.Join(Environment.NewLine, potentialSymbols.Select(x => $"{x.SymbolId}: {x.AverageAmplitudeInPercentage:F}%"));
+        clvResult.ItemsSource = potentialSymbols;
 
         await loadingService.Hide();
+    }
+
+    private static GroupPriceDataBy ConvertPeriodToGroupPriceData(string? period)
+    {
+        if (!Enum.TryParse(typeof(GroupPriceDataBy), period, out var groupBy))
+        {
+            groupBy = GroupPriceDataBy.Day;
+        }
+
+        return (GroupPriceDataBy)groupBy;
     }
 }

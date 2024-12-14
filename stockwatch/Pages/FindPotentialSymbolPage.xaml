@@ -7,15 +7,15 @@
         <VerticalStackLayout
             Padding="10,0"
             Spacing="25">
-            <HorizontalStackLayout>
+            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto, Auto">
                 <Label 
+                    Grid.Row="0" Grid.Column="0"
                     VerticalTextAlignment="Center"
-                    Margin="0,0,20,0"
-                    Text="Market"/>
+                    Text="Market "/>
                 <Picker
+                    Grid.Row="0" Grid.Column="1"
                     x:Name="pckMarket"
-                    Title="Select a market"
-                    SelectedItem="HOSE">
+                    Title="Select a market">
                     <Picker.Items>
                         <x:String>HOSE</x:String>
                         <x:String>HNX</x:String>
@@ -24,7 +24,22 @@
                         <x:String>BOND</x:String>
                     </Picker.Items>
                 </Picker>
-            </HorizontalStackLayout>
+                
+                <Label 
+                    Grid.Row="1" Grid.Column="0"
+                    VerticalTextAlignment="Center"
+                    Text="Group by"/>
+                <Picker
+                    Grid.Row="1" Grid.Column="1"
+                    x:Name="pckGroupByPeriod"
+                    Title="Period ">
+                    <Picker.Items>
+                        <x:String>Day</x:String>
+                        <x:String>Week</x:String>
+                        <x:String>Month</x:String>
+                    </Picker.Items>
+                </Picker>
+            </Grid>
 
             <Button
                 x:Name="btnAnalyze"
@@ -32,8 +47,46 @@
                 Clicked="OnAnalyzeButtonClicked"
                 HorizontalOptions="Fill" />
 
-            <Label
-                x:Name="lblResult" />
+            <CollectionView 
+                x:Name="clvResult">
+                <CollectionView.Header>
+                    <Grid ColumnDefinitions="100, 100, Auto">
+                        <Label
+                            Grid.Column="0"
+                            Text="Symbol ID"></Label>
+                        <Label
+                            Grid.Column="1"
+                            Text="Average amplitude"></Label>
+                        <Label
+                            Grid.Column="2"
+                            Text="{Binding 
+                                        Source={x:Reference pckGroupByPeriod}, 
+                                        Path=SelectedItem, 
+                                        StringFormat='Matched record count&#x0a;({0})'}">
+                        </Label>
+                    </Grid>
+                </CollectionView.Header>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid 
+                            HeightRequest="30"
+                            ColumnDefinitions="100, 100, Auto">
+                            <Label
+                                Grid.Column="0"
+                                Text="{Binding SymbolId, StringFormat='{0}'}"
+                                VerticalOptions="Center"></Label>
+                            <Label
+                                Grid.Column="1"
+                                Text="{Binding AverageAmplitudeInPercentage, StringFormat='{0:F2}%'}"
+                                VerticalOptions="Center"></Label>
+                            <Label
+                                Grid.Column="2"
+                                Text="{Binding MatchedRecordCount}"
+                                VerticalOptions="Center"></Label>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

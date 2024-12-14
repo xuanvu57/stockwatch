@@ -27,5 +27,11 @@
             public const string Success = "Success";
             public const string NotFound = "NoDataFound";
         }
+
+        public static class Format
+        {
+            public const string Date = "dd/MM/yyyy";
+            public const string Time = "HH:mm:ss";
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Application.Services
+﻿using Domain.Constants;
+
+namespace Application.Services
 {
     public static class StockRulesService
     {
@@ -17,5 +19,21 @@
         }
 
         public static decimal CalculatePercentage(decimal currentValue, decimal referencedValue) => (100 * currentValue / referencedValue) - 100;
+
+        public static DateOnly GetBeginningDateOfWeek(DateOnly date)
+        {
+            if (date.DayOfWeek == StockWatchConstants.BeginningDateOfWeek)
+                return date;
+
+            var beginningDate = date;
+            while (beginningDate.DayOfWeek != StockWatchConstants.BeginningDateOfWeek)
+            {
+                beginningDate = beginningDate.AddDays(-1);
+            }
+
+            return beginningDate;
+        }
+
+        public static DateOnly GetBeginningDateOfMonth(DateOnly date) => new(date.Year, date.Month, 1);
     }
 }
