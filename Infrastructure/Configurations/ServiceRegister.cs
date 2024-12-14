@@ -1,5 +1,5 @@
 ﻿using Application.Attributes;
-using Infrastructure.Services;
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using static Domain.Constants.StockWatchEnums;
 
@@ -7,10 +7,10 @@ namespace Infrastructure.Configurations
 {
     public static class ServiceRegister
     {
-        public static void RegisterDependencies(this IServiceCollection serviceCollection, Assembly presentationLayerAssembly = null)
+        public static void RegisterDependencies(this IServiceCollection serviceCollection, Assembly? presentationLayerAssembly = null)
         {
             var applicationAssembly = typeof(DIServiceAttribute).Assembly;
-            var infrastructureAssembly = typeof(ToastManagerService).Assembly;
+            var infrastructureAssembly = typeof(ServiceRegister).Assembly;
 
             serviceCollection.Scan(scrutor => scrutor
                 .FromAssemblies(applicationAssembly, infrastructureAssembly)

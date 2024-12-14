@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 
 namespace Infrastructure.Configurations
 {
@@ -7,11 +8,11 @@ namespace Infrastructure.Configurations
         private const string LogFolderName = "logs";
         private const string LogFileName = "log.txt";
 
-        public static void RegisterLogger(this IServiceCollection services)
+        public static void RegisterLogger(this IServiceCollection services, string appDataDirectory)
         {
             var logger = new LoggerConfiguration()
                 .WriteTo.Debug()
-                .WriteTo.File(Path.Combine(FileSystem.AppDataDirectory, LogFolderName, LogFileName), rollingInterval: RollingInterval.Day)
+                .WriteTo.File(Path.Combine(appDataDirectory, LogFolderName, LogFileName), rollingInterval: RollingInterval.Day)
                 .CreateLogger();
 
             services.AddSerilog(logger);

@@ -27,7 +27,7 @@ namespace stockwatch
             builder.Logging.AddDebug();
 #endif
 
-            builder.Services.RegisterLogger();
+            builder.Services.RegisterLogger(FileSystem.AppDataDirectory);
             builder.Services.RegisterDependencies(typeof(MauiProgram).Assembly);
             builder.Services.AddScoped<MainPage>();
             builder.Services.AddScoped<FindPotentialSymbolPage>();

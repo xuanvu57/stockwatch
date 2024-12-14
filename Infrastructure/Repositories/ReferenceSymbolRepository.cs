@@ -10,7 +10,8 @@ using static Domain.Constants.StockWatchEnums;
 namespace Infrastructure.Repositories
 {
     [DIService(DIServiceLifetime.Scoped)]
-    public class ReferenceSymbolRepository(ILogger<ReferenceSymbolRepository> logger, IToastManagerService toastManagerService) : BaseFileRepository("ReferenceSymbol.json"), IReferenceSymbolRepository
+    public class ReferenceSymbolRepository(ILogger<ReferenceSymbolRepository> logger, ILocalFileService localFileService, IToastManagerService toastManagerService) :
+        BaseFileRepository(localFileService, "ReferenceSymbol.json"), IReferenceSymbolRepository
     {
         public async Task<ReferenceSymbolEntity?> Get()
         {

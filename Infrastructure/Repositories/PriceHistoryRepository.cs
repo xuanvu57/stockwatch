@@ -1,5 +1,6 @@
 ﻿using Application.Attributes;
 using Application.Repositories.Interfaces;
+using Application.Services.Interfaces;
 using Domain.Entities;
 using Infrastructure.Repositories.Bases;
 using Microsoft.Extensions.Logging;
@@ -9,7 +10,7 @@ using static Domain.Constants.StockWatchEnums;
 namespace Infrastructure.Repositories
 {
     [DIService(DIServiceLifetime.Scoped)]
-    public class PriceHistoryRepository(ILogger<PriceHistoryRepository> logger) : BaseFileRepository("PriceHistory.json"), IPriceHistoryRepository
+    public class PriceHistoryRepository(ILogger<PriceHistoryRepository> logger, ILocalFileService localFileService) : BaseFileRepository(localFileService, "PriceHistory.json"), IPriceHistoryRepository
     {
         public async Task<IList<PriceHistoryEntity>> Get(int symbolId, DateTime fromTime, DateTime toTime)
         {

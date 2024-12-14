@@ -4,7 +4,7 @@ using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using static Domain.Constants.StockWatchEnums;
 
-namespace Infrastructure.Services
+namespace stockwatch.Services
 {
     [DIService(DIServiceLifetime.Scoped)]
     public class ToastManagerService : IToastManagerService
