@@ -11,8 +11,10 @@ using static Domain.Constants.StockWatchEnums;
 namespace Infrastructure.Services
 {
     [DIService(DIServiceLifetime.Scoped)]
-    public class SsiRealtimePriceService(ISsiClient ssiClient, IPriceHistoryRepository priceHistoryRepository, ILatestPriceRepository latestPriceRepository) :
-        AbstractRealtimePriceService(priceHistoryRepository, latestPriceRepository)
+    public class SsiRealtimePriceService(
+        ISsiClient ssiClient,
+        IRealtimePriceHistoryRepository priceHistoryRepository,
+        ILatestPriceRepository latestPriceRepository) : AbstractRealtimePriceService(priceHistoryRepository, latestPriceRepository)
     {
         override protected async Task<StockPriceInRealtime?> GetCurrentPriceBySymbolId(string symbolId)
         {
@@ -21,13 +23,13 @@ namespace Infrastructure.Services
 
         private async Task<StockPriceInRealtime?> GetCurrentPriceBySymbolIdFromSsi(string symbolId)
         {
-            var currentDate = StockRulesService.GetLatestAvailableDate();
+            var latestDate = StockRulesService.GetLatestAvailableDate();
 
-            var intradayOhlc = await ssiClient.IntradayOhlc(currentDate, currentDate, symbol: symbolId, pageIndex: 1, pageSize: 1);
+            var intradayOhlc = await ssiClient.IntradayOhlc(latestDate, latestDate, symbol: symbolId, pageIndex: 1, pageSize: 1);
 
             if (intradayOhlc.Status == SsiConstants.ResponseStatus.Success)
             {
-                var refPrice = await GetReferencePrice(symbolId, currentDate);
+                var refPrice = await GetReferencePrice(symbolId, latestDate);
 
                 return Convert(intradayOhlc.Data![0], refPrice);
             }

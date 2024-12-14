@@ -6,7 +6,9 @@ using Domain.Entities;
 
 namespace Application.Services.Abstracts
 {
-    public abstract class AbstractRealtimePriceService(IPriceHistoryRepository priceHistoryRepository, ILatestPriceRepository latestPriceRepository) : IRealtimePriceService
+    public abstract class AbstractRealtimePriceService(
+        IRealtimePriceHistoryRepository realtimePriceHistoryRepository,
+        ILatestPriceRepository latestPriceRepository) : IRealtimePriceService
     {
         protected readonly ILatestPriceRepository latestPriceRepository = latestPriceRepository;
 
@@ -36,7 +38,7 @@ namespace Application.Services.Abstracts
         {
             var priceHistory = stockPriceData.ToPriceHistoryEntity();
 
-            await priceHistoryRepository.Save(priceHistory);
+            await realtimePriceHistoryRepository.Save(priceHistory);
 
             await UpdateLatestPrice(stockPriceData);
         }

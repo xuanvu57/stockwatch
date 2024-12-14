@@ -35,7 +35,7 @@ namespace Application.Dtos
                 };
         }
 
-        public PriceHistoryEntity ToPriceHistoryEntity()
+        public RealtimePriceHistoryEntity ToPriceHistoryEntity()
         {
             return new()
             {

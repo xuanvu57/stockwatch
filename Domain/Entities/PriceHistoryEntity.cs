@@ -2,7 +2,7 @@
 
 namespace Domain.Entities
 {
-    public record PriceHistoryEntity : StockPriceBaseEntity
+    public record RealtimePriceHistoryEntity : StockPriceBaseEntity
     {
         public decimal? RefPrice { get; init; }
         public decimal? PriceChange { get; init; }

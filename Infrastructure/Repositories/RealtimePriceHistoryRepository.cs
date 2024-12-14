@@ -10,16 +10,18 @@ using static Domain.Constants.StockWatchEnums;
 namespace Infrastructure.Repositories
 {
     [DIService(DIServiceLifetime.Scoped)]
-    public class PriceHistoryRepository(ILogger<PriceHistoryRepository> logger, ILocalFileService localFileService) : BaseFileRepository(localFileService, "PriceHistory.json"), IPriceHistoryRepository
+    public class RealtimePriceHistoryRepository(
+        ILogger<RealtimePriceHistoryRepository> logger,
+        ILocalFileService localFileService) : BaseFileRepository(localFileService, "RealtimePriceHistory.json"), IRealtimePriceHistoryRepository
     {
-        public async Task<IList<PriceHistoryEntity>> Get(int symbolId, DateTime fromTime, DateTime toTime)
+        public async Task<IList<RealtimePriceHistoryEntity>> Get(int symbolId, DateTime fromTime, DateTime toTime)
         {
-            var prices = new List<PriceHistoryEntity>();
+            var prices = new List<RealtimePriceHistoryEntity>();
 
             return await Task.FromResult(prices);
         }
 
-        public async Task Save(PriceHistoryEntity priceHistory)
+        public async Task Save(RealtimePriceHistoryEntity priceHistory)
         {
             try
             {
@@ -28,7 +30,7 @@ namespace Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, $"Error in saving {nameof(PriceHistoryEntity)}");
+                logger.LogError(ex, $"Error in saving {nameof(RealtimePriceHistoryEntity)}");
             }
         }
     }

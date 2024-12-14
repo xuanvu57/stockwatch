@@ -13,11 +13,11 @@ namespace Infrastructure.Repositories
 
         public async Task<LatestPriceEntity?> Get(string symbolId)
         {
-            var currentDate = StockRulesService.GetLatestAvailableDate();
+            var latestDate = StockRulesService.GetLatestAvailableDate();
 
             latestPriceDictionary.TryGetValue(symbolId, out var latestPrice);
 
-            if (latestPrice is not null && DateOnly.FromDateTime(latestPrice.AtTime) < currentDate)
+            if (latestPrice is not null && DateOnly.FromDateTime(latestPrice.AtTime) < latestDate)
             {
                 latestPriceDictionary.Remove(symbolId);
 
