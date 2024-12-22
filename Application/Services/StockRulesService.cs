@@ -18,7 +18,7 @@ namespace Application.Services
             return DateOnly.FromDateTime(latestAvailableDate);
         }
 
-        public static decimal CalculatePercentage(decimal currentValue, decimal referencedValue) => (100 * currentValue / referencedValue) - 100;
+        public static decimal CalculatePercentage(decimal value, decimal referencedValue) => (100 * value / referencedValue) - 100;
 
         public static DateOnly GetBeginningDateOfWeek(DateOnly date)
         {

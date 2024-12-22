@@ -6,26 +6,40 @@
         {
             Singleton,
             Scoped,
-            Transient
+            Transient,
         }
 
-        public enum NotificationTypes
+        public enum UpDownStatus
         {
             Up,
-            Down
+            Down,
+        }
+
+        public enum PriceTypes
+        {
+            Price,
+            HighestPrice,
+            LowestPrice,
         }
 
         public enum RequestInputTypes
         {
             Parameter,
-            JsonBody
+            JsonBody,
         }
 
         public enum GroupPriceDataBy
         {
             Day,
             Week,
-            Month
+            Month,
+        }
+
+        public enum PotentialAlgorithm
+        {
+            Amplitude,
+            ContinuouslyUp,
+            ContinuouslyDown,
         }
     }
 }

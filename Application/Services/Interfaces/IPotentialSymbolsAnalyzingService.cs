@@ -1,10 +1,10 @@
-﻿using Application.Dtos;
-using static Domain.Constants.StockWatchEnums;
+﻿using Application.Dtos.Requests;
+using Application.Dtos.Responses;
 
 namespace Application.Services.Interfaces
 {
     public interface IPotentialSymbolsAnalyzingService
     {
-        public Task<IEnumerable<PotentialSymbol>> Analyze(string market, int months, decimal expectedAmplitudeInPercentage, GroupPriceDataBy groupPriceDataBy);
+        public Task<PotentialSymbolResponse> Analyze(PotentialSymbolRequest request);
     }
 }

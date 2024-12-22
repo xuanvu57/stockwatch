@@ -65,7 +65,7 @@ namespace Application.Services.Abstracts
         {
             return new()
             {
-                Time = DateTime.Now,
+                AtTime = DateTime.Now,
                 Symbols = stockPrice is null ? [] : [stockPrice]
             };
         }

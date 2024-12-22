@@ -144,7 +144,7 @@ namespace stockwatch.Pages
                     await stockAnalyzorService.Analyze(stockData.Symbols.First(), targetSymbol);
                 }
 
-                SetLatestDataForUI(stockData.Symbols.FirstOrDefault(), stockData.Time);
+                SetLatestDataForUI(stockData.Symbols.FirstOrDefault(), stockData.AtTime);
             }
             catch (Exception ex)
             {

@@ -7,7 +7,7 @@
         <VerticalStackLayout
             Padding="10,0"
             Spacing="25">
-            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto, Auto">
+            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto, Auto, Auto">
                 <Label 
                     Grid.Row="0" Grid.Column="0"
                     VerticalTextAlignment="Center"
@@ -39,6 +39,21 @@
                         <x:String>Month</x:String>
                     </Picker.Items>
                 </Picker>
+
+                <Label 
+                    Grid.Row="2" Grid.Column="0"
+                    VerticalTextAlignment="Center"
+                    Text="Algorithm "/>
+                <Picker
+                    Grid.Row="2" Grid.Column="1"
+                    x:Name="pckAlgorithm"
+                    Title="Select an analysis algorithm">
+                    <Picker.Items>
+                        <x:String>Amplitude</x:String>
+                        <x:String>ContinuouslyUp</x:String>
+                        <x:String>ContinuouslyDown</x:String>
+                    </Picker.Items>
+                </Picker>
             </Grid>
 
             <Button
@@ -56,13 +71,13 @@
                             Text="Symbol ID"></Label>
                         <Label
                             Grid.Column="1"
-                            Text="Average amplitude"></Label>
+                            Text="High/Low"></Label>
                         <Label
                             Grid.Column="2"
                             Text="{Binding 
                                         Source={x:Reference pckGroupByPeriod}, 
                                         Path=SelectedItem, 
-                                        StringFormat='Matched record count&#x0a;({0})'}">
+                                        StringFormat='Matched count ({0})'}">
                         </Label>
                     </Grid>
                 </CollectionView.Header>

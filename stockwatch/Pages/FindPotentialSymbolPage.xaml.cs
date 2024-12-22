@@ -1,3 +1,4 @@
+using Application.Dtos.Requests;
 using Application.Services.Interfaces;
 using static Domain.Constants.StockWatchEnums;
 
@@ -19,25 +20,49 @@ public partial class FindPotentialSymbolPage : ContentPage
 
     private async void OnAnalyzeButtonClicked(object sender, EventArgs e)
     {
-        var market = pckMarket.SelectedItem.ToString();
-        var groupBy = ConvertPeriodToGroupPriceData(pckGroupByPeriod.SelectedItem.ToString());
 
         await loadingService.Show();
 
-        var potentialSymbols = await potentialSymbolsAnalyzingService.Analyze(market!, 1, 5, groupBy);
+        var request = CreateRequest();
+        var potentialSymbols = await potentialSymbolsAnalyzingService.Analyze(request);
 
-        clvResult.ItemsSource = potentialSymbols;
+        clvResult.ItemsSource = potentialSymbols.PotentialSymbols;
 
         await loadingService.Hide();
     }
 
-    private static GroupPriceDataBy ConvertPeriodToGroupPriceData(string? period)
+    private PotentialSymbolRequest CreateRequest()
     {
-        if (!Enum.TryParse(typeof(GroupPriceDataBy), period, out var groupBy))
+        var market = pckMarket.SelectedItem.ToString() ?? "";
+        var groupBy = ConvertPeriodToGroupPriceData(pckGroupByPeriod.SelectedItem.ToString());
+        var algorithm = ConvertToPotentialAlgorithm(pckAlgorithm.SelectedItem.ToString());
+
+        return new()
+        {
+            Algorithm = algorithm,
+            ExpectedPercentage = 5,
+            GroupDataBy = groupBy,
+            Market = market,
+        };
+    }
+
+    private static GroupPriceDataBy ConvertPeriodToGroupPriceData(string? periodName)
+    {
+        if (!Enum.TryParse(typeof(GroupPriceDataBy), periodName, out var groupBy))
         {
             groupBy = GroupPriceDataBy.Day;
         }
 
         return (GroupPriceDataBy)groupBy;
+    }
+
+    private static PotentialAlgorithm ConvertToPotentialAlgorithm(string? algorithmName)
+    {
+        if (!Enum.TryParse(typeof(PotentialAlgorithm), algorithmName, out var algorithm))
+        {
+            algorithm = PotentialAlgorithm.Amplitude;
+        }
+
+        return (PotentialAlgorithm)algorithm;
     }
 }

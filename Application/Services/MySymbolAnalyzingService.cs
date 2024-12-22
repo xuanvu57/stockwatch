@@ -16,11 +16,11 @@ namespace Application.Services
 
             if (stockPrice.Price > ceilingPrice)
             {
-                await pushNotificationService.Notify(stockPrice, NotificationTypes.Up);
+                await pushNotificationService.Notify(stockPrice, UpDownStatus.Up);
             }
             else if (stockPrice.Price < floorPrice)
             {
-                await pushNotificationService.Notify(stockPrice, NotificationTypes.Down);
+                await pushNotificationService.Notify(stockPrice, UpDownStatus.Down);
             }
         }
     }
