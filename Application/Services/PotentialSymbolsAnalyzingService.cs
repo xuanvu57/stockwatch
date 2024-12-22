@@ -16,11 +16,11 @@ namespace Application.Services
             Dictionary<string, IEnumerable<StockPriceHistory>> priceHistory;
             if (string.IsNullOrEmpty(request.Market))
             {
-                priceHistory = await priceHistoryCollectingService.GetByMarket(request.Market, request.Months);
+                priceHistory = await priceHistoryCollectingService.GetBySymbols(request.Symbols, request.Months);
             }
             else
             {
-                priceHistory = await priceHistoryCollectingService.GetBySymbols(request.Symbols, request.Months);
+                priceHistory = await priceHistoryCollectingService.GetByMarket(request.Market, request.Months);
             }
 
             var validPrices = AnalyzeBaseOnPriceHistory(priceHistory, request);

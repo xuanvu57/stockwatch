@@ -33,10 +33,10 @@ public partial class FindPotentialSymbolPage : ContentPage
 
     private PotentialSymbolRequest CreateRequest()
     {
-        var market = pckMarket.SelectedItem.ToString() ?? string.Empty;
-        var groupBy = StockRulesService.ConvertToEnum<GroupPriceDataBy>(pckGroupByPeriod.SelectedItem.ToString());
-        var algorithm = StockRulesService.ConvertToEnum<PotentialAlgorithm>(pckAlgorithm.SelectedItem.ToString());
-        var priceType = StockRulesService.ConvertToEnum<PriceTypes>(pckPriceType.SelectedItem.ToString());
+        var market = pckMarket.SelectedItem?.ToString() ?? string.Empty;
+        var groupBy = StockRulesService.ConvertToEnum<GroupPriceDataBy>(pckGroupByPeriod.SelectedItem);
+        var algorithm = StockRulesService.ConvertToEnum<PotentialAlgorithm>(pckAlgorithm.SelectedItem);
+        var priceType = StockRulesService.ConvertToEnum<PriceTypes>(pckPriceType.SelectedItem);
         var expectedPercentage = decimal.Parse(entExpectedPercentage.Text?.Replace(",", string.Empty) ?? "0");
 
         return new()
