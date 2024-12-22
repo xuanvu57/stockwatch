@@ -1,4 +1,5 @@
 using Application.Dtos.Requests;
+using Application.Services;
 using Application.Services.Interfaces;
 using static Domain.Constants.StockWatchEnums;
 
@@ -32,36 +33,19 @@ public partial class FindPotentialSymbolPage : ContentPage
 
     private PotentialSymbolRequest CreateRequest()
     {
-        var market = pckMarket.SelectedItem.ToString() ?? "";
-        var groupBy = ConvertPeriodToGroupPriceData(pckGroupByPeriod.SelectedItem.ToString());
-        var algorithm = ConvertToPotentialAlgorithm(pckAlgorithm.SelectedItem.ToString());
+        var market = pckMarket.SelectedItem.ToString() ?? string.Empty;
+        var groupBy = StockRulesService.ConvertToEnum<GroupPriceDataBy>(pckGroupByPeriod.SelectedItem.ToString());
+        var algorithm = StockRulesService.ConvertToEnum<PotentialAlgorithm>(pckAlgorithm.SelectedItem.ToString());
+        var priceType = StockRulesService.ConvertToEnum<PriceTypes>(pckPriceType.SelectedItem.ToString());
+        var expectedPercentage = decimal.Parse(entExpectedPercentage.Text?.Replace(",", string.Empty) ?? "0");
 
         return new()
         {
             Algorithm = algorithm,
-            ExpectedPercentage = 5,
+            ExpectedPercentage = expectedPercentage,
             GroupDataBy = groupBy,
             Market = market,
+            PriceType = priceType
         };
-    }
-
-    private static GroupPriceDataBy ConvertPeriodToGroupPriceData(string? periodName)
-    {
-        if (!Enum.TryParse(typeof(GroupPriceDataBy), periodName, out var groupBy))
-        {
-            groupBy = GroupPriceDataBy.Day;
-        }
-
-        return (GroupPriceDataBy)groupBy;
-    }
-
-    private static PotentialAlgorithm ConvertToPotentialAlgorithm(string? algorithmName)
-    {
-        if (!Enum.TryParse(typeof(PotentialAlgorithm), algorithmName, out var algorithm))
-        {
-            algorithm = PotentialAlgorithm.Amplitude;
-        }
-
-        return (PotentialAlgorithm)algorithm;
     }
 }

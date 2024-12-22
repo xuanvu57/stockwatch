@@ -6,54 +6,61 @@
     <ScrollView>
         <VerticalStackLayout
             Padding="10,0"
-            Spacing="25">
-            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto, Auto, Auto">
-                <Label 
-                    Grid.Row="0" Grid.Column="0"
-                    VerticalTextAlignment="Center"
-                    Text="Market "/>
-                <Picker
-                    Grid.Row="0" Grid.Column="1"
-                    x:Name="pckMarket"
-                    Title="Select a market">
-                    <Picker.Items>
-                        <x:String>HOSE</x:String>
-                        <x:String>HNX</x:String>
-                        <x:String>UPCOM</x:String>
-                        <x:String>DER</x:String>
-                        <x:String>BOND</x:String>
-                    </Picker.Items>
-                </Picker>
-                
-                <Label 
-                    Grid.Row="1" Grid.Column="0"
-                    VerticalTextAlignment="Center"
-                    Text="Group by"/>
-                <Picker
-                    Grid.Row="1" Grid.Column="1"
-                    x:Name="pckGroupByPeriod"
-                    Title="Period ">
-                    <Picker.Items>
-                        <x:String>Day</x:String>
-                        <x:String>Week</x:String>
-                        <x:String>Month</x:String>
-                    </Picker.Items>
-                </Picker>
+            Spacing="10">
+            <Picker
+                x:Name="pckMarket"
+                Title="Market">
+                <Picker.Items>
+                    <x:String>HOSE</x:String>
+                    <x:String>HNX</x:String>
+                    <x:String>UPCOM</x:String>
+                    <x:String>DER</x:String>
+                    <x:String>BOND</x:String>
+                </Picker.Items>
+            </Picker>
 
+            <Picker
+                x:Name="pckGroupByPeriod"
+                Title="Period">
+                <Picker.Items>
+                    <x:String>Day</x:String>
+                    <x:String>Week</x:String>
+                    <x:String>Month</x:String>
+                </Picker.Items>
+            </Picker>
+
+            <Picker
+                x:Name="pckAlgorithm"
+                Title="Analysis algorithm">
+                <Picker.Items>
+                    <x:String>Amplitude</x:String>
+                    <x:String>ContinuouslyUp</x:String>
+                    <x:String>ContinuouslyDown</x:String>
+                </Picker.Items>
+            </Picker>
+
+            <Picker
+                x:Name="pckPriceType"
+                Title="Price type">
+                <Picker.Items>
+                    <x:String>Price</x:String>
+                    <x:String>HighestPrice</x:String>
+                    <x:String>LowestPrice</x:String>
+                </Picker.Items>
+            </Picker>
+
+            <Grid ColumnDefinitions="Auto, Auto" RowDefinitions="Auto">
+                <Entry
+                    Grid.Row="0" Grid.Column="0"
+                    WidthRequest="80"
+                    x:Name="entExpectedPercentage"
+                    Placeholder="Expected min percentage"
+                    Keyboard="Numeric"
+                    Text="5"/>
                 <Label 
-                    Grid.Row="2" Grid.Column="0"
+                    Grid.Row="0" Grid.Column="1"
                     VerticalTextAlignment="Center"
-                    Text="Algorithm "/>
-                <Picker
-                    Grid.Row="2" Grid.Column="1"
-                    x:Name="pckAlgorithm"
-                    Title="Select an analysis algorithm">
-                    <Picker.Items>
-                        <x:String>Amplitude</x:String>
-                        <x:String>ContinuouslyUp</x:String>
-                        <x:String>ContinuouslyDown</x:String>
-                    </Picker.Items>
-                </Picker>
+                    Text=" %"/>
             </Grid>
 
             <Button
