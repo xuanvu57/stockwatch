@@ -16,12 +16,11 @@ namespace Infrastructure.Services
         {
             var stockPriceHistoryByMarket = new Dictionary<string, IEnumerable<StockPriceHistory>>();
 
-            var pageIndex = 1;
-            // TODO: debugging
-            var pageSize = 10;
-            //var pageSize = SsiConstants.Request.DefaultPageSize;
+            // TODO: debugging, add fix number
+            var pageIndex = 1_000_000;      //SsiConstants.Request.DefaultPageIndex;
+            var pageSize = 10;              //SsiConstants.Request.DefaultPageSize;
 
-            var response = await ssiClient.Securities(market, pageIndex, pageSize);
+            var response = await ssiClient.Securities(market, 1, pageSize);
             while (response.Status == SsiConstants.ResponseStatus.Success &&
                 response.Data is not null &&
                 response.Data.Length > 0)
@@ -31,9 +30,6 @@ namespace Infrastructure.Services
                 {
                     stockPriceHistoryByMarket.Add(key, stockPrices[key]);
                 }
-
-                // TODO: debugging
-                break;
 
                 pageIndex++;
                 if (pageIndex * pageSize > response.TotalRecord)

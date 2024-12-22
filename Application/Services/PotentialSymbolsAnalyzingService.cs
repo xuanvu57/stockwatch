@@ -11,7 +11,7 @@ namespace Application.Services
     [DIService(DIServiceLifetime.Scoped)]
     public class PotentialSymbolsAnalyzingService(IPriceHistoryCollectingService priceHistoryCollectingService, IPotentialSymbolsAlgorithmFactory algorithmFactory) : IPotentialSymbolsAnalyzingService
     {
-        public async Task<PotentialSymbolResponse> Analyze(PotentialSymbolRequest request)
+        public async Task<BaseResponse<PotentialSymbol>> Analyze(PotentialSymbolRequest request)
         {
             Dictionary<string, IEnumerable<StockPriceHistory>> priceHistory;
             if (string.IsNullOrEmpty(request.Market))
@@ -46,12 +46,11 @@ namespace Application.Services
             return potentialSymbols;
         }
 
-        private static PotentialSymbolResponse ConvertToResponse(IEnumerable<PotentialSymbol> potentialSymbols)
+        private static BaseResponse<PotentialSymbol> ConvertToResponse(IEnumerable<PotentialSymbol> potentialSymbols)
         {
             return new()
             {
-                AtTime = DateTime.Now,
-                PotentialSymbols = potentialSymbols is null ? [] : potentialSymbols
+                Data = potentialSymbols is null ? [] : potentialSymbols
             };
         }
     }

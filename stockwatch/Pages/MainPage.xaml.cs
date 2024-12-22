@@ -139,12 +139,12 @@ namespace stockwatch.Pages
 
                 var stockData = await stockDataService.GetBySymbolId(targetSymbol.SymbolId);
 
-                if (stockData.Symbols.Any())
+                if (stockData.Data.Any())
                 {
-                    await stockAnalyzorService.Analyze(stockData.Symbols.First(), targetSymbol);
+                    await stockAnalyzorService.Analyze(stockData.Data.First(), targetSymbol);
                 }
 
-                SetLatestDataForUI(stockData.Symbols.FirstOrDefault(), stockData.AtTime);
+                SetLatestDataForUI(stockData.Data.FirstOrDefault(), stockData.AtTime);
             }
             catch (Exception ex)
             {

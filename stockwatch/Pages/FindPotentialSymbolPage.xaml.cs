@@ -20,13 +20,12 @@ public partial class FindPotentialSymbolPage : ContentPage
 
     private async void OnAnalyzeButtonClicked(object sender, EventArgs e)
     {
-
         await loadingService.Show();
 
         var request = CreateRequest();
         var potentialSymbols = await potentialSymbolsAnalyzingService.Analyze(request);
 
-        clvResult.ItemsSource = potentialSymbols.PotentialSymbols;
+        clvResult.ItemsSource = potentialSymbols.Data;
 
         await loadingService.Hide();
     }

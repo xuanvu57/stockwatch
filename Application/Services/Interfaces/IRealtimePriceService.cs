@@ -1,9 +1,10 @@
-﻿using Application.Dtos.Responses;
+﻿using Application.Dtos;
+using Application.Dtos.Responses;
 
 namespace Application.Services.Interfaces
 {
     public interface IRealtimePriceService
     {
-        public Task<StockWatchResponse> GetBySymbolId(string symbolId);
+        public Task<BaseResponse<StockPriceInRealtime>> GetBySymbolId(string symbolId);
     }
 }

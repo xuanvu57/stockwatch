@@ -12,7 +12,7 @@ namespace Application.Services.Abstracts
     {
         protected readonly ILatestPriceRepository latestPriceRepository = latestPriceRepository;
 
-        public async Task<StockWatchResponse> GetBySymbolId(string symbolId)
+        public async Task<BaseResponse<StockPriceInRealtime>> GetBySymbolId(string symbolId)
         {
             var stockPriceData = await GetCurrentPriceBySymbolId(symbolId);
             var latestPriceInMemory = await latestPriceRepository.Get(symbolId);
@@ -61,12 +61,11 @@ namespace Application.Services.Abstracts
             return stockPrice.Price != latestPrice.Price;
         }
 
-        private static StockWatchResponse ConvertToResponse(StockPriceInRealtime? stockPrice)
+        private static BaseResponse<StockPriceInRealtime> ConvertToResponse(StockPriceInRealtime? stockPrice)
         {
             return new()
             {
-                AtTime = DateTime.Now,
-                Symbols = stockPrice is null ? [] : [stockPrice]
+                Data = stockPrice is null ? [] : [stockPrice]
             };
         }
     }
