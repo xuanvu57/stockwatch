@@ -1,5 +1,5 @@
 using Application.Dtos.Requests;
-using Application.Services;
+using Application.Extensions;
 using Application.Services.Interfaces;
 using static Domain.Constants.StockWatchEnums;
 
@@ -9,6 +9,11 @@ public partial class FindPotentialSymbolPage : ContentPage
 {
     private readonly ILoadingService loadingService;
     private readonly IPotentialSymbolsAnalyzingService potentialSymbolsAnalyzingService;
+
+    public static IEnumerable<string> Markets { get; } = Enum<Market>.ToDescriptions();
+    public static IEnumerable<string> Periods { get; } = Enum<GroupPriceDataBy>.ToDescriptions();
+    public static IEnumerable<string> PotentialAlgorithms { get; } = Enum<PotentialAlgorithm>.ToDescriptions();
+    public static IEnumerable<string> PriceTypes { get; } = Enum<PriceType>.ToDescriptions();
 
     public FindPotentialSymbolPage(
         ILoadingService loadingService,
@@ -34,9 +39,9 @@ public partial class FindPotentialSymbolPage : ContentPage
     private PotentialSymbolRequest CreateRequest()
     {
         var market = pckMarket.SelectedItem?.ToString() ?? string.Empty;
-        var groupBy = StockRulesService.ConvertToEnum<GroupPriceDataBy>(pckGroupByPeriod.SelectedItem);
-        var algorithm = StockRulesService.ConvertToEnum<PotentialAlgorithm>(pckAlgorithm.SelectedItem);
-        var priceType = StockRulesService.ConvertToEnum<PriceTypes>(pckPriceType.SelectedItem);
+        var groupBy = Enum<GroupPriceDataBy>.ToEnum(pckGroupByPeriod.SelectedItem);
+        var algorithm = Enum<PotentialAlgorithm>.ToEnum(pckAlgorithm.SelectedItem);
+        var priceType = Enum<PriceType>.ToEnum(pckPriceType.SelectedItem);
         var expectedPercentage = decimal.Parse(entExpectedPercentage.Text?.Replace(",", string.Empty) ?? "0");
 
         return new()

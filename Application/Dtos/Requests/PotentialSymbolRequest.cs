@@ -10,7 +10,7 @@ namespace Application.Dtos.Requests
         public int Months { get; init; } = StockWatchConstants.DefaultMonthToAnalyzePotentialSymbol;
         public GroupPriceDataBy GroupDataBy { get; init; } = GroupPriceDataBy.Day;
         public PotentialAlgorithm Algorithm { get; init; } = PotentialAlgorithm.Amplitude;
-        public PriceTypes PriceType { get; init; } = PriceTypes.Price;
+        public PriceType PriceType { get; init; } = PriceType.Price;
         public decimal ExpectedPercentage { get; init; }
 
     }

@@ -35,15 +35,5 @@ namespace Application.Services
         }
 
         public static DateOnly GetBeginningDateOfMonth(DateOnly date) => new(date.Year, date.Month, 1);
-
-        public static T ConvertToEnum<T>(object? enumName) where T : Enum
-        {
-            if (!Enum.TryParse(typeof(T), enumName?.ToString(), out var value))
-            {
-                value = 0;
-            }
-
-            return (T)value;
-        }
     }
 }

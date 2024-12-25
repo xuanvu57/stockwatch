@@ -45,12 +45,12 @@ namespace Application.Algorithms
 
             return validHitoreis;
         }
-        private static decimal GetPriceByType(StockPriceHistory priceHistory, PriceTypes priceType)
+        private static decimal GetPriceByType(StockPriceHistory priceHistory, PriceType priceType)
         {
             return priceType switch
             {
-                PriceTypes.HighestPrice => priceHistory.HighestPrice,
-                PriceTypes.LowestPrice => priceHistory.LowestPrice,
+                PriceType.HighestPrice => priceHistory.HighestPrice,
+                PriceType.LowestPrice => priceHistory.LowestPrice,
                 _ => priceHistory.Price
             };
         }

@@ -1,52 +1,50 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converter="clr-namespace:stockwatch.ValueConverters"
+             xmlns:local="clr-namespace:stockwatch.Pages"
              x:Class="stockwatch.Pages.FindPotentialSymbolPage"
              Title="Potential symbols">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converter:EqualConverter x:Key="EqualConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
     <ScrollView>
         <VerticalStackLayout
             Padding="10,0"
             Spacing="10">
             <Picker
                 x:Name="pckMarket"
-                Title="Market">
-                <Picker.Items>
-                    <x:String>HOSE</x:String>
-                    <x:String>HNX</x:String>
-                    <x:String>UPCOM</x:String>
-                    <x:String>DER</x:String>
-                    <x:String>BOND</x:String>
-                </Picker.Items>
+                ItemsSource="{Binding Source={x:Static local:FindPotentialSymbolPage.Markets}}"
+                SelectedIndex="0"
+                Title="Market (default HOSE)">
             </Picker>
 
             <Picker
                 x:Name="pckGroupByPeriod"
-                Title="Period">
-                <Picker.Items>
-                    <x:String>Day</x:String>
-                    <x:String>Week</x:String>
-                    <x:String>Month</x:String>
-                </Picker.Items>
+                ItemsSource="{Binding Source={x:Static local:FindPotentialSymbolPage.Periods}}"
+                SelectedIndex="0"
+                Title="Period (default Day)">
             </Picker>
 
             <Picker
                 x:Name="pckAlgorithm"
-                Title="Analysis algorithm">
-                <Picker.Items>
-                    <x:String>Amplitude</x:String>
-                    <x:String>ContinuouslyUp</x:String>
-                    <x:String>ContinuouslyDown</x:String>
-                </Picker.Items>
+                ItemsSource="{Binding Source={x:Static local:FindPotentialSymbolPage.PotentialAlgorithms}}"
+                SelectedIndex="0"
+                Title="Analysis algorithm (default Amplitude)">                
             </Picker>
 
             <Picker
+                IsVisible="{Binding Source={x:Reference pckAlgorithm},
+                                    Path=SelectedItem,
+                                    Converter={x:StaticResource EqualConverter},
+                                    ConverterParameter='Amplitude'}"
+                ItemsSource="{Binding Source={x:Static local:FindPotentialSymbolPage.PriceTypes}}"
+                SelectedIndex="0"
                 x:Name="pckPriceType"
-                Title="Price type">
-                <Picker.Items>
-                    <x:String>Price</x:String>
-                    <x:String>HighestPrice</x:String>
-                    <x:String>LowestPrice</x:String>
-                </Picker.Items>
+                Title="Price type (default Price)">
             </Picker>
 
             <Grid ColumnDefinitions="Auto, Auto" RowDefinitions="Auto">
@@ -75,12 +73,15 @@
                     <Grid ColumnDefinitions="100, 100, Auto">
                         <Label
                             Grid.Column="0"
+                            FontAttributes="Bold"
                             Text="Symbol ID"></Label>
                         <Label
                             Grid.Column="1"
+                            FontAttributes="Bold"
                             Text="High/Low"></Label>
                         <Label
                             Grid.Column="2"
+                            FontAttributes="Bold"
                             Text="{Binding 
                                         Source={x:Reference pckGroupByPeriod}, 
                                         Path=SelectedItem, 
