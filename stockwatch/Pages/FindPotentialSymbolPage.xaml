@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:converter="clr-namespace:stockwatch.ValueConverters"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:local="clr-namespace:stockwatch.Pages"
              x:Class="stockwatch.Pages.FindPotentialSymbolPage"
              Title="Potential symbols">
     <ContentPage.Resources>
         <ResourceDictionary>
-            <converter:EqualConverter x:Key="EqualConverter" />
+            <toolkit:IsEqualConverter x:Key="IsEqualConverter" />
+            <toolkit:IsNotEqualConverter x:Key="IsNotEqualConverter" />
+            <toolkit:BoolToObjectConverter x:Key="FavoriteConverter" 
+                                           TrueObject="favorite_empty.png"
+                                           FalseObject="favorite_full.png"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 
     <ScrollView>
         <VerticalStackLayout
-            Padding="10,0"
+            Padding="5,0"
             Spacing="10">
             <Picker
                 x:Name="pckMarket"
@@ -37,13 +41,13 @@
             </Picker>
 
             <Picker
-                IsVisible="{Binding Source={x:Reference pckAlgorithm},
-                                    Path=SelectedItem,
-                                    Converter={x:StaticResource EqualConverter},
-                                    ConverterParameter='Amplitude'}"
+                x:Name="pckPriceType"
                 ItemsSource="{Binding Source={x:Static local:FindPotentialSymbolPage.PriceTypes}}"
                 SelectedIndex="0"
-                x:Name="pckPriceType"
+                IsVisible="{Binding Source={x:Reference pckAlgorithm},
+                                    Path=SelectedItem,
+                                    Converter={x:StaticResource IsEqualConverter},
+                                    ConverterParameter='Amplitude'}"
                 Title="Price type (default Price)">
             </Picker>
 
@@ -70,9 +74,14 @@
             <CollectionView 
                 x:Name="clvResult">
                 <CollectionView.Header>
-                    <Grid ColumnDefinitions="100, 100, Auto">
+                    <Grid 
+                        ColumnDefinitions="100, 100, *"
+                        IsVisible="{Binding Source={x:Reference clvResult}, 
+                                            Path=ItemsSource,
+                                            Converter={x:StaticResource IsNotEqualConverter}}">
                         <Label
                             Grid.Column="0"
+                            Margin="4, 0, 0, 0"
                             FontAttributes="Bold"
                             Text="Symbol ID"></Label>
                         <Label
@@ -85,28 +94,45 @@
                             Text="{Binding 
                                         Source={x:Reference pckGroupByPeriod}, 
                                         Path=SelectedItem, 
-                                        StringFormat='Matched count ({0})'}">
-                        </Label>
+                                        StringFormat='Matched count ({0})'}"></Label>
                     </Grid>
                 </CollectionView.Header>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Grid 
-                            HeightRequest="30"
-                            ColumnDefinitions="100, 100, Auto">
-                            <Label
-                                Grid.Column="0"
-                                Text="{Binding SymbolId, StringFormat='{0}'}"
-                                VerticalOptions="Center"></Label>
-                            <Label
-                                Grid.Column="1"
-                                Text="{Binding AverageAmplitudeInPercentage, StringFormat='{0:F2}%'}"
-                                VerticalOptions="Center"></Label>
-                            <Label
-                                Grid.Column="2"
-                                Text="{Binding MatchedRecordCount}"
-                                VerticalOptions="Center"></Label>
-                        </Grid>
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem
+                                        Invoked="FavoriteItem_Invoked"
+                                        CommandParameter="{Binding .}"
+                                        Text="Favorite"
+                                        IconImageSource="{Binding IsFavorite, Converter={x:StaticResource FavoriteConverter}}"
+                                        BackgroundColor="LightGreen"
+                                        ></SwipeItem>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+
+                            <Grid 
+                                ColumnDefinitions="100, 100, *"
+                                BackgroundColor="WhiteSmoke"
+                                HeightRequest="40"
+                                Margin="0, 1, 0, 1">
+                                <Label
+                                    Grid.Column="0"
+                                    Margin="4, 0, 0, 0"
+                                    Text="{Binding SymbolId, StringFormat='{0}'}"
+                                    VerticalOptions="Center"></Label>
+                                <Label
+                                    Grid.Column="1"
+                                    Text="{Binding AverageAmplitudeInPercentage, StringFormat='{0:F2}%'}"
+                                    VerticalOptions="Center"></Label>
+                                <Label
+                                    Grid.Column="2"
+                                    Text="{Binding MatchedRecordCount}"
+                                    VerticalOptions="Center"></Label>
+                            </Grid>
+                        </SwipeView>
+                        
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

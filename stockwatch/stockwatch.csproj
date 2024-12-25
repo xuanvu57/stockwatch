@@ -57,13 +57,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Remove="appsettings.json" />
-	  <None Remove="appsettings.local.json" />
-	  <None Remove="Resources\Images\find_stock.png" />
-	  <None Remove="Resources\Images\my_stock.png" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <EmbeddedResource Include="appsettings.json">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </EmbeddedResource>

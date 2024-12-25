@@ -1,3 +1,4 @@
+using Application.Dtos;
 using Application.Dtos.Requests;
 using Application.Extensions;
 using Application.Services.Interfaces;
@@ -8,6 +9,7 @@ namespace stockwatch.Pages;
 public partial class FindPotentialSymbolPage : ContentPage
 {
     private readonly ILoadingService loadingService;
+    private readonly IToastManagerService toastManagerService;
     private readonly IPotentialSymbolsAnalyzingService potentialSymbolsAnalyzingService;
 
     public static IEnumerable<string> Markets { get; } = Enum<Market>.ToDescriptions();
@@ -17,10 +19,12 @@ public partial class FindPotentialSymbolPage : ContentPage
 
     public FindPotentialSymbolPage(
         ILoadingService loadingService,
+        IToastManagerService toastManagerService,
         IPotentialSymbolsAnalyzingService potentialSymbolsAnalyzingService)
     {
         InitializeComponent();
         this.loadingService = loadingService;
+        this.toastManagerService = toastManagerService;
         this.potentialSymbolsAnalyzingService = potentialSymbolsAnalyzingService;
     }
 
@@ -52,5 +56,13 @@ public partial class FindPotentialSymbolPage : ContentPage
             Market = market,
             PriceType = priceType
         };
+    }
+
+    private void FavoriteItem_Invoked(object sender, EventArgs e)
+    {
+        var swipeItem = sender as SwipeItem;
+        var item = (PotentialSymbol)swipeItem!.CommandParameter;
+
+        toastManagerService.Show(item.SymbolId);
     }
 }
