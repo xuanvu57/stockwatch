@@ -61,6 +61,15 @@ namespace stockwatch.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Added &quot;{0}&quot; to favorite list.
+        /// </summary>
+        internal static string MSG_AddToFavoriteSuccessfully {
+            get {
+                return ResourceManager.GetString("MSG_AddToFavoriteSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please input a symbol.
         /// </summary>
         internal static string MSG_PleaseInputSymbol {
@@ -75,6 +84,24 @@ namespace stockwatch.Resources.Strings {
         internal static string MSG_PleaseInputValidPrice {
             get {
                 return ResourceManager.GetString("MSG_PleaseInputValidPrice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove &quot;{0}&quot; from favorite list.
+        /// </summary>
+        internal static string MSG_RemoveToFavoriteSuccessfully {
+            get {
+                return ResourceManager.GetString("MSG_RemoveToFavoriteSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Started following &quot;{0}&quot;.
+        /// </summary>
+        internal static string MSG_StartFollowingSymbol {
+            get {
+                return ResourceManager.GetString("MSG_StartFollowingSymbol", resourceCulture);
             }
         }
     }

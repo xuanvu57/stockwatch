@@ -1,16 +1,17 @@
 ﻿using Application.Dtos;
 using Application.Repositories.Interfaces;
 using Application.Services.Interfaces;
+using Domain.Constants;
 using Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using stockwatch.Configurations.Models;
-using stockwatch.Resources.Strings;
 
 namespace stockwatch.Pages
 {
     public partial class MainPage : ContentPage
     {
         private readonly IToastManagerService toastManagerService;
+        private readonly IMessageService messageService;
         private readonly IRealtimePriceService stockDataService;
         private readonly IMySymbolAnalyzingService stockAnalyzorService;
         private readonly IReferenceSymbolRepository referenceSymbolRepository;
@@ -21,6 +22,7 @@ namespace stockwatch.Pages
         public MainPage(
             IConfiguration configuration,
             IToastManagerService toastManagerService,
+            IMessageService messageService,
             IRealtimePriceService stockDataService,
             IMySymbolAnalyzingService stockAnalyzorService,
             IReferenceSymbolRepository referenceSymbolRepository)
@@ -34,6 +36,7 @@ namespace stockwatch.Pages
             timer.Tick += OnTimerTick;
 
             this.toastManagerService = toastManagerService;
+            this.messageService = messageService;
             this.stockDataService = stockDataService;
             this.stockAnalyzorService = stockAnalyzorService;
             this.referenceSymbolRepository = referenceSymbolRepository;
@@ -69,7 +72,7 @@ namespace stockwatch.Pages
             await DoApiExecution();
             timer.Start();
 
-            await toastManagerService.Show($"Start following {targetSymbol.SymbolId}");
+            await toastManagerService.Show(messageService.GetMessage(MessageConstants.MSG_StartFollowingSymbol, targetSymbol.SymbolId));
         }
 
         private void OnInputsTextChanged(object sender, TextChangedEventArgs e)
@@ -81,14 +84,14 @@ namespace stockwatch.Pages
         {
             if (string.IsNullOrWhiteSpace(entSymbol.Text))
             {
-                errorMessage = AppResources.MSG_PleaseInputSymbol;
+                errorMessage = messageService.GetMessage(MessageConstants.MSG_PleaseInputSymbol);
                 return false;
             }
 
             var isNumber = decimal.TryParse(entReferencePrice.Text?.Replace(",", string.Empty) ?? "0", out var price);
             if (!isNumber || price <= 0)
             {
-                errorMessage = AppResources.MSG_PleaseInputValidPrice;
+                errorMessage = messageService.GetMessage(MessageConstants.MSG_PleaseInputValidPrice);
                 return false;
             }
 

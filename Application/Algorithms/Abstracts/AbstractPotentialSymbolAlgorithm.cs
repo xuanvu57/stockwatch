@@ -51,7 +51,6 @@ namespace Application.Algorithms.Abstracts
             return new()
             {
                 SymbolId = stockPriceHistories[0].SymbolId,
-                IsFavorite = false,
                 MatchedRecordCount = stockPriceHistories.Count,
                 AverageAmplitude = stockPriceHistories.Average(x => x.HighestPrice - x.LowestPrice),
                 AverageAmplitudeInPercentage = stockPriceHistories.Average(x => StockRulesService.CalculatePercentage(x.HighestPrice, x.LowestPrice))

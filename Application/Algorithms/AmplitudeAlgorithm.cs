@@ -5,7 +5,7 @@ using Application.Services;
 
 namespace Application.Algorithms
 {
-    internal class AmplitudeAlgorithm : AbstractPotentialSymbolAlgorithm
+    public class AmplitudeAlgorithm : AbstractPotentialSymbolAlgorithm
     {
         protected override List<StockPriceHistory> FilterPriceHistory(IEnumerable<StockPriceHistory> priceHistories, PotentialSymbolRequest request)
         {
