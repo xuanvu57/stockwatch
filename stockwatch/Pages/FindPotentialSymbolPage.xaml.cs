@@ -53,24 +53,6 @@ public partial class FindPotentialSymbolPage : ContentPage
         await loadingService.Hide();
     }
 
-    private PotentialSymbolRequest CreateRequest()
-    {
-        var market = pckMarket.SelectedItem?.ToString() ?? string.Empty;
-        var groupBy = Enum<GroupPriceDataBy>.ToEnum(pckGroupByPeriod.SelectedItem);
-        var algorithm = Enum<PotentialAlgorithm>.ToEnum(pckAlgorithm.SelectedItem);
-        var priceType = Enum<PriceType>.ToEnum(pckPriceType.SelectedItem);
-        var expectedPercentage = decimal.Parse(entExpectedPercentage.Text?.Replace(",", string.Empty) ?? "0");
-
-        return new()
-        {
-            Algorithm = algorithm,
-            ExpectedPercentage = expectedPercentage,
-            GroupDataBy = groupBy,
-            Market = market,
-            PriceType = priceType
-        };
-    }
-
     private async void FavoriteItem_Invoked(object sender, EventArgs e)
     {
         var swipeItem = sender as SwipeItem;
@@ -90,12 +72,30 @@ public partial class FindPotentialSymbolPage : ContentPage
         if (isSuccess)
         {
             var symbol = PotentialSymbols!.First(x => x.SymbolId == item.SymbolId);
-            symbol.ChangeFavorite();
+            symbol.ToggleFavorite();
 
             await toastManagerService.Show(
                 isInFavoriteList ?
                 messageService.GetMessage(MessageConstants.MSG_RemoveToFavoriteSuccessfully, item.SymbolId) :
                 messageService.GetMessage(MessageConstants.MSG_AddToFavoriteSuccessfully, item.SymbolId));
         }
+    }
+
+    private PotentialSymbolRequest CreateRequest()
+    {
+        var market = pckMarket.SelectedItem?.ToString() ?? string.Empty;
+        var groupBy = Enum<GroupPriceDataBy>.ToEnum(pckGroupByPeriod.SelectedItem);
+        var algorithm = Enum<PotentialAlgorithm>.ToEnum(pckAlgorithm.SelectedItem);
+        var priceType = Enum<PriceType>.ToEnum(pckPriceType.SelectedItem);
+        var expectedPercentage = decimal.Parse(entExpectedPercentage.Text?.Replace(",", string.Empty) ?? "0");
+
+        return new()
+        {
+            Algorithm = algorithm,
+            ExpectedPercentage = expectedPercentage,
+            GroupDataBy = groupBy,
+            Market = market,
+            PriceType = priceType
+        };
     }
 }

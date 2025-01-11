@@ -5,6 +5,7 @@ using Domain.Constants;
 using Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using stockwatch.Configurations.Models;
+using stockwatch.Models;
 
 namespace stockwatch.Pages
 {
@@ -19,6 +20,9 @@ namespace stockwatch.Pages
         private readonly IDispatcherTimer timer;
         private ReferenceSymbolEntity? targetSymbol;
 
+        public LatestPriceModel LatestPrice { get; set; } = new LatestPriceModel();
+
+
         public MainPage(
             IConfiguration configuration,
             IToastManagerService toastManagerService,
@@ -28,6 +32,7 @@ namespace stockwatch.Pages
             IReferenceSymbolRepository referenceSymbolRepository)
         {
             InitializeComponent();
+            BindingContext = this;
 
             var scheduleSettings = configuration.GetRequiredSection(nameof(ScheduleSettings)).Get<ScheduleSettings>()!;
 
@@ -47,12 +52,19 @@ namespace stockwatch.Pages
             base.OnAppearing();
 
             targetSymbol = await referenceSymbolRepository.Get();
-            SetUIByReferenceSymbolInfo(targetSymbol);
+
+            if (targetSymbol is not null)
+            {
+                InitReferenceSymbolInfo(targetSymbol);
+
+                btnWatch.IsEnabled = false;
+                timer.Start();
+            }
         }
 
         private async void OnTimerTick(object? sender, EventArgs e)
         {
-            await DoApiExecution();
+            await DoApiExecution(targetSymbol);
         }
 
         private async void OnWatchButtonClicked(object sender, EventArgs e)
@@ -68,11 +80,11 @@ namespace stockwatch.Pages
             targetSymbol = CreateReferenceSymbolInfo();
             await referenceSymbolRepository.Save(targetSymbol);
 
-            timer.Stop();
-            await DoApiExecution();
-            timer.Start();
-
             await toastManagerService.Show(messageService.GetMessage(MessageConstants.MSG_StartFollowingSymbol, targetSymbol.SymbolId));
+
+            timer.Stop();
+            await DoApiExecution(targetSymbol);
+            timer.Start();
         }
 
         private void OnInputsTextChanged(object sender, TextChangedEventArgs e)
@@ -99,17 +111,12 @@ namespace stockwatch.Pages
             return true;
         }
 
-        private void SetUIByReferenceSymbolInfo(ReferenceSymbolEntity? symbol)
+        private void InitReferenceSymbolInfo(ReferenceSymbolEntity symbol)
         {
-            if (symbol is not null)
-            {
-                entSymbol.Text = symbol.SymbolId;
-                entReferencePrice.Text = symbol.InitializedPrice.ToString();
-                entCeilingPrice.Text = symbol.CeilingPricePercentage.ToString();
-                entFloorPrice.Text = symbol.FloorPricePercentage.ToString();
-
-                btnWatch.IsEnabled = false;
-            }
+            entSymbol.Text = symbol.SymbolId;
+            entReferencePrice.Text = symbol.InitializedPrice.ToString();
+            entCeilingPrice.Text = symbol.CeilingPricePercentage.ToString();
+            entFloorPrice.Text = symbol.FloorPricePercentage.ToString();
         }
 
         private ReferenceSymbolEntity CreateReferenceSymbolInfo()
@@ -127,27 +134,27 @@ namespace stockwatch.Pages
             };
         }
 
-        private void SetLatestDataForUI(StockPriceInRealtime? stockPrice, DateTime time)
+        private void SetLatestData(StockPriceInRealtime? stockPrice, DateTime time)
         {
-            lblPrice.Text = stockPrice?.Price.ToString() ?? "N/A";
-            lblLatestDataAt.Text = time.ToString("yyyy-MM-dd HH:mm:ss");
+            LatestPrice = LatestPrice.With(stockPrice?.SymbolId, stockPrice?.Price, time);
+            LatestPrice.NotifyPropertyChanged();
         }
 
-        private async Task DoApiExecution()
+        private async Task DoApiExecution(ReferenceSymbolEntity? symbol)
         {
             try
             {
-                if (targetSymbol is null)
+                if (symbol is null)
                     return;
 
-                var stockData = await stockDataService.GetBySymbolId(targetSymbol.SymbolId);
+                var stockData = await stockDataService.GetBySymbolId(symbol.SymbolId);
 
                 if (stockData.Data.Any())
                 {
-                    await stockAnalyzorService.Analyze(stockData.Data.First(), targetSymbol);
+                    await stockAnalyzorService.Analyze(stockData.Data.First(), symbol);
                 }
 
-                SetLatestDataForUI(stockData.Data.FirstOrDefault(), stockData.AtTime);
+                SetLatestData(stockData.Data.FirstOrDefault(), stockData.AtTime);
             }
             catch (Exception ex)
             {

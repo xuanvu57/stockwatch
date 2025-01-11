@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:stockwatch.Pages"
              x:Class="stockwatch.Pages.MainPage"
+             x:Name="mainPage"
              Title="My symbol">
 
     <ScrollView>
@@ -32,11 +34,15 @@
                     x:Name="entReferencePrice"
                     Grid.Row="1"
                     Grid.Column="1"
-                    Grid.ColumnSpan="2"
                     Placeholder="Input reference price"
                     Keyboard="Numeric"
                     Text="0"
                     TextChanged="OnInputsTextChanged"/>
+                <Label 
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    VerticalTextAlignment="Center"
+                    Text="đ"/>
 
                 <Label 
                     Grid.Row="2"
@@ -84,10 +90,18 @@
 
             <HorizontalStackLayout>
                 <Label 
+                    Text="Symbol: "/>
+                <Label
+                    x:Name="lblSymbol"
+                    Text="{Binding LatestPrice.SymbolId, Source={x:Reference mainPage}}"/>
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout>
+                <Label 
                     Text="Price: "/>
                 <Label
                     x:Name="lblPrice"
-                    Text="N/A"/>
+                    Text="{Binding LatestPrice.Price, Source={x:Reference mainPage}}"/>
             </HorizontalStackLayout>
 
             <HorizontalStackLayout>
@@ -95,7 +109,7 @@
                     Text="Latest data at: "/>
                 <Label
                     x:Name="lblLatestDataAt"
-                    Text="N/A"/>
+                    Text="{Binding LatestPrice.AtTime, Source={x:Reference mainPage}}"/>
             </HorizontalStackLayout>
         </VerticalStackLayout>
     </ScrollView>

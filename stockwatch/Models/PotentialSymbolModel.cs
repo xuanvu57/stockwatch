@@ -20,7 +20,7 @@ namespace stockwatch.Models
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void ChangeFavorite()
+        public void ToggleFavorite()
         {
             IsFavorite = !IsFavorite;
             OnPropertyChanged(nameof(IsFavorite));
