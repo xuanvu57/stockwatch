@@ -66,18 +66,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Maui" Version="8.0.1" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.1" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
-		<PackageReference Include="Mopups" Version="1.3.2" />
+		<PackageReference Include="CommunityToolkit.Maui" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+		<PackageReference Include="Microsoft.Maui.Controls" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" />
+		<PackageReference Include="Mopups" />
 	</ItemGroup>
 
 	<ItemGroup Condition="( '$(TargetFramework)' == 'net8.0-android' )">
-		<PackageReference Include="Xamarin.AndroidX.Collection" Version="1.4.5.1" />
-		<PackageReference Include="Xamarin.AndroidX.Preference" Version="1.2.1.11" />
+		<PackageReference Include="Xamarin.AndroidX.Collection" />
+		<PackageReference Include="Xamarin.AndroidX.Preference" />
 	</ItemGroup>
 
 	<ItemGroup>
