@@ -20,8 +20,18 @@ namespace stockwatch.Pages
         private readonly IDispatcherTimer timer;
         private ReferenceSymbolEntity? targetSymbol;
 
-        public LatestPriceModel LatestPrice { get; set; } = new LatestPriceModel();
+        public LatestPriceModel LatestPrice { get; private set; } = new LatestPriceModel();
 
+        private readonly BindableProperty IsWatcherStoppedProperty = BindableProperty.Create(
+            propertyName: nameof(IsWatcherStopped),
+            returnType: typeof(bool),
+            declaringType: typeof(MainPage),
+            defaultValue: true);
+        public bool IsWatcherStopped
+        {
+            get => (bool)GetValue(IsWatcherStoppedProperty);
+            private set => SetValue(IsWatcherStoppedProperty, value);
+        }
 
         public MainPage(
             IConfiguration configuration,
@@ -57,8 +67,12 @@ namespace stockwatch.Pages
             {
                 InitReferenceSymbolInfo(targetSymbol);
 
-                btnWatch.IsEnabled = false;
+                IsWatcherStopped = false;
                 timer.Start();
+            }
+            else
+            {
+                IsWatcherStopped = true;
             }
         }
 
@@ -69,13 +83,25 @@ namespace stockwatch.Pages
 
         private async void OnWatchButtonClicked(object sender, EventArgs e)
         {
+            if (IsWatcherStopped)
+            {
+                await StartWatching();
+            }
+            else
+            {
+                StopWatching();
+            }
+        }
+
+        private async Task StartWatching()
+        {
             if (!AreValidInputs(out var errorMessage))
             {
                 await toastManagerService.Show(errorMessage);
                 return;
             }
 
-            btnWatch.IsEnabled = false;
+            IsWatcherStopped = false;
 
             targetSymbol = CreateReferenceSymbolInfo();
             await referenceSymbolRepository.Save(targetSymbol);
@@ -87,9 +113,10 @@ namespace stockwatch.Pages
             timer.Start();
         }
 
-        private void OnInputsTextChanged(object sender, TextChangedEventArgs e)
+        private void StopWatching()
         {
-            btnWatch.IsEnabled = true;
+            IsWatcherStopped = true;
+            timer.Stop();
         }
 
         private bool AreValidInputs(out string errorMessage)

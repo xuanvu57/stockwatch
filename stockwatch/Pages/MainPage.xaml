@@ -1,10 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:local="clr-namespace:stockwatch.Pages"
              x:Class="stockwatch.Pages.MainPage"
              x:Name="mainPage"
              Title="My symbol">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:BoolToObjectConverter x:Key="WatchButtonTextConverter" 
+                                        TrueObject="Watch"
+                                        FalseObject="Stop watching"/>
+            <toolkit:BoolToObjectConverter x:Key="WatchButtonColorConverter" 
+                                           TrueObject="MediumBlue"
+                                           FalseObject="IndianRed"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <ScrollView>
         <VerticalStackLayout
@@ -23,7 +34,7 @@
                     Grid.ColumnSpan="2"
                     Placeholder="Input symbol"
                     TextTransform="Uppercase"
-                    TextChanged="OnInputsTextChanged"/>
+                    IsEnabled="{Binding IsWatcherStopped, Source={x:Reference mainPage}}"/>
 
                 <Label 
                     Grid.Row="1"
@@ -37,7 +48,7 @@
                     Placeholder="Input reference price"
                     Keyboard="Numeric"
                     Text="0"
-                    TextChanged="OnInputsTextChanged"/>
+                    IsEnabled="{Binding IsWatcherStopped, Source={x:Reference mainPage}}"/>
                 <Label 
                     Grid.Row="1"
                     Grid.Column="2"
@@ -55,7 +66,7 @@
                     Grid.Column="1"
                     Keyboard="Numeric"
                     Text="5"
-                    TextChanged="OnInputsTextChanged"/>
+                    IsEnabled="{Binding IsWatcherStopped, Source={x:Reference mainPage}}"/>
                 <Label 
                     Grid.Row="2"
                     Grid.Column="2"
@@ -73,7 +84,7 @@
                     Grid.Column="1"
                     Keyboard="Numeric"
                     Text="5"
-                    TextChanged="OnInputsTextChanged"/>
+                    IsEnabled="{Binding IsWatcherStopped, Source={x:Reference mainPage}}"/>
                 <Label 
                     Grid.Row="3"
                     Grid.Column="2"
@@ -82,11 +93,13 @@
             </Grid>
 
             <Button
-                    x:Name="btnWatch"
-                    Text="Watch" 
-                    SemanticProperties.Hint="Start watching"
-                    Clicked="OnWatchButtonClicked"
-                    HorizontalOptions="Fill" />
+                x:Name="btnWatch"
+                SemanticProperties.Hint="Start watching"
+                Clicked="OnWatchButtonClicked"
+                HorizontalOptions="Fill"
+                Text="{Binding IsWatcherStopped, Converter={x:StaticResource WatchButtonTextConverter}}"
+                BackgroundColor="{Binding IsWatcherStopped, Converter={x:StaticResource WatchButtonColorConverter}}"
+                TextColor="White"/>
 
             <HorizontalStackLayout>
                 <Label 
