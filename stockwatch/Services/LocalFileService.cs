@@ -1,6 +1,6 @@
 ﻿using Application.Attributes;
 using Application.Services.Interfaces;
-using static Domain.Constants.StockWatchEnums;
+using static Application.Constants.ApplicationEnums;
 
 namespace stockwatch.Services
 {

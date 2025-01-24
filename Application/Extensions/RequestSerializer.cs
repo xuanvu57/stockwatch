@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using System.Text.Json;
-using static Domain.Constants.StockWatchEnums;
+using static Application.Constants.ApplicationEnums;
 
 namespace Application.Extensions
 {

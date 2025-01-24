@@ -2,6 +2,7 @@
 using Application.Dtos;
 using Application.Services.Interfaces;
 using Domain.Entities;
+using static Application.Constants.ApplicationEnums;
 using static Domain.Constants.StockWatchEnums;
 
 namespace Application.Services
@@ -16,11 +17,11 @@ namespace Application.Services
 
             if (stockPrice.Price > ceilingPrice)
             {
-                await pushNotificationService.Notify(stockPrice, UpDownStatus.Up);
+                await pushNotificationService.NotifyWhenExpectationReached(stockPrice, UpDownStatus.Up);
             }
             else if (stockPrice.Price < floorPrice)
             {
-                await pushNotificationService.Notify(stockPrice, UpDownStatus.Down);
+                await pushNotificationService.NotifyWhenExpectationReached(stockPrice, UpDownStatus.Down);
             }
         }
     }

@@ -6,7 +6,7 @@ using Domain.Services;
 using Infrastructure.Clients.Ssi.Constants;
 using Infrastructure.Clients.Ssi.Interfaces;
 using Infrastructure.Clients.Ssi.Models;
-using static Domain.Constants.StockWatchEnums;
+using static Application.Constants.ApplicationEnums;
 
 namespace Infrastructure.Services
 {

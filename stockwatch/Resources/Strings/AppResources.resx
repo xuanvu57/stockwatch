@@ -126,10 +126,16 @@
   <data name="MSG_PleaseInputValidPrice" xml:space="preserve">
     <value>Please input a valid price other than zero</value>
   </data>
+  <data name="MSG_PriceDescription" xml:space="preserve">
+    <value>It was {0} at {1}</value>
+  </data>
   <data name="MSG_RemoveToFavoriteSuccessfully" xml:space="preserve">
     <value>Remove "{0}" from favorite list</value>
   </data>
   <data name="MSG_StartFollowingSymbol" xml:space="preserve">
     <value>Started following "{0}"</value>
+  </data>
+  <data name="MSG_SymbolPriceIsOverExpectation" xml:space="preserve">
+    <value>"{0}" is {1} over the expectation</value>
   </data>
 </root>

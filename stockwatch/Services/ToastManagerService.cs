@@ -2,7 +2,7 @@
 using Application.Services.Interfaces;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
-using static Domain.Constants.StockWatchEnums;
+using static Application.Constants.ApplicationEnums;
 
 namespace stockwatch.Services
 {

@@ -4,7 +4,7 @@ using Domain.Entities;
 using Domain.Repositories.Interfaces;
 using Infrastructure.Repositories.Bases;
 using Microsoft.Extensions.Logging;
-using static Domain.Constants.StockWatchEnums;
+using static Application.Constants.ApplicationEnums;
 
 namespace Infrastructure.Repositories
 {

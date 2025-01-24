@@ -112,8 +112,7 @@
             <HorizontalStackLayout>
                 <Label 
                     Text="Symbol: "/>
-                <Label
-                    
+                <Label                    
                     FontAttributes="Bold"
                     Text="{Binding LatestPrice.SymbolId, Source={x:Reference mainPage}}"/>
             </HorizontalStackLayout>

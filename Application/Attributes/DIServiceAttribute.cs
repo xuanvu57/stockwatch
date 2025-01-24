@@ -1,4 +1,4 @@
-﻿using static Domain.Constants.StockWatchEnums;
+﻿using static Application.Constants.ApplicationEnums;
 
 namespace Application.Attributes
 {

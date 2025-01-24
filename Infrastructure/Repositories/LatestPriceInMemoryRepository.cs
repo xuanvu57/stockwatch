@@ -2,7 +2,7 @@
 using Domain.Entities;
 using Domain.Repositories.Interfaces;
 using Domain.Services;
-using static Domain.Constants.StockWatchEnums;
+using static Application.Constants.ApplicationEnums;
 
 namespace Infrastructure.Repositories
 {

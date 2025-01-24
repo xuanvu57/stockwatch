@@ -1,27 +1,22 @@
 ﻿using Application.Attributes;
-using Application.Dtos;
+using Application.Services.Abstracts;
 using Application.Services.Interfaces;
 using Plugin.LocalNotification;
-using static Domain.Constants.StockWatchEnums;
+using static Application.Constants.ApplicationEnums;
 
 namespace Infrastructure.Services
 {
-    [DIService(DIServiceLifetime.Scoped)]
-    public class LocalNoficationService : IPushNotificationService
+    [DIService(DIServiceLifetime.Singleton)]
+    public class LocalNoficationService(IMessageService messageService) : AbstractPushNotificationService(messageService)
     {
-        public async Task Notify(StockPriceInRealtimeDto stockPrice, UpDownStatus upDownStatus)
+        protected override async Task SendNotification(int notificationId, string title, string subtitle, string description)
         {
-            var notificationId = 1000;
-            var title = upDownStatus == UpDownStatus.Up ?
-                $"{stockPrice.SymbolId}'s price is UP over the expectation" :
-                $"{stockPrice.SymbolId}'s price is DOWN over the expectation";
-
             var request = new NotificationRequest
             {
                 NotificationId = notificationId,
                 Title = title,
-                Subtitle = "You should be noticed",
-                Description = $"It was {stockPrice.Price:N2} at {DateTime.Now:HH:mm:ss}",
+                Subtitle = subtitle,
+                Description = description,
                 Schedule = new NotificationRequestSchedule
                 {
                     NotifyTime = DateTime.Now.AddSeconds(1),

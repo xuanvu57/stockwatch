@@ -3,7 +3,7 @@ using Application.Services.Interfaces;
 using Mopups.Interfaces;
 using Mopups.Services;
 using stockwatch.Popups;
-using static Domain.Constants.StockWatchEnums;
+using static Application.Constants.ApplicationEnums;
 
 namespace stockwatch.Services
 {

@@ -5,7 +5,7 @@ using Application.Dtos.Bases;
 using Application.Dtos.Requests;
 using Application.Services.Interfaces;
 using Domain.Repositories.Interfaces;
-using static Domain.Constants.StockWatchEnums;
+using static Application.Constants.ApplicationEnums;
 
 namespace Application.Services
 {

@@ -7,7 +7,7 @@ using Infrastructure.Clients.Ssi.Interfaces;
 using Infrastructure.Clients.Ssi.Models;
 using Microsoft.Extensions.Configuration;
 using System.Text;
-using static Domain.Constants.StockWatchEnums;
+using static Application.Constants.ApplicationEnums;
 
 namespace Infrastructure.Clients.Ssi
 {

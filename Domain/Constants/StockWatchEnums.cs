@@ -4,13 +4,6 @@ namespace Domain.Constants
 {
     public class StockWatchEnums
     {
-        public enum DIServiceLifetime
-        {
-            Singleton,
-            Scoped,
-            Transient,
-        }
-
         public enum UpDownStatus
         {
             Up,
@@ -55,18 +48,6 @@ namespace Domain.Constants
 
             [Description("Continuously Down")]
             ContinuouslyDown,
-        }
-
-        public enum RequestInputTypes
-        {
-            Parameter,
-            JsonBody,
-        }
-
-        public enum ResponseStatus
-        {
-            Success,
-            Error
         }
     }
 }

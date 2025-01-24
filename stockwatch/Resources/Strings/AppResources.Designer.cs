@@ -88,6 +88,15 @@ namespace stockwatch.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to It was {0} at {1}.
+        /// </summary>
+        internal static string MSG_PriceDescription {
+            get {
+                return ResourceManager.GetString("MSG_PriceDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove &quot;{0}&quot; from favorite list.
         /// </summary>
         internal static string MSG_RemoveToFavoriteSuccessfully {
@@ -102,6 +111,15 @@ namespace stockwatch.Resources.Strings {
         internal static string MSG_StartFollowingSymbol {
             get {
                 return ResourceManager.GetString("MSG_StartFollowingSymbol", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;{0}&quot; is {1} over the expectation.
+        /// </summary>
+        internal static string MSG_SymbolPriceIsOverExpectation {
+            get {
+                return ResourceManager.GetString("MSG_SymbolPriceIsOverExpectation", resourceCulture);
             }
         }
     }

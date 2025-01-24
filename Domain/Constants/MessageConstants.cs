@@ -7,5 +7,7 @@
         public const string MSG_AddToFavoriteSuccessfully = "MSG_AddToFavoriteSuccessfully";
         public const string MSG_RemoveToFavoriteSuccessfully = "MSG_RemoveToFavoriteSuccessfully";
         public const string MSG_StartFollowingSymbol = "MSG_StartFollowingSymbol";
+        public const string MSG_SymbolPriceIsOverExpectation = "MSG_SymbolPriceIsOverExpectation";
+        public const string MSG_PriceDescription = "MSG_PriceDescription";
     }
 }

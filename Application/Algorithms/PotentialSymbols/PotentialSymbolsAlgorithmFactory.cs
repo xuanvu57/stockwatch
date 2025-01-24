@@ -1,5 +1,6 @@
 ﻿using Application.Algorithms.PotentialSymbols.Interfaces;
 using Application.Attributes;
+using static Application.Constants.ApplicationEnums;
 using static Domain.Constants.StockWatchEnums;
 
 namespace Application.Algorithms.PotentialSymbols

@@ -1,7 +1,7 @@
 ﻿using Application.Attributes;
 using Application.Services.Interfaces;
 using stockwatch.Resources.Strings;
-using static Domain.Constants.StockWatchEnums;
+using static Application.Constants.ApplicationEnums;
 
 namespace stockwatch.Services
 {

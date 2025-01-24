@@ -1,7 +1,7 @@
 ﻿using Application.Attributes;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using static Domain.Constants.StockWatchEnums;
+using static Application.Constants.ApplicationEnums;
 
 namespace Infrastructure.Configurations
 {
@@ -14,6 +14,12 @@ namespace Infrastructure.Configurations
 
             serviceCollection.Scan(scrutor => scrutor
                 .FromAssemblies(applicationAssembly, infrastructureAssembly)
+
+                .AddClasses(x => x
+                    .Where(type => type
+                        .GetCustomAttribute<DIServiceAttribute>()?.Lifetime == DIServiceLifetime.Transient))
+                .AsImplementedInterfaces()
+                .WithScopedLifetime()
 
                 .AddClasses(x => x
                     .Where(type => type
@@ -32,6 +38,12 @@ namespace Infrastructure.Configurations
             {
                 serviceCollection.Scan(scrutor => scrutor
                     .FromAssemblies(presentationLayerAssembly)
+
+                    .AddClasses(x => x
+                        .Where(type => type
+                            .GetCustomAttribute<DIServiceAttribute>()?.Lifetime == DIServiceLifetime.Transient))
+                    .AsImplementedInterfaces()
+                    .WithScopedLifetime()
 
                     .AddClasses(x => x
                         .Where(type => type
