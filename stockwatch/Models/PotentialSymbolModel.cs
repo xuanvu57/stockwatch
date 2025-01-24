@@ -26,7 +26,7 @@ namespace stockwatch.Models
             OnPropertyChanged(nameof(IsFavorite));
         }
 
-        public static PotentialSymbolModel FromPotentialSymbol(PotentialSymbol potentialSymbol)
+        public static PotentialSymbolModel FromPotentialSymbol(PotentialSymbolDto potentialSymbol)
         {
             return new()
             {

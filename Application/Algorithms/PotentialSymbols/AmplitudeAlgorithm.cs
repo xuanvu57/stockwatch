@@ -7,7 +7,7 @@ namespace Application.Algorithms.PotentialSymbols
 {
     public class AmplitudeAlgorithm : AbstractPotentialSymbolAlgorithm
     {
-        protected override List<StockPriceHistory> FilterPriceHistory(IEnumerable<StockPriceHistory> priceHistories, PotentialSymbolRequest request)
+        protected override List<StockPriceHistoryDto> FilterPriceHistory(IEnumerable<StockPriceHistoryDto> priceHistories, PotentialSymbolRequest request)
         {
             return priceHistories
                     .Where(x => StockRulesService.CalculatePercentage(x.HighestPrice, x.LowestPrice) >= request.ExpectedPercentage)

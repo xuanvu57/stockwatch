@@ -1,6 +1,6 @@
 ﻿namespace Application.Dtos
 {
-    public record PotentialSymbol
+    public record PotentialSymbolDto
     {
         public required string SymbolId { get; init; }
         public bool IsFavorite { get; init; } = false;

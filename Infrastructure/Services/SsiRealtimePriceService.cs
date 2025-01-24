@@ -15,12 +15,12 @@ namespace Infrastructure.Services
         ISsiClient ssiClient,
         ILatestPriceRepository latestPriceRepository) : AbstractRealtimePriceService(latestPriceRepository)
     {
-        override protected async Task<StockPriceInRealtime?> GetCurrentPriceInMarketBySymbolId(string symbolId)
+        override protected async Task<StockPriceInRealtimeDto?> GetCurrentPriceInMarketBySymbolId(string symbolId)
         {
             return await GetCurrentPriceBySymbolIdFromSsi(symbolId);
         }
 
-        private async Task<StockPriceInRealtime?> GetCurrentPriceBySymbolIdFromSsi(string symbolId)
+        private async Task<StockPriceInRealtimeDto?> GetCurrentPriceBySymbolIdFromSsi(string symbolId)
         {
             var latestDate = StockRulesService.GetLatestAvailableDate();
 
@@ -36,7 +36,7 @@ namespace Infrastructure.Services
             return null;
         }
 
-        private async Task<decimal?> GetReferencePrice(string symbolId, DateOnly currentDate)
+        private async Task<decimal?> GetReferencePrice(string symbolId, DateOnly date)
         {
             var latestPriceInMemory = await latestPriceRepository.Get(symbolId);
 
@@ -45,7 +45,7 @@ namespace Infrastructure.Services
                 return latestPriceInMemory.RefPrice;
             }
 
-            var dailyStockPrice = await ssiClient.DailyStockPrice(currentDate, currentDate, symbol: symbolId, pageIndex: 1, pageSize: 1);
+            var dailyStockPrice = await ssiClient.DailyStockPrice(date, date, symbol: symbolId, pageIndex: 1, pageSize: 1);
             if (dailyStockPrice.Status == SsiConstants.ResponseStatus.Success)
             {
                 return decimal.Parse(dailyStockPrice.Data![0].RefPrice);
@@ -56,7 +56,7 @@ namespace Infrastructure.Services
             }
         }
 
-        private static StockPriceInRealtime Convert(IntradayOhlcResponse intradayOhlcResponse, decimal? refPrice)
+        private static StockPriceInRealtimeDto Convert(IntradayOhlcResponse intradayOhlcResponse, decimal? refPrice)
         {
             return new()
             {

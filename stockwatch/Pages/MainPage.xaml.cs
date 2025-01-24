@@ -161,7 +161,7 @@ namespace stockwatch.Pages
             };
         }
 
-        private void SetLatestData(StockPriceInRealtime? stockPrice, DateTime time)
+        private void SetLatestData(StockPriceInRealtimeDto? stockPrice, DateTime time)
         {
             LatestPrice = LatestPrice.With(stockPrice?.SymbolId, stockPrice?.Price, time);
             LatestPrice.NotifyPropertyChanged();

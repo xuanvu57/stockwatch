@@ -5,6 +5,6 @@ namespace Application.Algorithms.PotentialSymbols.Interfaces
 {
     public interface IPotentialSymbolsAlgorithm
     {
-        public PotentialSymbol? Verify(IEnumerable<StockPriceHistory> priceHistories, PotentialSymbolRequest request);
+        public PotentialSymbolDto? Verify(IEnumerable<StockPriceHistoryDto> priceHistories, PotentialSymbolRequest request);
     }
 }

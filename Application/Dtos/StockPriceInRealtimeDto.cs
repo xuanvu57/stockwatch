@@ -3,12 +3,12 @@ using Domain.Entities;
 
 namespace Application.Dtos
 {
-    public record StockPriceInRealtime : StockPriceBaseData
+    public record StockPriceInRealtimeDto : StockPriceBaseDto
     {
         public decimal? RefPrice { get; init; }
         public DateTime AtTime { get; init; }
 
-        public static StockPriceInRealtime? ConvertFromLatestStockPrice(LatestPriceEntity? latestPrice)
+        public static StockPriceInRealtimeDto? FromLatestPriceEntity(LatestPriceEntity? latestPrice)
         {
             return latestPrice is null ?
                 null :

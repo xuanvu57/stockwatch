@@ -6,6 +6,6 @@ namespace Application.Services.Interfaces
 {
     public interface IPotentialSymbolsAnalyzingService
     {
-        public Task<BaseResponse<PotentialSymbol>> Analyze(PotentialSymbolRequest request);
+        public Task<BaseResponse<PotentialSymbolDto>> Analyze(PotentialSymbolRequest request);
     }
 }

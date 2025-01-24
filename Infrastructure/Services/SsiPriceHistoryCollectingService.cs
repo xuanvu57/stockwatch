@@ -12,9 +12,9 @@ namespace Infrastructure.Services
     [DIService(DIServiceLifetime.Scoped)]
     public class SsiPriceHistoryCollectingService(ILoadingService loadingService, ISsiClient ssiClient) : IPriceHistoryCollectingService
     {
-        public async Task<Dictionary<string, IEnumerable<StockPriceHistory>>> GetByMarket(string market, int months)
+        public async Task<Dictionary<string, IEnumerable<StockPriceHistoryDto>>> GetByMarket(string market, int months)
         {
-            var stockPriceHistoryByMarket = new Dictionary<string, IEnumerable<StockPriceHistory>>();
+            var stockPriceHistoryByMarket = new Dictionary<string, IEnumerable<StockPriceHistoryDto>>();
 
             // TODO: debugging, add fix number
             var pageIndex = 1_000_000;      //SsiConstants.Request.DefaultPageIndex;
@@ -41,9 +41,9 @@ namespace Infrastructure.Services
             return stockPriceHistoryByMarket;
         }
 
-        public async Task<Dictionary<string, IEnumerable<StockPriceHistory>>> GetBySymbols(IEnumerable<string> symbolIds, int months)
+        public async Task<Dictionary<string, IEnumerable<StockPriceHistoryDto>>> GetBySymbols(IEnumerable<string> symbolIds, int months)
         {
-            var stockPrices = new Dictionary<string, IEnumerable<StockPriceHistory>>();
+            var stockPrices = new Dictionary<string, IEnumerable<StockPriceHistoryDto>>();
 
             foreach (var symbolId in symbolIds)
             {
@@ -55,14 +55,14 @@ namespace Infrastructure.Services
             return stockPrices;
         }
 
-        private async Task<IEnumerable<StockPriceHistory>> GetBySymbol(string symbolId, int months)
+        private async Task<IEnumerable<StockPriceHistoryDto>> GetBySymbol(string symbolId, int months)
         {
             await loadingService.Show(symbolId);
 
             var toDate = StockRulesService.GetLatestAvailableDate();
             var fromDate = toDate.AddMonths(-1 * months);
 
-            var stockPriceHistory = new List<StockPriceHistory>();
+            var stockPriceHistory = new List<StockPriceHistoryDto>();
 
             var pageIndex = 1;
             var pageSize = SsiConstants.Request.DefaultPageSize;
@@ -72,7 +72,7 @@ namespace Infrastructure.Services
                 response.Data is not null &&
                 response.Data.Length > 0)
             {
-                stockPriceHistory.AddRange(response.Data.Select(x => new StockPriceHistory()
+                stockPriceHistory.AddRange(response.Data.Select(x => new StockPriceHistoryDto()
                 {
                     SymbolId = x.Symbol,
                     AtDate = DateOnly.ParseExact(x.TradingDate, SsiConstants.Format.Date, CultureInfo.InvariantCulture),

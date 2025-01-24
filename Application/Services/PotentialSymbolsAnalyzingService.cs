@@ -15,9 +15,9 @@ namespace Application.Services
         IPotentialSymbolsAlgorithmFactory algorithmFactory,
         IFavoriteSymbolRepository favoriteSymbolRepository) : IPotentialSymbolsAnalyzingService
     {
-        public async Task<BaseResponse<PotentialSymbol>> Analyze(PotentialSymbolRequest request)
+        public async Task<BaseResponse<PotentialSymbolDto>> Analyze(PotentialSymbolRequest request)
         {
-            Dictionary<string, IEnumerable<StockPriceHistory>> priceHistory;
+            Dictionary<string, IEnumerable<StockPriceHistoryDto>> priceHistory;
             if (string.IsNullOrEmpty(request.Market))
             {
                 priceHistory = await priceHistoryCollectingService.GetBySymbols(request.Symbols, request.Months);
@@ -32,11 +32,11 @@ namespace Application.Services
             return ConvertToResponse(validPrices);
         }
 
-        private async Task<List<PotentialSymbol>> AnalyzeBaseOnPriceHistory(Dictionary<string, IEnumerable<StockPriceHistory>> priceHistory, PotentialSymbolRequest request)
+        private async Task<List<PotentialSymbolDto>> AnalyzeBaseOnPriceHistory(Dictionary<string, IEnumerable<StockPriceHistoryDto>> priceHistory, PotentialSymbolRequest request)
         {
             var favoriteSymbolIds = await favoriteSymbolRepository.Get();
 
-            var potentialSymbols = new List<PotentialSymbol>();
+            var potentialSymbols = new List<PotentialSymbolDto>();
             foreach (var symbolId in priceHistory.Keys)
             {
                 var algorithmInstance = algorithmFactory.CreateAlgorithm(request.Algorithm);
@@ -52,12 +52,12 @@ namespace Application.Services
             return potentialSymbols;
         }
 
-        private static PotentialSymbol UpdateFavoriteAttribute(PotentialSymbol symbol, IEnumerable<string> favoriteSymbolIds)
+        private static PotentialSymbolDto UpdateFavoriteAttribute(PotentialSymbolDto symbol, IEnumerable<string> favoriteSymbolIds)
         {
             return symbol with { IsFavorite = favoriteSymbolIds.Contains(symbol.SymbolId) };
         }
 
-        private static BaseResponse<PotentialSymbol> ConvertToResponse(IEnumerable<PotentialSymbol> potentialSymbols)
+        private static BaseResponse<PotentialSymbolDto> ConvertToResponse(IEnumerable<PotentialSymbolDto> potentialSymbols)
         {
             return new()
             {

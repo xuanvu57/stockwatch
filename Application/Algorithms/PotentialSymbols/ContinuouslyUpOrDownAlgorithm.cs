@@ -8,7 +8,7 @@ namespace Application.Algorithms.PotentialSymbols
 {
     public class ContinuouslyUpOrDownAlgorithm : AbstractPotentialSymbolAlgorithm
     {
-        protected override List<StockPriceHistory> FilterPriceHistory(IEnumerable<StockPriceHistory> priceHistories, PotentialSymbolRequest request)
+        protected override List<StockPriceHistoryDto> FilterPriceHistory(IEnumerable<StockPriceHistoryDto> priceHistories, PotentialSymbolRequest request)
         {
             if (!priceHistories.Any())
             {
@@ -18,9 +18,9 @@ namespace Application.Algorithms.PotentialSymbols
             var orderedPriceHistory = priceHistories
                 .OrderBy(x => x.AtDate);
 
-            var validHitoreis = new List<StockPriceHistory>();
+            var validHitoreis = new List<StockPriceHistoryDto>();
 
-            StockPriceHistory? previousPriceHistory = null;
+            StockPriceHistoryDto? previousPriceHistory = null;
             foreach (var priceHistory in orderedPriceHistory)
             {
                 if (previousPriceHistory is not null)
@@ -45,7 +45,7 @@ namespace Application.Algorithms.PotentialSymbols
 
             return validHitoreis;
         }
-        private static decimal GetPriceByType(StockPriceHistory priceHistory, PriceType priceType)
+        private static decimal GetPriceByType(StockPriceHistoryDto priceHistory, PriceType priceType)
         {
             return priceType switch
             {

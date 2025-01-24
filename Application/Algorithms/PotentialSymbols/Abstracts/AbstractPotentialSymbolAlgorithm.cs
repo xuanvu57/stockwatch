@@ -8,7 +8,7 @@ namespace Application.Algorithms.PotentialSymbols.Abstracts
 {
     public abstract class AbstractPotentialSymbolAlgorithm : IPotentialSymbolsAlgorithm
     {
-        public PotentialSymbol? Verify(IEnumerable<StockPriceHistory> priceHistories, PotentialSymbolRequest request)
+        public PotentialSymbolDto? Verify(IEnumerable<StockPriceHistoryDto> priceHistories, PotentialSymbolRequest request)
         {
             var groupedPriceHistory = GroupPriceByPeriod(priceHistories, request.GroupDataBy);
 
@@ -17,9 +17,9 @@ namespace Application.Algorithms.PotentialSymbols.Abstracts
             return validPrices.Count == 0 ? null : ConvertToPotentialSymbol(validPrices);
         }
 
-        protected abstract List<StockPriceHistory> FilterPriceHistory(IEnumerable<StockPriceHistory> priceHistories, PotentialSymbolRequest request);
+        protected abstract List<StockPriceHistoryDto> FilterPriceHistory(IEnumerable<StockPriceHistoryDto> priceHistories, PotentialSymbolRequest request);
 
-        private static IEnumerable<StockPriceHistory> GroupPriceByPeriod(IEnumerable<StockPriceHistory> priceHistory, GroupPriceDataBy groupPriceDataBy)
+        private static IEnumerable<StockPriceHistoryDto> GroupPriceByPeriod(IEnumerable<StockPriceHistoryDto> priceHistory, GroupPriceDataBy groupPriceDataBy)
         {
             if (groupPriceDataBy == GroupPriceDataBy.Day)
                 return priceHistory;
@@ -36,7 +36,7 @@ namespace Application.Algorithms.PotentialSymbols.Abstracts
                     x.SymbolId,
                     x.AtDate
                 })
-                .Select(g => new StockPriceHistory()
+                .Select(g => new StockPriceHistoryDto()
                 {
                     SymbolId = g.Key.SymbolId,
                     AtDate = g.Key.AtDate,
@@ -46,7 +46,7 @@ namespace Application.Algorithms.PotentialSymbols.Abstracts
                 });
         }
 
-        private static PotentialSymbol ConvertToPotentialSymbol(List<StockPriceHistory> stockPriceHistories)
+        private static PotentialSymbolDto ConvertToPotentialSymbol(List<StockPriceHistoryDto> stockPriceHistories)
         {
             return new()
             {

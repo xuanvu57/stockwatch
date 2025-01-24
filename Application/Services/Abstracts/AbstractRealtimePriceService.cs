@@ -11,7 +11,7 @@ namespace Application.Services.Abstracts
     {
         protected readonly ILatestPriceRepository latestPriceRepository = latestPriceRepository;
 
-        public async Task<BaseResponse<StockPriceInRealtime>> GetBySymbolId(string symbolId)
+        public async Task<BaseResponse<StockPriceInRealtimeDto>> GetBySymbolId(string symbolId)
         {
             var currentPriceInMarket = await GetCurrentPriceInMarketBySymbolId(symbolId);
             var latestPriceInMemory = await latestPriceRepository.Get(symbolId);
@@ -25,25 +25,25 @@ namespace Application.Services.Abstracts
             }
             else
             {
-                currentPriceInMarket = StockPriceInRealtime.ConvertFromLatestStockPrice(latestPriceInMemory);
+                currentPriceInMarket = StockPriceInRealtimeDto.FromLatestPriceEntity(latestPriceInMemory);
             }
 
             return ConvertToResponse(currentPriceInMarket);
         }
 
-        protected abstract Task<StockPriceInRealtime?> GetCurrentPriceInMarketBySymbolId(string symbolId);
+        protected abstract Task<StockPriceInRealtimeDto?> GetCurrentPriceInMarketBySymbolId(string symbolId);
 
-        private async Task UpdateLatestPriceInDB(StockPriceInRealtime currentPriceInMarket)
+        private async Task UpdateLatestPriceInDB(StockPriceInRealtimeDto currentPriceInMarket)
         {
-            var latestPricess = currentPriceInMarket.ToLatestPriceEntity();
+            var latestPriceEntity = currentPriceInMarket.ToLatestPriceEntity();
 
-            if (latestPricess is not null)
+            if (latestPriceEntity is not null)
             {
-                await latestPriceRepository.Save(latestPricess);
+                await latestPriceRepository.Save(latestPriceEntity);
             }
         }
 
-        private static bool HasPriceChanged(StockPriceInRealtime currentPriceInMarket, LatestPriceEntity? latestPriceInDB)
+        private static bool HasPriceChanged(StockPriceInRealtimeDto currentPriceInMarket, LatestPriceEntity? latestPriceInDB)
         {
             if (latestPriceInDB is null)
                 return true;
@@ -51,7 +51,7 @@ namespace Application.Services.Abstracts
             return currentPriceInMarket.Price != latestPriceInDB.Price;
         }
 
-        private static BaseResponse<StockPriceInRealtime> ConvertToResponse(StockPriceInRealtime? stockPrice)
+        private static BaseResponse<StockPriceInRealtimeDto> ConvertToResponse(StockPriceInRealtimeDto? stockPrice)
         {
             return new()
             {

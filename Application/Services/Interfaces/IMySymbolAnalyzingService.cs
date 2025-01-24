@@ -5,6 +5,6 @@ namespace Application.Services.Interfaces
 {
     public interface IMySymbolAnalyzingService
     {
-        public Task Analyze(StockPriceInRealtime stockPrice, ReferenceSymbolEntity targetSymbol);
+        public Task Analyze(StockPriceInRealtimeDto stockPrice, ReferenceSymbolEntity targetSymbol);
     }
 }

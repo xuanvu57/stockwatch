@@ -5,6 +5,6 @@ namespace Application.Services.Interfaces
 {
     public interface IRealtimePriceService
     {
-        public Task<BaseResponse<StockPriceInRealtime>> GetBySymbolId(string symbolId);
+        public Task<BaseResponse<StockPriceInRealtimeDto>> GetBySymbolId(string symbolId);
     }
 }
