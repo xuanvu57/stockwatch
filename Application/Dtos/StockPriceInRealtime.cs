@@ -1,4 +1,4 @@
-﻿using Application.Services;
+﻿using Application.Dtos.Bases;
 using Domain.Entities;
 
 namespace Application.Dtos
@@ -14,7 +14,7 @@ namespace Application.Dtos
                 null :
                 new()
                 {
-                    SymbolId = latestPrice.SymbolId,
+                    SymbolId = latestPrice.Id,
                     Price = latestPrice.Price,
                     HighestPrice = 0,
                     LowestPrice = 0,
@@ -28,26 +28,11 @@ namespace Application.Dtos
                 null :
                 new()
                 {
-                    SymbolId = SymbolId,
+                    Id = SymbolId,
                     Price = Price,
                     RefPrice = RefPrice.Value,
                     AtTime = AtTime,
                 };
-        }
-
-        public RealtimePriceHistoryEntity ToPriceHistoryEntity()
-        {
-            return new()
-            {
-                SymbolId = SymbolId,
-                Price = Price,
-                PriceChange = RefPrice is null ? null : Price - RefPrice.Value,
-                PriceChangeInPercentage = RefPrice is null ? null : StockRulesService.CalculatePercentage(Price, RefPrice.Value),
-                RefPrice = RefPrice,
-                AtTime = AtTime,
-                HighestPrice = HighestPrice,
-                LowestPrice = LowestPrice
-            };
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿using Application.Dtos;
-using Application.Repositories.Interfaces;
 using Application.Services.Interfaces;
 using Domain.Constants;
 using Domain.Entities;
+using Domain.Repositories.Interfaces;
 using Microsoft.Extensions.Configuration;
 using stockwatch.Configurations.Models;
 using stockwatch.Models;
@@ -106,7 +106,7 @@ namespace stockwatch.Pages
             targetSymbol = CreateReferenceSymbolInfo();
             await referenceSymbolRepository.Save(targetSymbol);
 
-            await toastManagerService.Show(messageService.GetMessage(MessageConstants.MSG_StartFollowingSymbol, targetSymbol.SymbolId));
+            await toastManagerService.Show(messageService.GetMessage(MessageConstants.MSG_StartFollowingSymbol, targetSymbol.Id));
 
             timer.Stop();
             await DoApiExecution(targetSymbol);
@@ -140,7 +140,7 @@ namespace stockwatch.Pages
 
         private void InitReferenceSymbolInfo(ReferenceSymbolEntity symbol)
         {
-            entSymbol.Text = symbol.SymbolId;
+            entSymbol.Text = symbol.Id;
             entReferencePrice.Text = symbol.InitializedPrice.ToString();
             entCeilingPrice.Text = symbol.CeilingPricePercentage.ToString();
             entFloorPrice.Text = symbol.FloorPricePercentage.ToString();
@@ -154,7 +154,7 @@ namespace stockwatch.Pages
 
             return new()
             {
-                SymbolId = entSymbol.Text,
+                Id = entSymbol.Text,
                 InitializedPrice = price,
                 CeilingPricePercentage = ceilingPrice,
                 FloorPricePercentage = floorPrice
@@ -174,7 +174,7 @@ namespace stockwatch.Pages
                 if (symbol is null)
                     return;
 
-                var stockData = await stockDataService.GetBySymbolId(symbol.SymbolId);
+                var stockData = await stockDataService.GetBySymbolId(symbol.Id);
 
                 if (stockData.Data.Any())
                 {

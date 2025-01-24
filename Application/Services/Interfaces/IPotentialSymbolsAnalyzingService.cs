@@ -1,6 +1,6 @@
 ﻿using Application.Dtos;
+using Application.Dtos.Bases;
 using Application.Dtos.Requests;
-using Application.Dtos.Responses;
 
 namespace Application.Services.Interfaces
 {

@@ -1,6 +1,6 @@
 ﻿using static Domain.Constants.StockWatchEnums;
 
-namespace Application.Dtos.Responses
+namespace Application.Dtos.Bases
 {
     public record BaseResponse<T> where T : class
     {

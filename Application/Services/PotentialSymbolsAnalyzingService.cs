@@ -1,10 +1,10 @@
-﻿using Application.Algorithms.Interfaces;
+﻿using Application.Algorithms.PotentialSymbols.Interfaces;
 using Application.Attributes;
 using Application.Dtos;
+using Application.Dtos.Bases;
 using Application.Dtos.Requests;
-using Application.Dtos.Responses;
-using Application.Repositories.Interfaces;
 using Application.Services.Interfaces;
+using Domain.Repositories.Interfaces;
 using static Domain.Constants.StockWatchEnums;
 
 namespace Application.Services

@@ -1,8 +1,8 @@
 using Application.Dtos.Requests;
 using Application.Extensions;
-using Application.Repositories.Interfaces;
 using Application.Services.Interfaces;
 using Domain.Constants;
+using Domain.Repositories.Interfaces;
 using stockwatch.Models;
 using System.Collections.ObjectModel;
 using static Domain.Constants.StockWatchEnums;
@@ -66,7 +66,7 @@ public partial class FindPotentialSymbolPage : ContentPage
         }
         else
         {
-            isSuccess = await favoriteSymbolRepository.Save(item.SymbolId);
+            isSuccess = await favoriteSymbolRepository.Add(item.SymbolId);
         }
 
         if (isSuccess)

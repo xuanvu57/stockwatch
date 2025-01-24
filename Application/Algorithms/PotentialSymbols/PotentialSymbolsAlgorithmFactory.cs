@@ -1,8 +1,8 @@
-﻿using Application.Algorithms.Interfaces;
+﻿using Application.Algorithms.PotentialSymbols.Interfaces;
 using Application.Attributes;
 using static Domain.Constants.StockWatchEnums;
 
-namespace Application.Algorithms
+namespace Application.Algorithms.PotentialSymbols
 {
     [DIService(DIServiceLifetime.Scoped)]
     public class PotentialSymbolsAlgorithmFactory : IPotentialSymbolsAlgorithmFactory

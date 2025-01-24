@@ -1,7 +1,7 @@
 ﻿using Application.Attributes;
 using Application.Dtos;
-using Application.Services;
 using Application.Services.Interfaces;
+using Domain.Services;
 using Infrastructure.Clients.Ssi.Constants;
 using Infrastructure.Clients.Ssi.Interfaces;
 using System.Globalization;

@@ -1,9 +1,9 @@
-﻿using Application.Algorithms.Abstracts;
+﻿using Application.Algorithms.PotentialSymbols.Abstracts;
 using Application.Dtos;
 using Application.Dtos.Requests;
-using Application.Services;
+using Domain.Services;
 
-namespace Application.Algorithms
+namespace Application.Algorithms.PotentialSymbols
 {
     public class AmplitudeAlgorithm : AbstractPotentialSymbolAlgorithm
     {

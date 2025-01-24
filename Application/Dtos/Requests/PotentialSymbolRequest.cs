@@ -12,6 +12,5 @@ namespace Application.Dtos.Requests
         public PotentialAlgorithm Algorithm { get; init; } = PotentialAlgorithm.Amplitude;
         public PriceType PriceType { get; init; } = PriceType.Price;
         public decimal ExpectedPercentage { get; init; }
-
     }
 }

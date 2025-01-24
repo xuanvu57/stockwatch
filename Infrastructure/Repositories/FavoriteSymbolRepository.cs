@@ -1,7 +1,7 @@
 ﻿using Application.Attributes;
-using Application.Repositories.Interfaces;
 using Application.Services.Interfaces;
 using Domain.Entities;
+using Domain.Repositories.Interfaces;
 using Infrastructure.Repositories.Bases;
 using Microsoft.Extensions.Logging;
 using static Domain.Constants.StockWatchEnums;
@@ -13,46 +13,36 @@ namespace Infrastructure.Repositories
         ILogger<FavoriteSymbolRepository> logger,
         ILocalFileService localFileService,
         IToastManagerService toastManagerService) :
-        BaseFileRepository<FavoriteSymbolRepository>(logger, localFileService, toastManagerService, "FavoriteSymbol.json"), IFavoriteSymbolRepository
+        BaseRepository<FavoriteSymbolRepository, FavoriteSymbolEntity>(logger, localFileService, toastManagerService), IFavoriteSymbolRepository
     {
         public async Task<IList<string>> Get()
         {
-            var favoriteSymbols = await ReadFromFile<FavoriteSymbolEntity>();
+            var favoriteSymbols = await GetAll();
 
-            return favoriteSymbols?.Count > 0 ?
-                favoriteSymbols.Select(x => x.SymbolId).ToList() :
+            return favoriteSymbols.Count > 0 ?
+                favoriteSymbols.Select(x => x.Id).ToList() :
                 [];
         }
 
-        public async Task<bool> Save(string symbolId)
+        public async Task<bool> Add(string symbolId)
         {
-            var exsitingFavoriteSymbolIds = await Get();
+            var exsitingSymbolIds = await Get();
 
-            if (exsitingFavoriteSymbolIds.Contains(symbolId))
+            if (exsitingSymbolIds.Contains(symbolId))
                 return true;
 
             var favoriteSymbol = new FavoriteSymbolEntity()
             {
-                SymbolId = symbolId,
+                Id = symbolId,
                 AtTime = DateTime.Now,
             };
 
-            return await SaveToFile([favoriteSymbol]);
+            return await Create(favoriteSymbol);
         }
 
         public async Task<bool> Remove(string symbolId)
         {
-            var favoriteSymbols = await ReadFromFile<FavoriteSymbolEntity>();
-
-            if (favoriteSymbols is null)
-                return true;
-
-            var symbol = favoriteSymbols.Find(x => x.SymbolId == symbolId);
-            if (symbol is null)
-                return true;
-
-            favoriteSymbols.Remove(symbol);
-            return await SaveToFile(favoriteSymbols, true);
+            return await Delete(symbolId);
         }
     }
 }

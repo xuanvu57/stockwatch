@@ -1,4 +1,6 @@
-﻿namespace Application.Dtos
+﻿using Application.Dtos.Bases;
+
+namespace Application.Dtos
 {
     public record StockPriceHistory : StockPriceBaseData
     {

@@ -1,6 +1,6 @@
 ﻿using Domain.Constants;
 
-namespace Application.Services
+namespace Domain.Services
 {
     public static class StockRulesService
     {

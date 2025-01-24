@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
 
-namespace Application.Repositories.Interfaces
+namespace Domain.Repositories.Interfaces
 {
     public interface ILatestPriceRepository
     {

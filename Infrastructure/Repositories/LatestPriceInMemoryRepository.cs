@@ -1,7 +1,7 @@
 ﻿using Application.Attributes;
-using Application.Repositories.Interfaces;
-using Application.Services;
 using Domain.Entities;
+using Domain.Repositories.Interfaces;
+using Domain.Services;
 using static Domain.Constants.StockWatchEnums;
 
 namespace Infrastructure.Repositories
@@ -17,11 +17,16 @@ namespace Infrastructure.Repositories
 
             latestPriceDictionary.TryGetValue(symbolId, out var latestPrice);
 
-            if (latestPrice is not null && DateOnly.FromDateTime(latestPrice.AtTime) < latestDate)
+            if (latestPrice is not null)
             {
-                latestPriceDictionary.Remove(symbolId);
+                var isExpired = DateOnly.FromDateTime(latestPrice.AtTime) < latestDate;
 
-                return null;
+                if (isExpired)
+                {
+                    latestPriceDictionary.Remove(symbolId);
+
+                    return null;
+                }
             }
 
             return await Task.FromResult(latestPrice);
@@ -29,9 +34,9 @@ namespace Infrastructure.Repositories
 
         public async Task Save(LatestPriceEntity latestPrice)
         {
-            if (!latestPriceDictionary.TryAdd(latestPrice.SymbolId, latestPrice))
+            if (!latestPriceDictionary.TryAdd(latestPrice.Id, latestPrice))
             {
-                latestPriceDictionary[latestPrice.SymbolId] = latestPrice;
+                latestPriceDictionary[latestPrice.Id] = latestPrice;
             }
 
             await Task.CompletedTask;

@@ -1,7 +1,7 @@
 ﻿using Application.Attributes;
-using Application.Repositories.Interfaces;
 using Application.Services.Interfaces;
 using Domain.Entities;
+using Domain.Repositories.Interfaces;
 using Infrastructure.Repositories.Bases;
 using Microsoft.Extensions.Logging;
 using static Domain.Constants.StockWatchEnums;
@@ -13,18 +13,26 @@ namespace Infrastructure.Repositories
         ILogger<ReferenceSymbolRepository> logger,
         ILocalFileService localFileService,
         IToastManagerService toastManagerService) :
-        BaseFileRepository<ReferenceSymbolRepository>(logger, localFileService, toastManagerService, "ReferenceSymbol.json"), IReferenceSymbolRepository
+        BaseRepository<ReferenceSymbolRepository, ReferenceSymbolEntity>(logger, localFileService, toastManagerService), IReferenceSymbolRepository
     {
         public async Task<ReferenceSymbolEntity?> Get()
         {
-            var referenceSymbolEntities = await ReadFromFile<ReferenceSymbolEntity>();
+            var entities = await GetAll();
 
-            return referenceSymbolEntities?.Count > 0 ? referenceSymbolEntities[0] : null;
+            return entities.FirstOrDefault();
         }
 
-        public async Task Save(ReferenceSymbolEntity symbol)
+        public async Task Save(ReferenceSymbolEntity entity)
         {
-            await SaveToFile([symbol], true);
+            var entities = await GetAll();
+            var firstEntity = entities.FirstOrDefault();
+
+            if (firstEntity is not null)
+            {
+                await Delete(firstEntity.Id);
+            }
+
+            await Create(entity);
         }
     }
 }

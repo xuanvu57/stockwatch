@@ -1,7 +1,7 @@
 ﻿using Application.Dtos;
 using Application.Dtos.Requests;
 
-namespace Application.Algorithms.Interfaces
+namespace Application.Algorithms.PotentialSymbols.Interfaces
 {
     public interface IPotentialSymbolsAlgorithm
     {

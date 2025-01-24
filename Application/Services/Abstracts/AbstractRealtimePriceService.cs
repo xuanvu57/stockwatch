@@ -1,51 +1,41 @@
 ﻿using Application.Dtos;
-using Application.Dtos.Responses;
-using Application.Repositories.Interfaces;
+using Application.Dtos.Bases;
 using Application.Services.Interfaces;
 using Domain.Entities;
+using Domain.Repositories.Interfaces;
 
 namespace Application.Services.Abstracts
 {
     public abstract class AbstractRealtimePriceService(
-        IRealtimePriceHistoryRepository realtimePriceHistoryRepository,
         ILatestPriceRepository latestPriceRepository) : IRealtimePriceService
     {
         protected readonly ILatestPriceRepository latestPriceRepository = latestPriceRepository;
 
         public async Task<BaseResponse<StockPriceInRealtime>> GetBySymbolId(string symbolId)
         {
-            var stockPriceData = await GetCurrentPriceBySymbolId(symbolId);
+            var currentPriceInMarket = await GetCurrentPriceInMarketBySymbolId(symbolId);
             var latestPriceInMemory = await latestPriceRepository.Get(symbolId);
 
-            if (stockPriceData is not null)
+            if (currentPriceInMarket is not null)
             {
-                if (HasPriceChanged(stockPriceData, latestPriceInMemory))
+                if (HasPriceChanged(currentPriceInMarket, latestPriceInMemory))
                 {
-                    await SaveStockPrice(stockPriceData);
+                    await UpdateLatestPriceInDB(currentPriceInMarket);
                 }
             }
             else
             {
-                stockPriceData = StockPriceInRealtime.ConvertFromLatestStockPrice(latestPriceInMemory);
+                currentPriceInMarket = StockPriceInRealtime.ConvertFromLatestStockPrice(latestPriceInMemory);
             }
 
-            return ConvertToResponse(stockPriceData);
+            return ConvertToResponse(currentPriceInMarket);
         }
 
-        protected abstract Task<StockPriceInRealtime?> GetCurrentPriceBySymbolId(string symbolId);
+        protected abstract Task<StockPriceInRealtime?> GetCurrentPriceInMarketBySymbolId(string symbolId);
 
-        private async Task SaveStockPrice(StockPriceInRealtime stockPriceData)
+        private async Task UpdateLatestPriceInDB(StockPriceInRealtime currentPriceInMarket)
         {
-            var priceHistory = stockPriceData.ToPriceHistoryEntity();
-
-            await realtimePriceHistoryRepository.Save(priceHistory);
-
-            await UpdateLatestPrice(stockPriceData);
-        }
-
-        private async Task UpdateLatestPrice(StockPriceInRealtime stockPriceData)
-        {
-            var latestPricess = stockPriceData.ToLatestPriceEntity();
+            var latestPricess = currentPriceInMarket.ToLatestPriceEntity();
 
             if (latestPricess is not null)
             {
@@ -53,12 +43,12 @@ namespace Application.Services.Abstracts
             }
         }
 
-        private static bool HasPriceChanged(StockPriceInRealtime stockPrice, LatestPriceEntity? latestPrice)
+        private static bool HasPriceChanged(StockPriceInRealtime currentPriceInMarket, LatestPriceEntity? latestPriceInDB)
         {
-            if (latestPrice is null)
+            if (latestPriceInDB is null)
                 return true;
 
-            return stockPrice.Price != latestPrice.Price;
+            return currentPriceInMarket.Price != latestPriceInDB.Price;
         }
 
         private static BaseResponse<StockPriceInRealtime> ConvertToResponse(StockPriceInRealtime? stockPrice)

@@ -1,10 +1,10 @@
-﻿using Application.Algorithms.Interfaces;
+﻿using Application.Algorithms.PotentialSymbols.Interfaces;
 using Application.Dtos;
 using Application.Dtos.Requests;
-using Application.Services;
+using Domain.Services;
 using static Domain.Constants.StockWatchEnums;
 
-namespace Application.Algorithms.Abstracts
+namespace Application.Algorithms.PotentialSymbols.Abstracts
 {
     public abstract class AbstractPotentialSymbolAlgorithm : IPotentialSymbolsAlgorithm
     {

@@ -1,8 +1,8 @@
 ﻿using Application.Attributes;
 using Application.Dtos;
-using Application.Repositories.Interfaces;
-using Application.Services;
 using Application.Services.Abstracts;
+using Domain.Repositories.Interfaces;
+using Domain.Services;
 using Infrastructure.Clients.Ssi.Constants;
 using Infrastructure.Clients.Ssi.Interfaces;
 using Infrastructure.Clients.Ssi.Models;
@@ -13,10 +13,9 @@ namespace Infrastructure.Services
     [DIService(DIServiceLifetime.Scoped)]
     public class SsiRealtimePriceService(
         ISsiClient ssiClient,
-        IRealtimePriceHistoryRepository priceHistoryRepository,
-        ILatestPriceRepository latestPriceRepository) : AbstractRealtimePriceService(priceHistoryRepository, latestPriceRepository)
+        ILatestPriceRepository latestPriceRepository) : AbstractRealtimePriceService(latestPriceRepository)
     {
-        override protected async Task<StockPriceInRealtime?> GetCurrentPriceBySymbolId(string symbolId)
+        override protected async Task<StockPriceInRealtime?> GetCurrentPriceInMarketBySymbolId(string symbolId)
         {
             return await GetCurrentPriceBySymbolIdFromSsi(symbolId);
         }

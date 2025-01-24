@@ -1,5 +1,5 @@
 ﻿using Application.Dtos;
-using Application.Dtos.Responses;
+using Application.Dtos.Bases;
 
 namespace Application.Services.Interfaces
 {

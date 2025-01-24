@@ -1,8 +1,11 @@
-﻿namespace Domain.Entities
+﻿using Domain.Entities.Bases;
+using System.ComponentModel;
+
+namespace Domain.Entities
 {
-    public record FavoriteSymbolEntity
+    [DisplayName("FavoriteSymbol")]
+    public record FavoriteSymbolEntity : StockBaseEntity
     {
-        public required string SymbolId { get; init; }
         public DateTime AtTime { get; init; }
     }
 }

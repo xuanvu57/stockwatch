@@ -1,6 +1,6 @@
-﻿namespace Application.Dtos
+﻿namespace Application.Dtos.Bases
 {
-    public record StockPriceBaseData
+    public abstract record StockPriceBaseData
     {
         public required string SymbolId { get; init; }
         public decimal Price { get; init; }

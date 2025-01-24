@@ -1,8 +1,11 @@
-﻿namespace Domain.Entities
+﻿using Domain.Entities.Bases;
+using System.ComponentModel;
+
+namespace Domain.Entities
 {
-    public record ReferenceSymbolEntity
+    [DisplayName("ReferenceSymbol")]
+    public record ReferenceSymbolEntity : StockBaseEntity
     {
-        public required string SymbolId { get; init; }
         public decimal InitializedPrice { get; init; }
         public decimal FloorPricePercentage { get; init; } = 0;
         public decimal CeilingPricePercentage { get; init; } = 0;
