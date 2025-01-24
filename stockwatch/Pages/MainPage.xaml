@@ -12,7 +12,7 @@
                                         TrueObject="Watch"
                                         FalseObject="Stop watching"/>
             <toolkit:BoolToObjectConverter x:Key="WatchButtonColorConverter" 
-                                           TrueObject="MediumBlue"
+                                           TrueObject="#512bd4"
                                            FalseObject="IndianRed"/>
         </ResourceDictionary>
     </ContentPage.Resources>
