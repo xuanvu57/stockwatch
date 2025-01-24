@@ -24,12 +24,11 @@ namespace Infrastructure.Repositories
 
         public async Task Save(ReferenceSymbolEntity entity)
         {
-            var entities = await GetAll();
-            var firstEntity = entities.FirstOrDefault();
+            var existingEntities = await GetAll();
 
-            if (firstEntity is not null)
+            foreach (var existingEntity in existingEntities)
             {
-                await Delete(firstEntity.Id);
+                await Delete(existingEntity.Id);
             }
 
             await Create(entity);

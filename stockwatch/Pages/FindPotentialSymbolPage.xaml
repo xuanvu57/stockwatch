@@ -9,15 +9,18 @@
         <ResourceDictionary>
             <toolkit:IsNotEqualConverter x:Key="IsNotEqualConverter" />
             <toolkit:IsNotNullConverter x:Key="IsNotNullConverter" />
-            <toolkit:BoolToObjectConverter x:Key="FavoriteIconConverter" 
-                                           TrueObject="favorite_full.jpg"
-                                           FalseObject="favorite_empty.png"/>
-            <toolkit:BoolToObjectConverter x:Key="FavoriteTextConverter" 
-                                           TrueObject="Unfavored"
-                                           FalseObject="Favorite"/>
-            <toolkit:BoolToObjectConverter x:Key="FavoriteColorConverter" 
-                                           TrueObject="LightPink"
-                                           FalseObject="LightGreen"/>
+            <toolkit:BoolToObjectConverter 
+                x:Key="FavoriteIconConverter" 
+                TrueObject="favorite_full.jpg"
+                FalseObject="favorite_empty.png"/>
+            <toolkit:BoolToObjectConverter 
+                x:Key="FavoriteTextConverter" 
+                TrueObject="Unfavored"
+                FalseObject="Favorite"/>
+            <toolkit:BoolToObjectConverter 
+                x:Key="FavoriteColorConverter" 
+                TrueObject="LightPink"
+                FalseObject="LightGreen"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 

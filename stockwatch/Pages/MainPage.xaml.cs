@@ -3,6 +3,7 @@ using Application.Services.Interfaces;
 using Domain.Constants;
 using Domain.Entities;
 using Domain.Repositories.Interfaces;
+using Domain.Services;
 using Microsoft.Extensions.Configuration;
 using stockwatch.Configurations.Models;
 using stockwatch.Models;
@@ -161,12 +162,6 @@ namespace stockwatch.Pages
             };
         }
 
-        private void SetLatestData(StockPriceInRealtimeDto? stockPrice, DateTime time)
-        {
-            LatestPrice = LatestPrice.With(stockPrice?.SymbolId, stockPrice?.Price, time);
-            LatestPrice.NotifyPropertyChanged();
-        }
-
         private async Task DoApiExecution(ReferenceSymbolEntity? symbol)
         {
             try
@@ -181,12 +176,24 @@ namespace stockwatch.Pages
                     await stockAnalyzorService.Analyze(stockData.Data.First(), symbol);
                 }
 
-                SetLatestData(stockData.Data.FirstOrDefault(), stockData.AtTime);
+                SetLatestData(symbol.Id, stockData.Data.FirstOrDefault(), stockData.AtTime);
             }
             catch (Exception ex)
             {
                 await toastManagerService.Show(ex.Message);
             }
+        }
+
+        private void SetLatestData(string symbolId, StockPriceInRealtimeDto? stockPrice, DateTime time)
+        {
+            decimal? percentage = null;
+            if (stockPrice is not null && targetSymbol is not null)
+            {
+                percentage = StockRulesService.CalculatePercentage(stockPrice.Price, targetSymbol.InitializedPrice);
+            }
+
+            LatestPrice = LatestPrice.With(symbolId, stockPrice?.Price, percentage, time);
+            LatestPrice.NotifyPropertyChanged();
         }
     }
 }

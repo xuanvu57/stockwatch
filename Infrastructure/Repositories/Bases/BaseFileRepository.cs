@@ -49,7 +49,13 @@ namespace Infrastructure.Repositories.Bases
             try
             {
                 if (!datas.Any())
+                {
+                    if (overwrite)
+                    {
+                        await File.WriteAllTextAsync(FilePath, string.Empty);
+                    }
                     return true;
+                }
 
                 var serializedDatas = datas.Select(x => JsonSerializer.Serialize(x)).ToList();
 

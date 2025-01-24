@@ -8,12 +8,21 @@
              Title="My symbol">
     <ContentPage.Resources>
         <ResourceDictionary>
-            <toolkit:BoolToObjectConverter x:Key="WatchButtonTextConverter" 
-                                        TrueObject="Watch"
-                                        FalseObject="Stop watching"/>
-            <toolkit:BoolToObjectConverter x:Key="WatchButtonColorConverter" 
-                                           TrueObject="#512bd4"
-                                           FalseObject="IndianRed"/>
+            <x:Decimal x:Key="Threshold">0</x:Decimal>
+            <toolkit:BoolToObjectConverter 
+                x:Key="WatchButtonTextConverter" 
+                TrueObject="Watch"
+                FalseObject="Stop watching"/>
+            <toolkit:BoolToObjectConverter 
+                x:Key="WatchButtonColorConverter" 
+                TrueObject="#512bd4"
+                FalseObject="IndianRed"/>
+            <toolkit:CompareConverter x:Key="PercentageTextColorConverter"
+                ComparisonOperator="GreaterOrEqual"
+                ComparingValue="{x:StaticResource Threshold}"
+                TrueObject="Green"
+                FalseObject="Red" 
+                DefaultConvertReturnValue="Black"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -53,7 +62,7 @@
                     Grid.Row="1"
                     Grid.Column="2"
                     VerticalTextAlignment="Center"
-                    Text="đ"/>
+                    Text="VND"/>
 
                 <Label 
                     Grid.Row="2"
@@ -94,18 +103,18 @@
 
             <Button
                 x:Name="btnWatch"
-                SemanticProperties.Hint="Start watching"
                 Clicked="OnWatchButtonClicked"
                 HorizontalOptions="Fill"
-                Text="{Binding IsWatcherStopped, Converter={x:StaticResource WatchButtonTextConverter}}"
-                BackgroundColor="{Binding IsWatcherStopped, Converter={x:StaticResource WatchButtonColorConverter}}"
+                Text="{Binding Source={x:Reference mainPage}, Path=IsWatcherStopped, Converter={x:StaticResource WatchButtonTextConverter}}"
+                BackgroundColor="{Binding Source={x:Reference mainPage}, Path=IsWatcherStopped, Converter={x:StaticResource WatchButtonColorConverter}}"
                 TextColor="White"/>
 
             <HorizontalStackLayout>
                 <Label 
                     Text="Symbol: "/>
                 <Label
-                    x:Name="lblSymbol"
+                    
+                    FontAttributes="Bold"
                     Text="{Binding LatestPrice.SymbolId, Source={x:Reference mainPage}}"/>
             </HorizontalStackLayout>
 
@@ -113,16 +122,25 @@
                 <Label 
                     Text="Price: "/>
                 <Label
-                    x:Name="lblPrice"
-                    Text="{Binding LatestPrice.Price, Source={x:Reference mainPage}}"/>
+                    FontAttributes="Bold"
+                    Text="{Binding LatestPrice.Price, Source={x:Reference mainPage}, StringFormat='{0:N0} VND', TargetNullValue='N/A'}"
+                    TextColor="{Binding LatestPrice.Percentage, Source={x:Reference mainPage}, Converter={x:StaticResource PercentageTextColorConverter}}"/>
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout>
+                <Label 
+                    Text="Percentage: "/>
+                <Label
+                    FontAttributes="Bold"
+                    Text="{Binding LatestPrice.Percentage, Source={x:Reference mainPage}, StringFormat='{0:F2}%', TargetNullValue='N/A'}"
+                    TextColor="{Binding LatestPrice.Percentage, Source={x:Reference mainPage}, Converter={x:StaticResource PercentageTextColorConverter}}"/>
             </HorizontalStackLayout>
 
             <HorizontalStackLayout>
                 <Label 
                     Text="Latest data at: "/>
                 <Label
-                    x:Name="lblLatestDataAt"
-                    Text="{Binding LatestPrice.AtTime, Source={x:Reference mainPage}}"/>
+                    Text="{Binding LatestPrice.AtTime, Source={x:Reference mainPage}, StringFormat='{0:yyyy-MM-dd HH:mm:ss}', TargetNullValue='N/A'}"/>
             </HorizontalStackLayout>
         </VerticalStackLayout>
     </ScrollView>

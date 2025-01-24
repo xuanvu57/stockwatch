@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel;
-using System.Globalization;
 
 namespace stockwatch.Models
 {
     public record LatestPriceModel : INotifyPropertyChanged
     {
         public string SymbolId { get; init; } = "N/A";
-        public string Price { get; init; } = "N/A";
-        public string AtTime { get; init; } = "N/A";
+        public decimal? Price { get; init; }
+        public decimal? Percentage { get; init; }
+        public DateTime? AtTime { get; init; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -16,15 +16,15 @@ namespace stockwatch.Models
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(""));
         }
 
-        public LatestPriceModel With(string? symbolId, decimal? price, DateTime atTime)
+        public LatestPriceModel With(string symbolId, decimal? price, decimal? percentage, DateTime atTime)
         {
             return this with
             {
-                SymbolId = symbolId ?? "N/A",
-                Price = price?.ToString("C", new CultureInfo("VN-vn")) ?? "N/A",
-                AtTime = atTime.ToString("yyyy-MM-dd HH:mm:ss")
+                SymbolId = symbolId,
+                Price = price,
+                Percentage = percentage,
+                AtTime = atTime
             };
-
         }
     }
 }
