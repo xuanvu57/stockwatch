@@ -29,6 +29,12 @@ namespace Infrastructure.Repositories.Bases
 
                 return data;
             }
+            catch (FileNotFoundException ex)
+            {
+                logger.LogError(ex, $"Error in getting {nameof(TEntity)}");
+
+                return null;
+            }
             catch (Exception ex)
             {
                 logger.LogError(ex, $"Error in getting {nameof(TEntity)}");
