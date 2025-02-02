@@ -34,7 +34,7 @@ namespace Application.Algorithms.PotentialSymbols
                         _ => StockRulesService.CalculatePercentage(previousPrices, currentPrice)
                     };
 
-                    if (percentage >= request.ExpectedPercentage)
+                    if (percentage >= request.ExpectedAmplitudePercentage)
                     {
                         validHitoreis.Add(priceHistory);
                     }

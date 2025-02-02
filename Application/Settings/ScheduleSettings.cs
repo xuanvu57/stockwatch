@@ -1,4 +1,4 @@
-﻿namespace stockwatch.Configurations.Models
+﻿namespace Application.Settings
 {
     public record ScheduleSettings
     {

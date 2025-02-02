@@ -6,39 +6,28 @@ using Infrastructure.Clients.Ssi.Constants;
 using Infrastructure.Clients.Ssi.Interfaces;
 using System.Globalization;
 using static Application.Constants.ApplicationEnums;
+using static Domain.Constants.StockWatchEnums;
 
 namespace Infrastructure.Services
 {
     [DIService(DIServiceLifetime.Scoped)]
     public class SsiPriceHistoryCollectingService(ILoadingService loadingService, ISsiClient ssiClient) : IPriceHistoryCollectingService
     {
-        public async Task<Dictionary<string, IEnumerable<StockPriceHistoryDto>>> GetByMarket(string market, int months)
+        public async Task<Dictionary<string, IEnumerable<StockPriceHistoryDto>>> GetByMarket(Market market, int maxSymbolCountFromMarket, int months)
         {
-            var stockPriceHistoryByMarket = new Dictionary<string, IEnumerable<StockPriceHistoryDto>>();
+            var symbolIds = Enumerable.Empty<string>();
+            var securitiesResponse = await ssiClient.Securities(market.ToString(), 1, maxSymbolCountFromMarket);
 
-            // TODO: debugging, add fix number
-            var pageIndex = 1_000_000;      //SsiConstants.Request.DefaultPageIndex;
-            var pageSize = 10;              //SsiConstants.Request.DefaultPageSize;
-
-            var response = await ssiClient.Securities(market, 1, pageSize);
-            while (response.Status == SsiConstants.ResponseStatus.Success &&
-                response.Data is not null &&
-                response.Data.Length > 0)
+            if (securitiesResponse.Status == SsiConstants.ResponseStatus.Success &&
+                securitiesResponse.Data is not null &&
+                securitiesResponse.Data.Length > 0)
             {
-                var stockPrices = await GetBySymbols(response.Data.Select(x => x.Symbol), months);
-                foreach (var key in stockPrices.Keys)
-                {
-                    stockPriceHistoryByMarket.Add(key, stockPrices[key]);
-                }
-
-                pageIndex++;
-                if (pageIndex * pageSize > response.TotalRecord)
-                    break;
-
-                response = await ssiClient.Securities(market, pageIndex, pageSize);
+                symbolIds = securitiesResponse.Data
+                    .Select(x => x.Symbol)
+                    .Take(maxSymbolCountFromMarket);
             }
 
-            return stockPriceHistoryByMarket;
+            return await GetBySymbols(symbolIds, months);
         }
 
         public async Task<Dictionary<string, IEnumerable<StockPriceHistoryDto>>> GetBySymbols(IEnumerable<string> symbolIds, int months)

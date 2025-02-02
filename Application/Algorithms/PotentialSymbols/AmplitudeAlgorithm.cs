@@ -10,7 +10,7 @@ namespace Application.Algorithms.PotentialSymbols
         protected override List<StockPriceHistoryDto> FilterPriceHistory(IEnumerable<StockPriceHistoryDto> priceHistories, PotentialSymbolRequest request)
         {
             return priceHistories
-                    .Where(x => StockRulesService.CalculatePercentage(x.HighestPrice, x.LowestPrice) >= request.ExpectedPercentage)
+                    .Where(x => StockRulesService.CalculatePercentage(x.HighestPrice, x.LowestPrice) >= request.ExpectedAmplitudePercentage)
                     .ToList();
         }
     }

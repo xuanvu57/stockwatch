@@ -32,21 +32,21 @@
                 x:Name="pckMarket"
                 ItemsSource="{Binding Source={x:Static local:FindPotentialSymbolPage.Markets}}"
                 SelectedIndex="0"
-                Title="Market (default HOSE)">
+                Title="Market">
             </Picker>
 
             <Picker
                 x:Name="pckGroupByPeriod"
                 ItemsSource="{Binding Source={x:Static local:FindPotentialSymbolPage.Periods}}"
                 SelectedIndex="0"
-                Title="Period (default Day)">
+                Title="Period">
             </Picker>
 
             <Picker
                 x:Name="pckAlgorithm"
                 ItemsSource="{Binding Source={x:Static local:FindPotentialSymbolPage.PotentialAlgorithms}}"
                 SelectedIndex="0"
-                Title="Analysis algorithm (default Amplitude)">                
+                Title="Analysis algorithm">                
             </Picker>
 
             <Picker
@@ -57,15 +57,15 @@
                                     Path=SelectedItem,
                                     Converter={x:StaticResource IsNotEqualConverter},
                                     ConverterParameter='Amplitude'}"
-                Title="Price type (default Price)">
+                Title="Price type">
             </Picker>
 
             <Grid ColumnDefinitions="Auto, Auto" RowDefinitions="Auto">
                 <Entry
                     Grid.Row="0" Grid.Column="0"
-                    WidthRequest="90"
-                    x:Name="entExpectedPercentage"
-                    Placeholder="Expectation"
+                    WidthRequest="140"
+                    x:Name="entExpectedAmplitudePercentage"
+                    Placeholder="Expected amplitude"
                     Keyboard="Numeric"
                     Text="5"/>
                 <Label 
@@ -96,7 +96,7 @@
                         <Label
                             Grid.Column="1"
                             FontAttributes="Bold"
-                            Text="High/Low"></Label>
+                            Text="Average amplitude"></Label>
                         <Label
                             Grid.Column="2"
                             FontAttributes="Bold"

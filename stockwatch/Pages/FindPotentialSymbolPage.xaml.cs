@@ -17,7 +17,7 @@ public partial class FindPotentialSymbolPage : ContentPage
     private readonly IPotentialSymbolsAnalyzingService potentialSymbolsAnalyzingService;
     private readonly IFavoriteSymbolRepository favoriteSymbolRepository;
 
-    public static IEnumerable<string> Markets { get; } = Enum<Market>.ToDescriptions();
+    public static IEnumerable<string> Markets { get; } = ["<Favorite symbols>", .. Enum<Market>.ToDescriptions()];
     public static IEnumerable<string> Periods { get; } = Enum<GroupPriceDataBy>.ToDescriptions();
     public static IEnumerable<string> PotentialAlgorithms { get; } = Enum<PotentialAlgorithm>.ToDescriptions();
     public static IEnumerable<string> PriceTypes { get; } = Enum<PriceType>.ToDescriptions();
@@ -43,7 +43,7 @@ public partial class FindPotentialSymbolPage : ContentPage
     {
         await loadingService.Show();
 
-        var request = CreateRequest();
+        var request = await CreateRequest();
         var analyziedResponse = await potentialSymbolsAnalyzingService.Analyze(request);
 
         PotentialSymbols = new(analyziedResponse.Data.Select(x => PotentialSymbolModel.FromPotentialSymbol(x)));
@@ -81,20 +81,22 @@ public partial class FindPotentialSymbolPage : ContentPage
         }
     }
 
-    private PotentialSymbolRequest CreateRequest()
+    private async Task<PotentialSymbolRequest> CreateRequest()
     {
-        var market = pckMarket.SelectedItem?.ToString() ?? string.Empty;
+        var market = pckMarket.SelectedIndex == 0 ? (Market?)null : Enum<Market>.ToEnum(pckMarket.SelectedItem);
+        var symbols = pckMarket.SelectedIndex == 0 ? await favoriteSymbolRepository.Get() : [];
         var groupBy = Enum<GroupPriceDataBy>.ToEnum(pckGroupByPeriod.SelectedItem);
         var algorithm = Enum<PotentialAlgorithm>.ToEnum(pckAlgorithm.SelectedItem);
         var priceType = Enum<PriceType>.ToEnum(pckPriceType.SelectedItem);
-        var expectedPercentage = decimal.Parse(entExpectedPercentage.Text?.Replace(",", string.Empty) ?? "0");
+        var expectedAmplitudePercentage = decimal.Parse(entExpectedAmplitudePercentage.Text?.Replace(",", string.Empty) ?? "0");
 
         return new()
         {
             Algorithm = algorithm,
-            ExpectedPercentage = expectedPercentage,
+            ExpectedAmplitudePercentage = expectedAmplitudePercentage,
             GroupDataBy = groupBy,
             Market = market,
+            Symbols = symbols,
             PriceType = priceType
         };
     }

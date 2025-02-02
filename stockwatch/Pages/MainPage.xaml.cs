@@ -1,11 +1,11 @@
 ﻿using Application.Dtos;
 using Application.Services.Interfaces;
+using Application.Settings;
 using Domain.Constants;
 using Domain.Entities;
 using Domain.Repositories.Interfaces;
 using Domain.Services;
 using Microsoft.Extensions.Configuration;
-using stockwatch.Configurations.Models;
 using stockwatch.Models;
 
 namespace stockwatch.Pages
@@ -21,7 +21,7 @@ namespace stockwatch.Pages
         private readonly IDispatcherTimer timer;
         private ReferenceSymbolEntity? targetSymbol;
 
-        public LatestPriceModel LatestPrice { get; private set; } = new LatestPriceModel();
+        public LatestPriceModel LatestPrice { get; private set; } = new();
 
         private readonly BindableProperty IsWatcherStoppedProperty = BindableProperty.Create(
             propertyName: nameof(IsWatcherStopped),
