@@ -22,11 +22,11 @@ namespace Domain.Services
 
         public static DateOnly GetBeginningDateOfWeek(DateOnly date)
         {
-            if (date.DayOfWeek == StockWatchConstants.BeginningDateOfWeek)
+            if (date.DayOfWeek == StockWatchConstants.BeginningDayOfWeek)
                 return date;
 
             var beginningDate = date;
-            while (beginningDate.DayOfWeek != StockWatchConstants.BeginningDateOfWeek)
+            while (beginningDate.DayOfWeek != StockWatchConstants.BeginningDayOfWeek)
             {
                 beginningDate = beginningDate.AddDays(-1);
             }

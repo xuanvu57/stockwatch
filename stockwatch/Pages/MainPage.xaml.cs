@@ -68,8 +68,7 @@ namespace stockwatch.Pages
             {
                 InitReferenceSymbolInfo(targetSymbol);
 
-                IsWatcherStopped = false;
-                timer.Start();
+                await StartWatching();
             }
             else
             {
@@ -86,7 +85,7 @@ namespace stockwatch.Pages
         {
             if (IsWatcherStopped)
             {
-                await StartWatching();
+                await StartNewWatching();
             }
             else
             {
@@ -94,7 +93,7 @@ namespace stockwatch.Pages
             }
         }
 
-        private async Task StartWatching()
+        private async Task StartNewWatching()
         {
             if (!AreValidInputs(out var errorMessage))
             {
@@ -102,12 +101,17 @@ namespace stockwatch.Pages
                 return;
             }
 
-            IsWatcherStopped = false;
-
             targetSymbol = CreateReferenceSymbolInfo();
             await referenceSymbolRepository.Save(targetSymbol);
 
             await toastManagerService.Show(messageService.GetMessage(MessageConstants.MSG_StartFollowingSymbol, targetSymbol.Id));
+
+            await StartWatching();
+        }
+
+        private async Task StartWatching()
+        {
+            IsWatcherStopped = false;
 
             timer.Stop();
             await DoApiExecution(targetSymbol);
