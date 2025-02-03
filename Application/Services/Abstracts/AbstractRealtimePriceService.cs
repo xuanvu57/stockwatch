@@ -7,9 +7,11 @@ using Domain.Repositories.Interfaces;
 namespace Application.Services.Abstracts
 {
     public abstract class AbstractRealtimePriceService(
+        IDateTimeService dateTimeService,
         ILatestPriceRepository latestPriceRepository) : IRealtimePriceService
     {
         protected readonly ILatestPriceRepository latestPriceRepository = latestPriceRepository;
+        protected readonly IDateTimeService dateTimeService = dateTimeService;
 
         public async Task<BaseResponse<StockPriceInRealtimeDto>> GetBySymbolId(string symbolId)
         {
@@ -28,7 +30,7 @@ namespace Application.Services.Abstracts
                 currentPriceInMarket = StockPriceInRealtimeDto.FromLatestPriceEntity(latestPriceInMemory);
             }
 
-            return ConvertToResponse(currentPriceInMarket);
+            return await ConvertToResponse(currentPriceInMarket);
         }
 
         protected abstract Task<StockPriceInRealtimeDto?> GetCurrentPriceInMarketBySymbolId(string symbolId);
@@ -51,11 +53,13 @@ namespace Application.Services.Abstracts
             return currentPriceInMarket.Price != latestPriceInDB.Price;
         }
 
-        private static BaseResponse<StockPriceInRealtimeDto> ConvertToResponse(StockPriceInRealtimeDto? stockPrice)
+        private async Task<BaseResponse<StockPriceInRealtimeDto>> ConvertToResponse(StockPriceInRealtimeDto? stockPrice)
         {
+            var currentTime = await dateTimeService.GetCurrentSystemDateTime();
             return new()
             {
-                Data = stockPrice is null ? [] : [stockPrice]
+                Data = stockPrice is null ? [] : [stockPrice],
+                AtTime = currentTime,
             };
         }
     }

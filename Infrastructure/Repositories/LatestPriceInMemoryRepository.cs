@@ -1,4 +1,5 @@
 ﻿using Application.Attributes;
+using Application.Services.Interfaces;
 using Domain.Entities;
 using Domain.Repositories.Interfaces;
 using Domain.Services;
@@ -7,13 +8,14 @@ using static Application.Constants.ApplicationEnums;
 namespace Infrastructure.Repositories
 {
     [DIService(DIServiceLifetime.Singleton)]
-    public class LatestPriceInMemoryRepository : ILatestPriceRepository
+    public class LatestPriceInMemoryRepository(IDateTimeService dateTimeService) : ILatestPriceRepository
     {
         private readonly Dictionary<string, LatestPriceEntity> latestPriceDictionary = [];
 
         public async Task<LatestPriceEntity?> Get(string symbolId)
         {
-            var latestDate = StockRulesService.GetLatestAvailableDate();
+            var today = await dateTimeService.GetCurrentBusinessDateTime();
+            var latestDate = StockRulesService.GetLatestAvailableDate(today);
 
             latestPriceDictionary.TryGetValue(symbolId, out var latestPrice);
 

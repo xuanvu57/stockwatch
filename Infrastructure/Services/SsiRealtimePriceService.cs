@@ -1,6 +1,7 @@
 ﻿using Application.Attributes;
 using Application.Dtos;
 using Application.Services.Abstracts;
+using Application.Services.Interfaces;
 using Domain.Repositories.Interfaces;
 using Domain.Services;
 using Infrastructure.Clients.Ssi.Constants;
@@ -13,7 +14,8 @@ namespace Infrastructure.Services
     [DIService(DIServiceLifetime.Scoped)]
     public class SsiRealtimePriceService(
         ISsiClient ssiClient,
-        ILatestPriceRepository latestPriceRepository) : AbstractRealtimePriceService(latestPriceRepository)
+        IDateTimeService dateTimeService,
+        ILatestPriceRepository latestPriceRepository) : AbstractRealtimePriceService(dateTimeService, latestPriceRepository)
     {
         override protected async Task<StockPriceInRealtimeDto?> GetCurrentPriceInMarketBySymbolId(string symbolId)
         {
@@ -22,7 +24,8 @@ namespace Infrastructure.Services
 
         private async Task<StockPriceInRealtimeDto?> GetCurrentPriceBySymbolIdFromSsi(string symbolId)
         {
-            var latestDate = StockRulesService.GetLatestAvailableDate();
+            var today = await dateTimeService.GetCurrentBusinessDateTime();
+            var latestDate = StockRulesService.GetLatestAvailableDate(today);
 
             var intradayOhlc = await ssiClient.IntradayOhlc(latestDate, latestDate, symbol: symbolId, pageIndex: 1, pageSize: 1);
 
@@ -30,7 +33,7 @@ namespace Infrastructure.Services
             {
                 var refPrice = await GetReferencePrice(symbolId, latestDate);
 
-                return Convert(intradayOhlc.Data![0], refPrice);
+                return await Convert(intradayOhlc.Data![0], refPrice);
             }
 
             return null;
@@ -56,8 +59,10 @@ namespace Infrastructure.Services
             }
         }
 
-        private static StockPriceInRealtimeDto Convert(IntradayOhlcResponse intradayOhlcResponse, decimal? refPrice)
+        private async Task<StockPriceInRealtimeDto> Convert(IntradayOhlcResponse intradayOhlcResponse, decimal? refPrice)
         {
+            var currentTime = await dateTimeService.GetCurrentSystemDateTime();
+
             return new()
             {
                 SymbolId = intradayOhlcResponse.Symbol,
@@ -65,7 +70,7 @@ namespace Infrastructure.Services
                 RefPrice = refPrice,
                 HighestPrice = decimal.Parse(intradayOhlcResponse.High),
                 LowestPrice = decimal.Parse(intradayOhlcResponse.Low),
-                AtTime = DateTime.Now
+                AtTime = currentTime
             };
         }
     }

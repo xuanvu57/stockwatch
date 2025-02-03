@@ -12,7 +12,8 @@ namespace Infrastructure.Repositories
     public class FavoriteSymbolRepository(
         ILogger<FavoriteSymbolRepository> logger,
         ILocalFileService localFileService,
-        IToastManagerService toastManagerService) :
+        IToastManagerService toastManagerService,
+        IDateTimeService dateTimeService) :
         BaseRepository<FavoriteSymbolRepository, FavoriteSymbolEntity>(logger, localFileService, toastManagerService), IFavoriteSymbolRepository
     {
         public async Task<IList<string>> Get()
@@ -31,10 +32,11 @@ namespace Infrastructure.Repositories
             if (exsitingSymbolIds.Contains(symbolId))
                 return true;
 
+            var currentTime = await dateTimeService.GetCurrentSystemDateTime();
             var favoriteSymbol = new FavoriteSymbolEntity()
             {
                 Id = symbolId,
-                AtTime = DateTime.Now,
+                AtTime = currentTime,
             };
 
             return await Create(favoriteSymbol);

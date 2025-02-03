@@ -4,15 +4,13 @@ namespace Domain.Services
 {
     public static class StockRulesService
     {
-        public static DateOnly GetLatestAvailableDate()
+        public static DateOnly GetLatestAvailableDate(DateTime date)
         {
-            var currentDate = DateTime.Now.Date;
-
-            var latestAvailableDate = currentDate.DayOfWeek switch
+            var latestAvailableDate = date.DayOfWeek switch
             {
-                DayOfWeek.Saturday => currentDate.AddDays(-1),
-                DayOfWeek.Sunday => currentDate.AddDays(-2),
-                _ => currentDate
+                DayOfWeek.Saturday => date.AddDays(-1),
+                DayOfWeek.Sunday => date.AddDays(-2),
+                _ => date
             };
 
             return DateOnly.FromDateTime(latestAvailableDate);

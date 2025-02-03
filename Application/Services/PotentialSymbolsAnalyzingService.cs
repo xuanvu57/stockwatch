@@ -14,6 +14,7 @@ namespace Application.Services
     [DIService(DIServiceLifetime.Scoped)]
     public class PotentialSymbolsAnalyzingService(
         IConfiguration configuration,
+        IDateTimeService dateTimeService,
         IPriceHistoryCollectingService priceHistoryCollectingService,
         IPotentialSymbolsAlgorithmFactory algorithmFactory,
         IFavoriteSymbolRepository favoriteSymbolRepository) : IPotentialSymbolsAnalyzingService
@@ -37,7 +38,7 @@ namespace Application.Services
 
             var potentialSymbols = await AnalyzeBaseOnPriceHistory(priceHistory, request);
 
-            return ConvertToResponse(potentialSymbols);
+            return await ConvertToResponse(potentialSymbols);
         }
 
         private async Task<List<PotentialSymbolDto>> AnalyzeBaseOnPriceHistory(Dictionary<string, IEnumerable<StockPriceHistoryDto>> priceHistory, PotentialSymbolRequest request)
@@ -65,11 +66,13 @@ namespace Application.Services
             return symbol with { IsFavorite = favoriteSymbolIds.Contains(symbol.SymbolId) };
         }
 
-        private static BaseResponse<PotentialSymbolDto> ConvertToResponse(IEnumerable<PotentialSymbolDto> potentialSymbols)
+        private async Task<BaseResponse<PotentialSymbolDto>> ConvertToResponse(IEnumerable<PotentialSymbolDto> potentialSymbols)
         {
+            var currentTime = await dateTimeService.GetCurrentSystemDateTime();
             return new()
             {
-                Data = potentialSymbols is null ? [] : potentialSymbols
+                Data = potentialSymbols is null ? [] : potentialSymbols,
+                AtTime = currentTime
             };
         }
     }

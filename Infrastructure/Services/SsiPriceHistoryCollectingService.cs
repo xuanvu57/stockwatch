@@ -11,7 +11,10 @@ using static Domain.Constants.StockWatchEnums;
 namespace Infrastructure.Services
 {
     [DIService(DIServiceLifetime.Scoped)]
-    public class SsiPriceHistoryCollectingService(ILoadingService loadingService, ISsiClient ssiClient) : IPriceHistoryCollectingService
+    public class SsiPriceHistoryCollectingService(
+        ILoadingService loadingService,
+        ISsiClient ssiClient,
+        IDateTimeService dateTimeService) : IPriceHistoryCollectingService
     {
         public async Task<Dictionary<string, IEnumerable<StockPriceHistoryDto>>> GetByMarket(Market market, int maxSymbolCountFromMarket, int months)
         {
@@ -48,7 +51,9 @@ namespace Infrastructure.Services
         {
             await loadingService.Show(symbolId);
 
-            var toDate = StockRulesService.GetLatestAvailableDate();
+            var today = await dateTimeService.GetCurrentBusinessDateTime();
+
+            var toDate = StockRulesService.GetLatestAvailableDate(today);
             var fromDate = toDate.AddMonths(-1 * months);
 
             var stockPriceHistory = new List<StockPriceHistoryDto>();
