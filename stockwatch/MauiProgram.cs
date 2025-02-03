@@ -3,7 +3,6 @@ using Infrastructure.Configurations;
 using Microsoft.Extensions.Logging;
 using Mopups.Hosting;
 using stockwatch.Configurations;
-using stockwatch.Pages;
 
 namespace stockwatch
 {
@@ -32,8 +31,7 @@ namespace stockwatch
 
             builder.Services.RegisterLogger(FileSystem.AppDataDirectory);
             builder.Services.RegisterDependencies(typeof(MauiProgram).Assembly);
-            builder.Services.AddScoped<MainPage>();
-            builder.Services.AddScoped<FindPotentialSymbolPage>();
+            builder.Services.RegisterMauiPagesAsScopedService(typeof(MauiProgram).Assembly);
 
             LanguageRegister.SetLanguage();
 
