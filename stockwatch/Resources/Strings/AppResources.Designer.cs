@@ -61,6 +61,240 @@ namespace stockwatch.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Analysis algorithm.
+        /// </summary>
+        internal static string LBL_AnalysisAlgorithm {
+            get {
+                return ResourceManager.GetString("LBL_AnalysisAlgorithm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Analyze.
+        /// </summary>
+        internal static string LBL_Analyze {
+            get {
+                return ResourceManager.GetString("LBL_Analyze", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Average amplitude.
+        /// </summary>
+        internal static string LBL_AverageAmplitude {
+            get {
+                return ResourceManager.GetString("LBL_AverageAmplitude", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ex: FPT.
+        /// </summary>
+        internal static string LBL_ExampleOfSymbolID {
+            get {
+                return ResourceManager.GetString("LBL_ExampleOfSymbolID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected amplitude.
+        /// </summary>
+        internal static string LBL_ExpectedAmplitude {
+            get {
+                return ResourceManager.GetString("LBL_ExpectedAmplitude", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected percentage.
+        /// </summary>
+        internal static string LBL_ExpectedPercentage {
+            get {
+                return ResourceManager.GetString("LBL_ExpectedPercentage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Favorite.
+        /// </summary>
+        internal static string LBL_Favorite {
+            get {
+                return ResourceManager.GetString("LBL_Favorite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;Favorite symbols&gt;.
+        /// </summary>
+        internal static string LBL_FavoriteSymbolsItem {
+            get {
+                return ResourceManager.GetString("LBL_FavoriteSymbolsItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Group by.
+        /// </summary>
+        internal static string LBL_GroupBy {
+            get {
+                return ResourceManager.GetString("LBL_GroupBy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Higher.
+        /// </summary>
+        internal static string LBL_Higher {
+            get {
+                return ResourceManager.GetString("LBL_Higher", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Latest data at.
+        /// </summary>
+        internal static string LBL_LatestDataAtTime {
+            get {
+                return ResourceManager.GetString("LBL_LatestDataAtTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lower.
+        /// </summary>
+        internal static string LBL_Lower {
+            get {
+                return ResourceManager.GetString("LBL_Lower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Market/Symbols.
+        /// </summary>
+        internal static string LBL_MarketOrSymbols {
+            get {
+                return ResourceManager.GetString("LBL_MarketOrSymbols", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Match count.
+        /// </summary>
+        internal static string LBL_MatchCount {
+            get {
+                return ResourceManager.GetString("LBL_MatchCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My symbol.
+        /// </summary>
+        internal static string LBL_MySymbol {
+            get {
+                return ResourceManager.GetString("LBL_MySymbol", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Percentage.
+        /// </summary>
+        internal static string LBL_Percentage {
+            get {
+                return ResourceManager.GetString("LBL_Percentage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Potential symbols.
+        /// </summary>
+        internal static string LBL_PotentialSymbols {
+            get {
+                return ResourceManager.GetString("LBL_PotentialSymbols", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Price.
+        /// </summary>
+        internal static string LBL_Price {
+            get {
+                return ResourceManager.GetString("LBL_Price", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Price type.
+        /// </summary>
+        internal static string LBL_PriceType {
+            get {
+                return ResourceManager.GetString("LBL_PriceType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reference price.
+        /// </summary>
+        internal static string LBL_ReferencePrice {
+            get {
+                return ResourceManager.GetString("LBL_ReferencePrice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop watch.
+        /// </summary>
+        internal static string LBL_StopWatch {
+            get {
+                return ResourceManager.GetString("LBL_StopWatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Symbol ID.
+        /// </summary>
+        internal static string LBL_SymbolID {
+            get {
+                return ResourceManager.GetString("LBL_SymbolID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unexpected percentage.
+        /// </summary>
+        internal static string LBL_UnexpectedPercentage {
+            get {
+                return ResourceManager.GetString("LBL_UnexpectedPercentage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unfavored.
+        /// </summary>
+        internal static string LBL_Unfavored {
+            get {
+                return ResourceManager.GetString("LBL_Unfavored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VND.
+        /// </summary>
+        internal static string LBL_VND {
+            get {
+                return ResourceManager.GetString("LBL_VND", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Watch.
+        /// </summary>
+        internal static string LBL_Watch {
+            get {
+                return ResourceManager.GetString("LBL_Watch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Added &quot;{0}&quot; to favorite list.
         /// </summary>
         internal static string MSG_AddToFavoriteSuccessfully {

@@ -2,9 +2,10 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:strings="clr-namespace:stockwatch.Resources.Strings"
              xmlns:local="clr-namespace:stockwatch.Pages"
              x:Class="stockwatch.Pages.FindPotentialSymbolPage"
-             Title="Potential symbols">
+             Title="{Binding Source={x:Static strings:AppResources.LBL_PotentialSymbols}}">
     <ContentPage.Resources>
         <ResourceDictionary>
             <toolkit:IsNotEqualConverter x:Key="IsNotEqualConverter" />
@@ -15,8 +16,8 @@
                 FalseObject="favorite_empty.png"/>
             <toolkit:BoolToObjectConverter 
                 x:Key="FavoriteTextConverter" 
-                TrueObject="Unfavored"
-                FalseObject="Favorite"/>
+                TrueObject="{x:Static strings:AppResources.LBL_Unfavored}"
+                FalseObject="{x:Static strings:AppResources.LBL_Favorite}"/>
             <toolkit:BoolToObjectConverter 
                 x:Key="FavoriteColorConverter" 
                 TrueObject="LightPink"
@@ -32,21 +33,21 @@
                 x:Name="pckMarket"
                 ItemsSource="{Binding Source={x:Static local:FindPotentialSymbolPage.Markets}}"
                 SelectedIndex="0"
-                Title="Market">
+                Title="{Binding Source={x:Static strings:AppResources.LBL_MarketOrSymbols}}">
             </Picker>
 
             <Picker
                 x:Name="pckGroupByPeriod"
                 ItemsSource="{Binding Source={x:Static local:FindPotentialSymbolPage.Periods}}"
                 SelectedIndex="0"
-                Title="Period">
+                Title="{Binding Source={x:Static strings:AppResources.LBL_GroupBy}}">
             </Picker>
 
             <Picker
                 x:Name="pckAlgorithm"
                 ItemsSource="{Binding Source={x:Static local:FindPotentialSymbolPage.PotentialAlgorithms}}"
                 SelectedIndex="0"
-                Title="Analysis algorithm">                
+                Title="{Binding Source={x:Static strings:AppResources.LBL_AnalysisAlgorithm}}">                
             </Picker>
 
             <Picker
@@ -57,7 +58,7 @@
                                     Path=SelectedItem,
                                     Converter={x:StaticResource IsNotEqualConverter},
                                     ConverterParameter='Amplitude'}"
-                Title="Price type">
+                Title="{Binding Source={x:Static strings:AppResources.LBL_PriceType}}">
             </Picker>
 
             <Grid ColumnDefinitions="Auto, Auto" RowDefinitions="Auto">
@@ -65,7 +66,7 @@
                     Grid.Row="0" Grid.Column="0"
                     WidthRequest="140"
                     x:Name="entExpectedAmplitudePercentage"
-                    Placeholder="Expected amplitude"
+                    Placeholder="{Binding Source={x:Static strings:AppResources.LBL_ExpectedAmplitude}}"
                     Keyboard="Numeric"
                     Text="5"/>
                 <Label 
@@ -76,7 +77,7 @@
 
             <Button
                 x:Name="btnAnalyze"
-                Text="Analyze" 
+                Text="{Binding Source={x:Static strings:AppResources.LBL_Analyze}}"
                 Clicked="OnAnalyzeButtonClicked"
                 HorizontalOptions="Fill" />
 
@@ -92,18 +93,21 @@
                             Grid.Column="0"
                             Margin="4, 0, 0, 0"
                             FontAttributes="Bold"
-                            Text="Symbol ID"></Label>
+                            Text="{Binding Source={x:Static strings:AppResources.LBL_SymbolID}}"></Label>
                         <Label
                             Grid.Column="1"
                             FontAttributes="Bold"
-                            Text="Average amplitude"></Label>
+                            Text="{Binding Source={x:Static strings:AppResources.LBL_AverageAmplitude}}"></Label>
                         <Label
                             Grid.Column="2"
-                            FontAttributes="Bold"
-                            Text="{Binding 
-                                        Source={x:Reference pckGroupByPeriod}, 
-                                        Path=SelectedItem, 
-                                        StringFormat='Matched count ({0})'}"></Label>
+                            FontAttributes="Bold">
+                            <Label.Text>
+                                <MultiBinding StringFormat="{}{0} ({1})">
+                                    <Binding Source="{x:Static strings:AppResources.LBL_MatchCount}" />
+                                    <Binding Path="SelectedItem" Source="{x:Reference pckGroupByPeriod}" />
+                                </MultiBinding>
+                            </Label.Text>
+                        </Label>
                     </Grid>
                 </CollectionView.Header>
                 <CollectionView.ItemTemplate>

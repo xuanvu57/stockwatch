@@ -4,6 +4,7 @@ using Application.Services.Interfaces;
 using Domain.Constants;
 using Domain.Repositories.Interfaces;
 using stockwatch.Models;
+using stockwatch.Resources.Strings;
 using System.Collections.ObjectModel;
 using static Domain.Constants.StockWatchEnums;
 
@@ -17,7 +18,7 @@ public partial class FindPotentialSymbolPage : ContentPage
     private readonly IPotentialSymbolsAnalyzingService potentialSymbolsAnalyzingService;
     private readonly IFavoriteSymbolRepository favoriteSymbolRepository;
 
-    public static IEnumerable<string> Markets { get; } = ["<Favorite symbols>", .. Enum<Market>.ToDescriptions()];
+    public static IEnumerable<string> Markets { get; } = [AppResources.LBL_FavoriteSymbolsItem, .. Enum<Market>.ToDescriptions()];
     public static IEnumerable<string> Periods { get; } = Enum<GroupPriceDataBy>.ToDescriptions();
     public static IEnumerable<string> PotentialAlgorithms { get; } = Enum<PotentialAlgorithm>.ToDescriptions();
     public static IEnumerable<string> PriceTypes { get; } = Enum<PriceType>.ToDescriptions();

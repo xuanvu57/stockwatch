@@ -9,35 +9,18 @@ namespace Infrastructure.Configurations
     {
         public static void RegisterDependencies(this IServiceCollection serviceCollection, Assembly? presentationLayerAssembly = null)
         {
-            var applicationAssembly = typeof(DIServiceAttribute).Assembly;
-            var infrastructureAssembly = typeof(ServiceRegister).Assembly;
+            var applicationLayerAssembly = typeof(DIServiceAttribute).Assembly;
+            var infrastructureLayerAssembly = typeof(ServiceRegister).Assembly;
 
-            serviceCollection.Scan(scrutor => scrutor
-                .FromAssemblies(applicationAssembly, infrastructureAssembly)
-
-                .AddClasses(x => x
-                    .Where(type => type
-                        .GetCustomAttribute<DIServiceAttribute>()?.Lifetime == DIServiceLifetime.Transient))
-                .AsImplementedInterfaces()
-                .WithScopedLifetime()
-
-                .AddClasses(x => x
-                    .Where(type => type
-                        .GetCustomAttribute<DIServiceAttribute>()?.Lifetime == DIServiceLifetime.Scoped))
-                .AsImplementedInterfaces()
-                .WithScopedLifetime()
-
-                .AddClasses(x => x
-                    .Where(type => type
-                        .GetCustomAttribute<DIServiceAttribute>()?.Lifetime == DIServiceLifetime.Singleton))
-                .AsImplementedInterfaces()
-                .WithSingletonLifetime()
-                );
-
+            var assemblies = new[] { applicationLayerAssembly, infrastructureLayerAssembly };
             if (presentationLayerAssembly is not null)
             {
-                serviceCollection.Scan(scrutor => scrutor
-                    .FromAssemblies(presentationLayerAssembly)
+                assemblies = [.. assemblies, presentationLayerAssembly];
+            }
+
+            serviceCollection
+                .Scan(scrutor => scrutor
+                    .FromAssemblies(assemblies)
 
                     .AddClasses(x => x
                         .Where(type => type
@@ -56,8 +39,7 @@ namespace Infrastructure.Configurations
                             .GetCustomAttribute<DIServiceAttribute>()?.Lifetime == DIServiceLifetime.Singleton))
                     .AsImplementedInterfaces()
                     .WithSingletonLifetime()
-                    );
-            }
+                );
         }
     }
 }

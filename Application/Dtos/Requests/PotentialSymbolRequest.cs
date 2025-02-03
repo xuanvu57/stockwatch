@@ -6,9 +6,9 @@ namespace Application.Dtos.Requests
     {
         public Market? Market { get; init; }
         public IEnumerable<string> Symbols { get; init; } = [];
-        public GroupPriceDataBy GroupDataBy { get; init; } = GroupPriceDataBy.Day;
-        public PotentialAlgorithm Algorithm { get; init; } = PotentialAlgorithm.Amplitude;
-        public PriceType PriceType { get; init; } = PriceType.Price;
+        public GroupPriceDataBy GroupDataBy { get; init; }
+        public PotentialAlgorithm Algorithm { get; init; }
+        public PriceType PriceType { get; init; }
         public decimal ExpectedAmplitudePercentage { get; init; }
     }
 }

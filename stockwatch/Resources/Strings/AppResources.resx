@@ -117,6 +117,84 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="LBL_AnalysisAlgorithm" xml:space="preserve">
+    <value>Analysis algorithm</value>
+  </data>
+  <data name="LBL_Analyze" xml:space="preserve">
+    <value>Analyze</value>
+  </data>
+  <data name="LBL_AverageAmplitude" xml:space="preserve">
+    <value>Average amplitude</value>
+  </data>
+  <data name="LBL_ExampleOfSymbolID" xml:space="preserve">
+    <value>Ex: FPT</value>
+  </data>
+  <data name="LBL_ExpectedAmplitude" xml:space="preserve">
+    <value>Expected amplitude</value>
+  </data>
+  <data name="LBL_ExpectedPercentage" xml:space="preserve">
+    <value>Expected percentage</value>
+  </data>
+  <data name="LBL_Favorite" xml:space="preserve">
+    <value>Favorite</value>
+  </data>
+  <data name="LBL_FavoriteSymbolsItem" xml:space="preserve">
+    <value>&lt;Favorite symbols&gt;</value>
+  </data>
+  <data name="LBL_GroupBy" xml:space="preserve">
+    <value>Group by</value>
+  </data>
+  <data name="LBL_Higher" xml:space="preserve">
+    <value>Higher</value>
+  </data>
+  <data name="LBL_LatestDataAtTime" xml:space="preserve">
+    <value>Latest data at</value>
+  </data>
+  <data name="LBL_Lower" xml:space="preserve">
+    <value>Lower</value>
+  </data>
+  <data name="LBL_MarketOrSymbols" xml:space="preserve">
+    <value>Market/Symbols</value>
+  </data>
+  <data name="LBL_MatchCount" xml:space="preserve">
+    <value>Match count</value>
+  </data>
+  <data name="LBL_MySymbol" xml:space="preserve">
+    <value>My symbol</value>
+  </data>
+  <data name="LBL_Percentage" xml:space="preserve">
+    <value>Percentage</value>
+  </data>
+  <data name="LBL_PotentialSymbols" xml:space="preserve">
+    <value>Potential symbols</value>
+  </data>
+  <data name="LBL_Price" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="LBL_PriceType" xml:space="preserve">
+    <value>Price type</value>
+  </data>
+  <data name="LBL_ReferencePrice" xml:space="preserve">
+    <value>Reference price</value>
+  </data>
+  <data name="LBL_StopWatch" xml:space="preserve">
+    <value>Stop watch</value>
+  </data>
+  <data name="LBL_SymbolID" xml:space="preserve">
+    <value>Symbol ID</value>
+  </data>
+  <data name="LBL_UnexpectedPercentage" xml:space="preserve">
+    <value>Unexpected percentage</value>
+  </data>
+  <data name="LBL_Unfavored" xml:space="preserve">
+    <value>Unfavored</value>
+  </data>
+  <data name="LBL_VND" xml:space="preserve">
+    <value>VND</value>
+  </data>
+  <data name="LBL_Watch" xml:space="preserve">
+    <value>Watch</value>
+  </data>
   <data name="MSG_AddToFavoriteSuccessfully" xml:space="preserve">
     <value>Added "{0}" to favorite list</value>
   </data>
