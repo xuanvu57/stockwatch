@@ -1,6 +1,6 @@
 ﻿using Application.Dtos;
+using Application.Dtos.Bases;
 using Application.Services.Interfaces;
-using Application.Settings;
 using Domain.Constants;
 using Domain.Entities;
 using Domain.Repositories.Interfaces;
@@ -10,15 +10,12 @@ using stockwatch.Models;
 
 namespace stockwatch.Pages
 {
-    public partial class MainPage : ContentPage
+    public partial class MainPage : ContentPage, IBackgroundServiceSubscriber
     {
         private readonly IToastManagerService toastManagerService;
         private readonly IMessageService messageService;
-        private readonly IRealtimePriceService stockDataService;
-        private readonly IMySymbolAnalyzingService stockAnalyzorService;
         private readonly IReferenceSymbolRepository referenceSymbolRepository;
-
-        private readonly IDispatcherTimer timer;
+        private readonly IBackgroundService backgroundService;
         private ReferenceSymbolEntity? targetSymbol;
 
         public LatestPriceModel LatestPrice { get; private set; } = new();
@@ -38,24 +35,16 @@ namespace stockwatch.Pages
             IConfiguration configuration,
             IToastManagerService toastManagerService,
             IMessageService messageService,
-            IRealtimePriceService stockDataService,
-            IMySymbolAnalyzingService stockAnalyzorService,
-            IReferenceSymbolRepository referenceSymbolRepository)
+            IReferenceSymbolRepository referenceSymbolRepository,
+            IBackgroundService backgroundService)
         {
             InitializeComponent();
             BindingContext = this;
 
-            var scheduleSettings = configuration.GetRequiredSection(nameof(ScheduleSettings)).Get<ScheduleSettings>()!;
-
-            timer = Microsoft.Maui.Controls.Application.Current!.Dispatcher.CreateTimer();
-            timer.Interval = TimeSpan.FromSeconds(scheduleSettings.FetchDataIntervalInSecond);
-            timer.Tick += OnTimerTick;
-
             this.toastManagerService = toastManagerService;
             this.messageService = messageService;
-            this.stockDataService = stockDataService;
-            this.stockAnalyzorService = stockAnalyzorService;
             this.referenceSymbolRepository = referenceSymbolRepository;
+            this.backgroundService = backgroundService;
         }
 
         protected override async void OnAppearing()
@@ -68,7 +57,7 @@ namespace stockwatch.Pages
             {
                 InitReferenceSymbolInfo(targetSymbol);
 
-                await StartWatching();
+                StartWatching();
             }
             else
             {
@@ -76,16 +65,18 @@ namespace stockwatch.Pages
             }
         }
 
-        private async void OnTimerTick(object? sender, EventArgs e)
+        protected override void OnDisappearing()
         {
-            await DoApiExecution(targetSymbol);
+            base.OnDisappearing();
+
+            backgroundService.Unsubscribe(this);
         }
 
         private async void OnWatchButtonClicked(object sender, EventArgs e)
         {
             if (IsWatcherStopped)
             {
-                await StartNewWatching();
+                await StartNewWatchingManual();
             }
             else
             {
@@ -93,7 +84,7 @@ namespace stockwatch.Pages
             }
         }
 
-        private async Task StartNewWatching()
+        private async Task StartNewWatchingManual()
         {
             if (!AreValidInputs(out var errorMessage))
             {
@@ -106,22 +97,23 @@ namespace stockwatch.Pages
 
             await toastManagerService.Show(messageService.GetMessage(MessageConstants.MSG_StartFollowingSymbol, targetSymbol.Id));
 
-            await StartWatching();
+            StartWatching();
         }
 
-        private async Task StartWatching()
+        private void StartWatching()
         {
             IsWatcherStopped = false;
 
-            timer.Stop();
-            await DoApiExecution(targetSymbol);
-            timer.Start();
+            backgroundService.Subscribe(this);
+            backgroundService.Start();
         }
 
         private void StopWatching()
         {
+            backgroundService.Unsubscribe(this);
+            backgroundService.Stop();
+
             IsWatcherStopped = true;
-            timer.Stop();
         }
 
         private bool AreValidInputs(out string errorMessage)
@@ -166,28 +158,6 @@ namespace stockwatch.Pages
             };
         }
 
-        private async Task DoApiExecution(ReferenceSymbolEntity? symbol)
-        {
-            try
-            {
-                if (symbol is null)
-                    return;
-
-                var stockData = await stockDataService.GetBySymbolId(symbol.Id);
-
-                if (stockData.Data.Any())
-                {
-                    await stockAnalyzorService.Analyze(stockData.Data.First(), symbol);
-                }
-
-                SetLatestData(symbol.Id, stockData.Data.FirstOrDefault(), stockData.AtTime);
-            }
-            catch (Exception ex)
-            {
-                await toastManagerService.Show(ex.Message);
-            }
-        }
-
         private void SetLatestData(string symbolId, StockPriceInRealtimeDto? stockPrice, DateTime time)
         {
             decimal? percentage = null;
@@ -198,6 +168,16 @@ namespace stockwatch.Pages
 
             LatestPrice = LatestPrice.With(symbolId, stockPrice?.Price, percentage, time);
             LatestPrice.NotifyPropertyChanged();
+        }
+
+        public Task HandleBackgroundServiceEvent<T>(T data)
+        {
+            if (data is BaseResponse<StockPriceInRealtimeDto> stockPrice)
+            {
+                SetLatestData(targetSymbol!.Id, stockPrice.Data.FirstOrDefault(), stockPrice.AtTime);
+            }
+
+            return Task.CompletedTask;
         }
     }
 }

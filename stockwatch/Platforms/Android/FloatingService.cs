@@ -40,6 +40,7 @@ namespace stockwatch.Platforms.Android
         public override void OnDestroy()
         {
             windowManager?.RemoveView(floatView);
+
             base.OnDestroy();
         }
 
