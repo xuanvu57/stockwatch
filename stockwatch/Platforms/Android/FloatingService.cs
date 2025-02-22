@@ -97,7 +97,7 @@ namespace stockwatch.Platforms.Android
 
                 case MotionEventActions.Move:
                     isMoving = true;
-                    MoveFloatingWindow(e);
+                    DragFloatingWindow(e);
                     break;
 
                 case MotionEventActions.Up:
@@ -124,7 +124,7 @@ namespace stockwatch.Platforms.Android
             positionY = (int)e.RawY;
         }
 
-        private void MoveFloatingWindow(MotionEvent e)
+        private void DragFloatingWindow(MotionEvent e)
         {
             var nowX = (int)e.RawX;
             var nowY = (int)e.RawY;
@@ -135,6 +135,7 @@ namespace stockwatch.Platforms.Android
             layoutParams.X = layoutParams.X + movedX;
             layoutParams.Y = layoutParams.Y + movedY;
 
+            EnsureFloatingWindowInsideScreenView();
             windowManager?.UpdateViewLayout(floatView, layoutParams);
         }
 
@@ -148,7 +149,14 @@ namespace stockwatch.Platforms.Android
             {
                 layoutParams.X = displayMetrics.WidthPixels - layoutParams.Width;
             }
+
             windowManager?.UpdateViewLayout(floatView, layoutParams);
+        }
+
+        private void EnsureFloatingWindowInsideScreenView()
+        {
+            layoutParams.X = Math.Max(0, Math.Min(displayMetrics.WidthPixels - layoutParams.Width, layoutParams.X));
+            layoutParams.Y = Math.Max(0, Math.Min(displayMetrics.HeightPixels - layoutParams.Height, layoutParams.Y));
         }
 
         private void LaunchApp()
