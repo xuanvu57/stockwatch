@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Clients.Ssi.Models
+﻿namespace Infrastructure.Clients.Ssi.Models.Requests
 {
     public record AccessTokenRequest
     {

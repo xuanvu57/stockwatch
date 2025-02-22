@@ -4,8 +4,9 @@ using Infrastructure.Clients.Settings;
 using Infrastructure.Clients.Ssi.Constants;
 using Infrastructure.Clients.Ssi.Extensions;
 using Infrastructure.Clients.Ssi.Interfaces;
-using Infrastructure.Clients.Ssi.Models;
+using Infrastructure.Clients.Ssi.Models.Requests;
 using Microsoft.Extensions.Configuration;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using static Application.Constants.ApplicationEnums;
 
@@ -20,34 +21,50 @@ namespace Infrastructure.Clients.Ssi
 
         public async Task<string> GetToken()
         {
-            if (string.IsNullOrEmpty(acccessToken))
+            if (IsValidToken(acccessToken))
             {
-                var request = new AccessTokenRequest()
-                {
-                    ConsumerId = ssiSettings.ConsumerId,
-                    ConsumerSecret = ssiSettings.ConsumerSecrect
-                };
-
-                var content = new StringContent(RequestSerializer.Serialize(request), Encoding.UTF8, "application/json");
-
-                var client = new HttpClient()
-                {
-                    BaseAddress = new Uri(ssiSettings.SsiBaseAddress)
-                };
-
-                var response = await client.PostAsync(SsiConstants.Endpoints.AccessToken, content);
-
-                var accessTokenResponse = await response.ConvertToAuthenticationResponse();
-
-                acccessToken = accessTokenResponse.Data!.AccessToken;
+                return acccessToken;
             }
 
+            var request = new AccessTokenRequest()
+            {
+                ConsumerId = ssiSettings.ConsumerId,
+                ConsumerSecret = ssiSettings.ConsumerSecrect
+            };
+
+            var content = new StringContent(RequestSerializer.Serialize(request), Encoding.UTF8, "application/json");
+
+            var client = new HttpClient()
+            {
+                BaseAddress = new Uri(ssiSettings.SsiBaseAddress)
+            };
+
+            var response = await client.PostAsync(SsiConstants.Endpoints.AccessToken, content);
+
+            var accessTokenResponse = await response.ConvertToAuthenticationResponse();
+
+            acccessToken = accessTokenResponse.Data!.AccessToken ?? string.Empty;
             return acccessToken;
         }
 
-        public void SetToken(string token)
+        private static bool IsValidToken(string accessToken)
         {
-            acccessToken = token;
+            if (string.IsNullOrEmpty(accessToken))
+                return false;
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            try
+            {
+                var jwtToken = tokenHandler.ReadJwtToken(accessToken);
+                if (jwtToken is null)
+                    return false;
+
+                return jwtToken.ValidTo < DateTime.UtcNow;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

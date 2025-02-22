@@ -1,5 +1,5 @@
 ﻿using Infrastructure.Clients.Ssi.Exceptions;
-using Infrastructure.Clients.Ssi.Models;
+using Infrastructure.Clients.Ssi.Models.Responses;
 using System.Net;
 using System.Text.Json;
 

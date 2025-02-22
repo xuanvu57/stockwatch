@@ -1,6 +1,6 @@
-﻿namespace Infrastructure.Clients.Ssi.Models
+﻿namespace Infrastructure.Clients.Ssi.Models.Responses
 {
-    public record IntradayOhlcResponse
+    public record DailyOhlcResponse
     {
         public string Symbol { get; init; } = string.Empty;
         public string Market { get; init; } = string.Empty;

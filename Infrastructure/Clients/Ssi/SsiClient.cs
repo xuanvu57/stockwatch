@@ -5,7 +5,8 @@ using Infrastructure.Clients.Ssi.Constants;
 using Infrastructure.Clients.Ssi.DelegatingHandlers;
 using Infrastructure.Clients.Ssi.Extensions;
 using Infrastructure.Clients.Ssi.Interfaces;
-using Infrastructure.Clients.Ssi.Models;
+using Infrastructure.Clients.Ssi.Models.Requests;
+using Infrastructure.Clients.Ssi.Models.Responses;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using static Application.Constants.ApplicationEnums;
@@ -17,6 +18,7 @@ namespace Infrastructure.Clients.Ssi
     {
         private readonly HttpClient client;
         private readonly ILogger<SsiClient> logger;
+        private static readonly SemaphoreSlim semaphoreSlim = new(1, 1);
 
         public SsiClient(ILogger<SsiClient> logger, IConfiguration configuration, ISsiClientTokenManager ssiClientTokenManager)
         {
@@ -92,6 +94,8 @@ namespace Infrastructure.Clients.Ssi
         {
             try
             {
+                await semaphoreSlim.WaitAsync();
+
                 await Task.Delay(TimeSpan.FromSeconds(SsiConstants.MinSecondBetweenApiCalls));
 
                 var parameters = RequestSerializer.Serialize(request, RequestInputTypes.Parameter);
@@ -102,6 +106,10 @@ namespace Infrastructure.Clients.Ssi
             catch (Exception ex)
             {
                 return HandleException<TResponse>(ex);
+            }
+            finally
+            {
+                semaphoreSlim.Release();
             }
         }
 
