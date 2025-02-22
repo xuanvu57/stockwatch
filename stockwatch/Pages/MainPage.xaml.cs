@@ -5,7 +5,6 @@ using Domain.Constants;
 using Domain.Entities;
 using Domain.Repositories.Interfaces;
 using Domain.Services;
-using Microsoft.Extensions.Configuration;
 using stockwatch.Models;
 
 namespace stockwatch.Pages
@@ -16,6 +15,7 @@ namespace stockwatch.Pages
         private readonly IMessageService messageService;
         private readonly IReferenceSymbolRepository referenceSymbolRepository;
         private readonly IBackgroundService backgroundService;
+
         private ReferenceSymbolEntity? targetSymbol;
 
         public LatestPriceModel LatestPrice { get; private set; } = new();
@@ -32,7 +32,6 @@ namespace stockwatch.Pages
         }
 
         public MainPage(
-            IConfiguration configuration,
             IToastManagerService toastManagerService,
             IMessageService messageService,
             IReferenceSymbolRepository referenceSymbolRepository,

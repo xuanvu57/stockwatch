@@ -1,6 +1,6 @@
-﻿namespace stockwatch.Services
+﻿namespace stockwatch.Services.Providers
 {
-    internal static class PlatformServiceProvider
+    internal static class PlatformsServiceProvider
     {
         public static IServiceProvider ServiceProvider
         {
