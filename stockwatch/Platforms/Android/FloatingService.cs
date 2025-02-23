@@ -191,6 +191,7 @@ namespace stockwatch.Platforms.Android
             if (backgroundService?.IsRunning == true)
             {
                 backgroundService.Subscribe(subscriber);
+                backgroundService.Start();
             }
         }
 
