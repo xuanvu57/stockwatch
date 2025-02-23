@@ -5,11 +5,19 @@
    android:layout_width="match_parent"
    android:layout_height="match_parent">
 
- <ImageView
-    android:id="@+id/iv1"
+
+<TextView    
+    android:id="@+id/tv1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:src="@drawable/appicon_fg">
-</ImageView>
+    android:text="-"
+    android:textAlignment="center"
+    android:gravity="center"
+    android:maxLines="1"    
+    android:autoSizeTextType="uniform"
+    android:autoSizeMaxTextSize="12sp"
+    android:autoSizeMinTextSize="5sp"
+    android:padding="@dimen/abc_control_padding_material"
+    android:background="@drawable/appicon_fg"/>
 
 </LinearLayout>

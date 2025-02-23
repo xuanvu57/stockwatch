@@ -1,6 +1,5 @@
 ﻿using Application.Attributes;
 using Application.Dtos;
-using Application.Dtos.Bases;
 using Application.Services.Interfaces;
 using Application.Settings;
 using Domain.Repositories.Interfaces;
@@ -21,6 +20,7 @@ namespace Application.Services
     {
         private Timer? timer;
         private readonly List<IBackgroundServiceSubscriber> subscribers = [];
+        public bool IsRunning { get; private set; } = false;
 
         public void Start()
         {
@@ -28,11 +28,13 @@ namespace Application.Services
 
             timer ??= new(HandleTimerCallback);
             timer.Change(TimeSpan.Zero, TimeSpan.FromSeconds(scheduleSettings.FetchDataIntervalInSecond));
+            IsRunning = true;
         }
 
         public void Stop()
         {
             timer?.Change(Timeout.Infinite, 0);
+            IsRunning = false;
         }
 
         public void Subscribe(IBackgroundServiceSubscriber subscriber)
@@ -69,7 +71,12 @@ namespace Application.Services
                     await mySymbolAnalyzingService.Analyze(stockPrice.Data.First(), targetSymbol);
                 }
 
-                await NotifyToSubscribers(stockPrice);
+                var symbolAnalyzingResult = SymbolAnalyzingResultDto.FromStockPriceInRealtimeDto(
+                    stockPrice.Data.FirstOrDefault(),
+                    targetSymbol,
+                    stockPrice.AtTime);
+
+                await NotifyToSubscribers(symbolAnalyzingResult);
             }
             catch (Exception ex)
             {
@@ -82,11 +89,11 @@ namespace Application.Services
             }
         }
 
-        private async Task NotifyToSubscribers(BaseResponse<StockPriceInRealtimeDto> stockPrice)
+        private async Task NotifyToSubscribers(SymbolAnalyzingResultDto symbolAnalyzingResult)
         {
             foreach (var subscriber in subscribers)
             {
-                await subscriber.HandleBackgroundServiceEvent(stockPrice);
+                await subscriber.HandleBackgroundServiceEvent(symbolAnalyzingResult);
             }
         }
     }

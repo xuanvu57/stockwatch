@@ -3,7 +3,7 @@ using Domain.Entities;
 
 namespace Application.Dtos
 {
-    public record StockPriceInRealtimeDto : StockPriceBaseDto
+    public record StockPriceInRealtimeDto : StockPriceHistoryBaseDto
     {
         public decimal? RefPrice { get; init; }
         public DateTime AtTime { get; init; }

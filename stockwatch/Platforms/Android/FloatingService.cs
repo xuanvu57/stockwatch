@@ -4,15 +4,22 @@ using Android.OS;
 using Android.Runtime;
 using Android.Util;
 using Android.Views;
+using Android.Widget;
+using Application.Dtos;
+using Application.Services.Interfaces;
+using stockwatch.Services.Providers;
 using static Android.Views.View;
+using Color = Android.Graphics.Color;
 using Format = Android.Graphics.Format;
 using View = Android.Views.View;
 
 namespace stockwatch.Platforms.Android
 {
     [Service]
-    public class FloatingService : Service, IOnTouchListener
+    public class FloatingService : Service, IOnTouchListener, IBackgroundServiceSubscriber
     {
+        private IBackgroundService? backgroundService;
+
         private readonly DisplayMetrics displayMetrics = new();
         private IWindowManager? windowManager;
         private readonly WindowManagerLayoutParams layoutParams = new();
@@ -34,6 +41,8 @@ namespace stockwatch.Platforms.Android
 
             windowManager?.AddView(floatView, layoutParams);
 
+            SubscribeBackgroundService(this);
+
             return StartCommandResult.NotSticky;
         }
 
@@ -41,47 +50,19 @@ namespace stockwatch.Platforms.Android
         {
             windowManager?.RemoveView(floatView);
 
+            backgroundService?.Unsubscribe(this);
+
             base.OnDestroy();
         }
 
-        private void InitializeParamsToShowFloatingWindow()
+        public Task HandleBackgroundServiceEvent<T>(T data)
         {
-            windowManager = GetSystemService(WindowService).JavaCast<IWindowManager>()!;
-
-#pragma warning disable CA1422
-            windowManager?.DefaultDisplay?.GetMetrics(displayMetrics);
-#pragma warning restore CA1422
-
-            var mLayoutInflater = LayoutInflater.From(ApplicationContext)!;
-            floatView = mLayoutInflater.Inflate(Resource.Layout.floatview, null)!;
-            floatView.SetOnTouchListener(this);
-            //ImageView iv1 = floatView.FindViewById<ImageView>(Resource.Id.iv1);
-
-            SetLayoutParams(displayMetrics);
-        }
-
-        private void SetLayoutParams(DisplayMetrics displayMetrics)
-        {
-            if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+            if (data is SymbolAnalyzingResultDto symbolAnalyzingResult)
             {
-                layoutParams.Type = WindowManagerTypes.ApplicationOverlay;
+                UpdatePercentageView(symbolAnalyzingResult);
             }
-            else
-            {
-                layoutParams.Type = WindowManagerTypes.Phone;
-            }
-            layoutParams.Flags =
-                WindowManagerFlags.LayoutNoLimits |
-                WindowManagerFlags.NotFocusable |
-                WindowManagerFlags.NotTouchModal |
-                WindowManagerFlags.WatchOutsideTouch;
 
-            layoutParams.Format = Format.Translucent;
-            layoutParams.Gravity = GravityFlags.Top | GravityFlags.Left;
-            layoutParams.Width = 150;
-            layoutParams.Height = 150;
-            layoutParams.X = displayMetrics.WidthPixels - layoutParams.Width;
-            layoutParams.Y = 300;
+            return Task.CompletedTask;
         }
 
         public bool OnTouch(global::Android.Views.View? v, MotionEvent? e)
@@ -116,6 +97,45 @@ namespace stockwatch.Platforms.Android
                     break;
             }
             return false;
+        }
+
+        private void InitializeParamsToShowFloatingWindow()
+        {
+            windowManager = GetSystemService(WindowService).JavaCast<IWindowManager>()!;
+
+#pragma warning disable CA1422
+            windowManager?.DefaultDisplay?.GetMetrics(displayMetrics);
+#pragma warning restore CA1422
+
+            var mLayoutInflater = LayoutInflater.From(ApplicationContext)!;
+            floatView = mLayoutInflater.Inflate(Resource.Layout.floatview, null)!;
+            floatView.SetOnTouchListener(this);
+
+            SetLayoutParams(displayMetrics);
+        }
+
+        private void SetLayoutParams(DisplayMetrics displayMetrics)
+        {
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+            {
+                layoutParams.Type = WindowManagerTypes.ApplicationOverlay;
+            }
+            else
+            {
+                layoutParams.Type = WindowManagerTypes.Phone;
+            }
+            layoutParams.Flags =
+                WindowManagerFlags.LayoutNoLimits |
+                WindowManagerFlags.NotFocusable |
+                WindowManagerFlags.NotTouchModal |
+                WindowManagerFlags.WatchOutsideTouch;
+
+            layoutParams.Format = Format.Translucent;
+            layoutParams.Gravity = GravityFlags.Top | GravityFlags.Left;
+            layoutParams.Width = 150;
+            layoutParams.Height = 150;
+            layoutParams.X = displayMetrics.WidthPixels - layoutParams.Width;
+            layoutParams.Y = 300;
         }
 
         private void SetCurrentPosition(MotionEvent e)
@@ -163,6 +183,25 @@ namespace stockwatch.Platforms.Android
         {
             var main = PackageManager!.GetLaunchIntentForPackage(PackageName!);
             StartActivity(main);
+        }
+
+        private void SubscribeBackgroundService(IBackgroundServiceSubscriber subscriber)
+        {
+            backgroundService = PlatformsServiceProvider.ServiceProvider.GetRequiredService<IBackgroundService>();
+            if (backgroundService?.IsRunning == true)
+            {
+                backgroundService.Subscribe(subscriber);
+            }
+        }
+
+        private void UpdatePercentageView(SymbolAnalyzingResultDto? symbolAnalyzingResult)
+        {
+            var percentageView = floatView?.FindViewById<TextView>(Resource.Id.tv1);
+            if (percentageView is not null)
+            {
+                percentageView.SetTextColor(Color.ParseColor(symbolAnalyzingResult?.Percentage > 0 ? "#00FFAA" : "#FF5555"));
+                percentageView.SetText($"{symbolAnalyzingResult?.Percentage ?? 0:F2}%", TextView.BufferType.Editable);
+            }
         }
     }
 }

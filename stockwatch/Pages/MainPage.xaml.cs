@@ -1,10 +1,8 @@
 ﻿using Application.Dtos;
-using Application.Dtos.Bases;
 using Application.Services.Interfaces;
 using Domain.Constants;
 using Domain.Entities;
 using Domain.Repositories.Interfaces;
-using Domain.Services;
 using stockwatch.Models;
 
 namespace stockwatch.Pages
@@ -157,23 +155,22 @@ namespace stockwatch.Pages
             };
         }
 
-        private void SetLatestData(string symbolId, StockPriceInRealtimeDto? stockPrice, DateTime time)
+        private void SetLatestData(SymbolAnalyzingResultDto symbolAnalyzingResult)
         {
-            decimal? percentage = null;
-            if (stockPrice is not null && targetSymbol is not null)
-            {
-                percentage = StockRulesService.CalculatePercentage(stockPrice.Price, targetSymbol.InitializedPrice);
-            }
+            LatestPrice = LatestPrice.With(
+                symbolAnalyzingResult.SymbolId,
+                symbolAnalyzingResult.Price,
+                symbolAnalyzingResult.Percentage,
+                symbolAnalyzingResult.AtTime);
 
-            LatestPrice = LatestPrice.With(symbolId, stockPrice?.Price, percentage, time);
             LatestPrice.NotifyPropertyChanged();
         }
 
         public Task HandleBackgroundServiceEvent<T>(T data)
         {
-            if (data is BaseResponse<StockPriceInRealtimeDto> stockPrice)
+            if (data is SymbolAnalyzingResultDto symbolAnalyzingResult)
             {
-                SetLatestData(targetSymbol!.Id, stockPrice.Data.FirstOrDefault(), stockPrice.AtTime);
+                SetLatestData(symbolAnalyzingResult);
             }
 
             return Task.CompletedTask;

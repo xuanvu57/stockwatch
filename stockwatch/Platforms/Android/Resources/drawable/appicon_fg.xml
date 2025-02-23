@@ -3,31 +3,22 @@
     android:viewportHeight="100"
     android:width="100dp"
     android:height="100dp">
-    <path
-        android:pathData="M98 50A48 48 0 0 1 2 50A48 48 0 0 1 98 50Z"
+	<!-- First half stroke (Cyan) -->
+	<path
+        android:pathData="M98 50A48 48 0 0 1 2 50"
+        android:fillColor="#1E1E2E"
+        android:strokeColor="#FF5555"
+        android:strokeWidth="4" />
+
+	<!-- Second half stroke (Red) -->
+	<path
+        android:pathData="M2 50A48 48 0 0 1 98 50"
         android:fillColor="#1E1E2E"
         android:strokeColor="#00FFAA"
-        android:strokeWidth="2" />
-    <path
-        android:pathData="M70 40L50 60L30 40"
-        android:strokeColor="#FF5555"
-        android:strokeWidth="4"
-        android:strokeLineCap="round"
-        android:strokeLineJoin="round" />
-    <path
-        android:pathData="M50 60L50 20"
-        android:strokeColor="#FF5555"
-        android:strokeWidth="4"
-        android:strokeLineCap="round" />
-    <path
-        android:pathData="M30 60L50 40L70 60"
-        android:strokeColor="#00FFAA"
-        android:strokeWidth="4"
-        android:strokeLineCap="round"
-        android:strokeLineJoin="round" />
-    <path
-        android:pathData="M50 40L50 80"
-        android:strokeColor="#00FFAA"
-        android:strokeWidth="4"
-        android:strokeLineCap="round" />
+        android:strokeWidth="4" />
+
+	<!-- Background Circle -->
+	<path
+        android:pathData="M98 50A48 48 0 0 1 2 50A48 48 0 0 1 98 50Z"
+        android:fillColor="#1E1E2E" />
 </vector>

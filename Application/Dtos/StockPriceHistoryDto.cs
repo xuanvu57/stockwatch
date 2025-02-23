@@ -2,7 +2,7 @@
 
 namespace Application.Dtos
 {
-    public record StockPriceHistoryDto : StockPriceBaseDto
+    public record StockPriceHistoryDto : StockPriceHistoryBaseDto
     {
         public required DateOnly AtDate { get; init; }
     }

@@ -2,7 +2,9 @@
 using Android.Content;
 using Android.Content.PM;
 using Android.Provider;
+using Application.Services.Interfaces;
 using stockwatch.Platforms.Android;
+using stockwatch.Services.Providers;
 
 namespace stockwatch
 {
@@ -29,7 +31,7 @@ namespace stockwatch
             }
             else
             {
-                StartService(new Intent(this, typeof(FloatingService)));
+                StartFloatingService();
             }
             base.OnStop();
         }
@@ -37,6 +39,15 @@ namespace stockwatch
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent? data)
         {
             if (requestCode == 0 && Settings.CanDrawOverlays(this))
+            {
+                StartFloatingService();
+            }
+        }
+
+        private void StartFloatingService()
+        {
+            var backgroundService = PlatformsServiceProvider.ServiceProvider.GetRequiredService<IBackgroundService>();
+            if (backgroundService?.IsRunning == true)
             {
                 StartService(new Intent(this, typeof(FloatingService)));
             }

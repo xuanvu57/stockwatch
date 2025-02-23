@@ -2,6 +2,7 @@
 {
     public interface IBackgroundService
     {
+        public bool IsRunning { get; }
         void Start();
         void Stop();
         void Subscribe(IBackgroundServiceSubscriber subscriber);
