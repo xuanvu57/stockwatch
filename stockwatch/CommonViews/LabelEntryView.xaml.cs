@@ -1,10 +1,11 @@
-using stockwatch.Constants;
 using System.ComponentModel;
 
 namespace stockwatch.CommonViews;
 
 public partial class LabelEntryView : ContentView
 {
+    const string DefaultNumericText = "0";
+
     public static readonly BindableProperty LabelProperty = BindableProperty.Create(
         propertyName: nameof(Label),
         returnType: typeof(string),
@@ -87,15 +88,13 @@ public partial class LabelEntryView : ContentView
 
     public string Text
     {
-        get => GetValue(TextProperty) as string ?? string.Empty;
+        get => GetFormatText();
         set => SetValue(TextProperty, value);
     }
 
     public string NumericText
     {
-        get => (Keyboard)GetValue(KeyboardProperty) == Keyboard.Numeric
-            ? GetNumericText()
-            : Text;
+        get => GetNumericText();
     }
 
     [TypeConverter(typeof(GridLengthTypeConverter))]
@@ -123,12 +122,29 @@ public partial class LabelEntryView : ContentView
         InitializeComponent();
     }
 
+    private string GetFormatText()
+    {
+        var text = GetValue(TextProperty) as string ?? string.Empty;
+        if (Keyboard != Keyboard.Numeric)
+            return text;
+
+        if (entEntry.IsFocused)
+            return text;
+
+        if (string.IsNullOrEmpty(text))
+            return DefaultNumericText;
+
+        var number = decimal.Parse(text, Thread.CurrentThread.CurrentCulture.NumberFormat);
+        return number.ToString("N2", Thread.CurrentThread.CurrentCulture.NumberFormat);
+    }
+
     private string GetNumericText()
     {
-        if (Keyboard != Keyboard.Numeric || string.IsNullOrEmpty(Text))
-            return DisplayConstants.DefaultNumericText;
+        var text = GetValue(TextProperty) as string ?? string.Empty;
+        if (Keyboard != Keyboard.Numeric || string.IsNullOrEmpty(text))
+            return DefaultNumericText;
 
-        var number = decimal.Parse(Text, Thread.CurrentThread.CurrentCulture.NumberFormat);
+        var number = decimal.Parse(text, Thread.CurrentThread.CurrentCulture.NumberFormat);
         return number.ToString();
     }
 
@@ -144,9 +160,7 @@ public partial class LabelEntryView : ContentView
     {
         if (Keyboard == Keyboard.Numeric)
         {
-            var number = decimal.Parse(GetNumericText());
-
-            Text = number.ToString("N2", Thread.CurrentThread.CurrentCulture.NumberFormat);
+            Text = GetFormatText();
         }
     }
 }

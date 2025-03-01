@@ -2,7 +2,6 @@
 {
     internal static class DisplayConstants
     {
-        public const string DefaultNumericText = "0";
         public const string ArrowUp = "↑";
         public const string ArrowDown = "↓";
 
