@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:strings="clr-namespace:stockwatch.Resources.Strings"
+             xmlns:commonViews="clr-namespace:stockwatch.CommonViews"
              xmlns:local="clr-namespace:stockwatch.Pages"
              x:Class="stockwatch.Pages.MainPage"
              x:Name="mainPage"
@@ -31,79 +32,52 @@
         <VerticalStackLayout
             Padding="10,0"
             Spacing="25">
-            <Grid RowDefinitions="Auto,Auto,Auto,*" ColumnDefinitions="Auto,Auto,*">
-                <Label 
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    VerticalTextAlignment="Center"
-                    Text="{Binding Source={x:Static strings:AppResources.LBL_SymbolID}}"/>
-                <Entry
+            <Grid RowDefinitions="Auto,Auto,Auto,*" ColumnDefinitions="*">
+                <commonViews:LabelEntryView
                     x:Name="entSymbol"
                     Grid.Row="0"
-                    Grid.Column="1"
-                    Grid.ColumnSpan="2"
-                    Placeholder="{Binding Source={x:Static strings:AppResources.LBL_ExampleOfSymbolID}}"
-                    TextTransform="Uppercase"
-                    IsEnabled="{Binding IsWatcherStopped, Source={x:Reference mainPage}}"/>
+                    LabelWidth="155"
+                    IsEnabled="{Binding IsWatcherStopped, Source={x:Reference mainPage}}"
+                    Label="{Binding Source={x:Static strings:AppResources.LBL_SymbolID}}"
+                    EntryPlaceholder="{Binding Source={x:Static strings:AppResources.LBL_ExampleOfSymbolID}}"
+                    EntryTextTransform="Uppercase">
+                </commonViews:LabelEntryView>
 
-                <Label 
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    VerticalTextAlignment="Center"
-                    Text="{Binding Source={x:Static strings:AppResources.LBL_ReferencePrice}}"/>
-                <Entry
+                <commonViews:LabelEntryView
                     x:Name="entReferencePrice"
                     Grid.Row="1"
-                    Grid.Column="1"
                     Keyboard="Numeric"
-                    WidthRequest="100"
-                    Text="0"
-                    IsEnabled="{Binding IsWatcherStopped, Source={x:Reference mainPage}}"/>
-                <Label 
-                    Grid.Row="1"
-                    Grid.Column="2"
-                    VerticalTextAlignment="Center"
-                    Text="{Binding Source={x:Static strings:AppResources.LBL_VND}}"/>
+                    LabelWidth="155"
+                    TextWidth="150"
+                    IsEnabled="{Binding IsWatcherStopped, Source={x:Reference mainPage}}"
+                    Label="{Binding Source={x:Static strings:AppResources.LBL_ReferencePrice}}"
+                    Text="0.00"
+                    Unit="{Binding Source={x:Static strings:AppResources.LBL_VND}}">
+                </commonViews:LabelEntryView>
 
-                <Label 
-                    Grid.Row="2"
-                    Grid.Column="0"
-                    VerticalTextAlignment="Center"
-                    Text="{Binding Source={x:Static strings:AppResources.LBL_ExpectedPercentage}}"/>
-                <Entry
+                <commonViews:LabelEntryView
                     x:Name="entCeilingPrice"
                     Grid.Row="2"
-                    Grid.Column="1"
                     Keyboard="Numeric"
-                    Text="5"
-                    WidthRequest="100"
-                    IsEnabled="{Binding IsWatcherStopped, Source={x:Reference mainPage}}"/>
-                <Label 
-                    Grid.Row="2"
-                    Grid.Column="2"
-                    VerticalTextAlignment="Center"
-                    TextTransform="Lowercase"
-                    Text="{Binding Source={x:Static strings:AppResources.LBL_Higher}, StringFormat='% ({0})'}"/>
+                    LabelWidth="155"
+                    TextWidth="100"
+                    IsEnabled="{Binding IsWatcherStopped, Source={x:Reference mainPage}}"
+                    Label="{Binding Source={x:Static strings:AppResources.LBL_ExpectedPercentage}}"
+                    Text="5.00"
+                    Unit="{Binding Source={x:Static strings:AppResources.LBL_Higher}, StringFormat='% ({0})'}">
+                </commonViews:LabelEntryView>
 
-                <Label 
-                    Grid.Row="3"
-                    Grid.Column="0"
-                    VerticalTextAlignment="Center"
-                    Text="{Binding Source={x:Static strings:AppResources.LBL_UnexpectedPercentage}}"/>
-                <Entry
+                <commonViews:LabelEntryView
                     x:Name="entFloorPrice"
                     Grid.Row="3"
-                    Grid.Column="1"
                     Keyboard="Numeric"
-                    Text="5"
-                    WidthRequest="100"
-                    IsEnabled="{Binding IsWatcherStopped, Source={x:Reference mainPage}}"/>
-                <Label 
-                    Grid.Row="3"
-                    Grid.Column="2"
-                    VerticalTextAlignment="Center"
-                    TextTransform="Lowercase"
-                    Text="{Binding Source={x:Static strings:AppResources.LBL_Lower}, StringFormat='% ({0})'}"/>
+                    LabelWidth="155"
+                    TextWidth="100"
+                    IsEnabled="{Binding IsWatcherStopped, Source={x:Reference mainPage}}"
+                    Label="{Binding Source={x:Static strings:AppResources.LBL_UnexpectedPercentage}}"
+                    Text="5.00"
+                    Unit="{Binding Source={x:Static strings:AppResources.LBL_Lower}, StringFormat='% ({0})'}">
+                </commonViews:LabelEntryView>
             </Grid>
 
             <Button

@@ -121,7 +121,7 @@ namespace stockwatch.Pages
                 return false;
             }
 
-            var isNumber = decimal.TryParse(entReferencePrice.Text?.Replace(",", string.Empty) ?? "0", out var price);
+            var isNumber = decimal.TryParse(entReferencePrice.NumericText, out var price);
             if (!isNumber || price <= 0)
             {
                 errorMessage = messageService.GetMessage(MessageConstants.MSG_PleaseInputValidPrice);
@@ -142,9 +142,9 @@ namespace stockwatch.Pages
 
         private ReferenceSymbolEntity CreateReferenceSymbolInfo()
         {
-            _ = decimal.TryParse(entReferencePrice.Text?.Replace(",", string.Empty) ?? "0", out var price);
-            _ = decimal.TryParse(entCeilingPrice.Text?.Replace(",", string.Empty) ?? "0", out var ceilingPrice);
-            _ = decimal.TryParse(entFloorPrice.Text?.Replace(",", string.Empty) ?? "0", out var floorPrice);
+            var price = decimal.Parse(entReferencePrice.NumericText);
+            var ceilingPrice = decimal.Parse(entCeilingPrice.NumericText);
+            var floorPrice = decimal.Parse(entFloorPrice.NumericText);
 
             return new()
             {

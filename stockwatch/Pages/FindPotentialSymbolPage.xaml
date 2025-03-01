@@ -3,25 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:strings="clr-namespace:stockwatch.Resources.Strings"
+             xmlns:commonViews="clr-namespace:stockwatch.CommonViews"
+             xmlns:childViews="clr-namespace:stockwatch.ChildViews"
              xmlns:local="clr-namespace:stockwatch.Pages"
              x:Class="stockwatch.Pages.FindPotentialSymbolPage"
              Title="{Binding Source={x:Static strings:AppResources.LBL_PotentialSymbols}}">
     <ContentPage.Resources>
         <ResourceDictionary>
             <toolkit:IsNotEqualConverter x:Key="IsNotEqualConverter" />
-            <toolkit:IsNotNullConverter x:Key="IsNotNullConverter" />
-            <toolkit:BoolToObjectConverter 
-                x:Key="FavoriteIconConverter" 
-                TrueObject="favorite_full.jpg"
-                FalseObject="favorite_empty.png"/>
-            <toolkit:BoolToObjectConverter 
-                x:Key="FavoriteTextConverter" 
-                TrueObject="{x:Static strings:AppResources.LBL_Unfavored}"
-                FalseObject="{x:Static strings:AppResources.LBL_Favorite}"/>
-            <toolkit:BoolToObjectConverter 
-                x:Key="FavoriteColorConverter" 
-                TrueObject="LightPink"
-                FalseObject="LightGreen"/>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -61,101 +50,27 @@
                 Title="{Binding Source={x:Static strings:AppResources.LBL_PriceType}}">
             </Picker>
 
-            <Grid ColumnDefinitions="Auto, Auto" RowDefinitions="Auto">
-                <Entry
-                    Grid.Row="0" Grid.Column="0"
-                    WidthRequest="140"
-                    x:Name="entExpectedAmplitudePercentage"
-                    Placeholder="{Binding Source={x:Static strings:AppResources.LBL_ExpectedAmplitude}}"
-                    Keyboard="Numeric"
-                    Text="5"/>
-                <Label 
-                    Grid.Row="0" Grid.Column="1"
-                    VerticalTextAlignment="Center"
-                    Text=" %"/>
-            </Grid>
+            <commonViews:LabelEntryView
+                x:Name="entExpectedAmplitudePercentage"
+                Keyboard="Numeric"
+                TextWidth="150"
+                Text="5.00"
+                EntryPlaceholder="{Binding Source={x:Static strings:AppResources.LBL_ExpectedAmplitude}}"
+                Unit="%">
+            </commonViews:LabelEntryView>
 
             <Button
                 x:Name="btnAnalyze"
                 Text="{Binding Source={x:Static strings:AppResources.LBL_Analyze}}"
                 Clicked="OnAnalyzeButtonClicked"
                 HorizontalOptions="Fill" />
-
-            <CollectionView 
-                x:Name="clvResult">
-                <CollectionView.Header>
-                    <Grid 
-                        ColumnDefinitions="100, 100, *"
-                        IsVisible="{Binding Source={x:Reference clvResult}, 
-                                            Path=ItemsSource,
-                                            Converter={x:StaticResource IsNotNullConverter}}">
-                        <Label
-                            Grid.Column="0"
-                            Margin="4, 0, 0, 0"
-                            FontAttributes="Bold"
-                            Text="{Binding Source={x:Static strings:AppResources.LBL_SymbolID}}"></Label>
-                        <Label
-                            Grid.Column="1"
-                            FontAttributes="Bold"
-                            Text="{Binding Source={x:Static strings:AppResources.LBL_AverageAmplitude}}"></Label>
-                        <Label
-                            Grid.Column="2"
-                            FontAttributes="Bold">
-                            <Label.Text>
-                                <MultiBinding StringFormat="{}{0} ({1})">
-                                    <Binding Source="{x:Static strings:AppResources.LBL_MatchCount}" />
-                                    <Binding Path="SelectedItem" Source="{x:Reference pckGroupByPeriod}" />
-                                </MultiBinding>
-                            </Label.Text>
-                        </Label>
-                    </Grid>
-                </CollectionView.Header>
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <SwipeView>
-                            <SwipeView.RightItems>
-                                <SwipeItems>
-                                    <SwipeItem
-                                        Invoked="FavoriteItem_Invoked"
-                                        CommandParameter="{Binding .}"
-                                        Text="{Binding IsFavorite, Converter={x:StaticResource FavoriteTextConverter}}"
-                                        IconImageSource="{Binding IsFavorite, Converter={x:StaticResource FavoriteIconConverter}}"
-                                        BackgroundColor="{Binding IsFavorite, Converter={x:StaticResource FavoriteColorConverter}}"
-                                        ></SwipeItem>
-                                </SwipeItems>
-                            </SwipeView.RightItems>
-
-                            <Grid 
-                                ColumnDefinitions="100, 100, *, 25"
-                                BackgroundColor="WhiteSmoke"
-                                HeightRequest="40"
-                                Margin="0, 1, 0, 1">
-                                <Label
-                                    Grid.Column="0"
-                                    Margin="4, 0, 0, 0"
-                                    Text="{Binding SymbolId, StringFormat='{0}'}"
-                                    VerticalOptions="Center"></Label>
-                                <Label
-                                    Grid.Column="1"
-                                    Text="{Binding AverageAmplitudeInPercentage, StringFormat='{0:F2}%'}"
-                                    VerticalOptions="Center"></Label>
-                                <Label
-                                    Grid.Column="2"
-                                    Text="{Binding MatchedRecordCount}"
-                                    VerticalOptions="Center"></Label>
-                                <Image
-                                    Grid.Column="3"
-                                    Source="favorite_full.jpg"
-                                    HeightRequest="15"
-                                    WidthRequest="15"
-                                    VerticalOptions="Center"
-                                    IsVisible="{Binding IsFavorite}"/>
-                            </Grid>
-                        </SwipeView>
-                        
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+            
+            <childViews:FindPotentialSymbolResultView
+                x:Name="resultView"
+                SelectedGroupByPeriod="{Binding Source={x:Reference pckGroupByPeriod}, 
+                                                Path=SelectedItem}">
+            </childViews:FindPotentialSymbolResultView>
+            
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
