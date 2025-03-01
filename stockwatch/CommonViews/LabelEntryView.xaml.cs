@@ -5,6 +5,7 @@ namespace stockwatch.CommonViews;
 public partial class LabelEntryView : ContentView
 {
     const string DefaultNumericText = "0";
+    const int DefaultDecimalPlace = 2;
 
     public static readonly BindableProperty LabelProperty = BindableProperty.Create(
         propertyName: nameof(Label),
@@ -62,6 +63,13 @@ public partial class LabelEntryView : ContentView
         defaultValue: default(Keyboard),
         defaultBindingMode: BindingMode.TwoWay);
 
+    public static readonly BindableProperty DecimalPlaceProperty = BindableProperty.Create(
+        propertyName: nameof(DecimalPlace),
+        returnType: typeof(int?),
+        declaringType: typeof(LabelEntryView),
+        defaultValue: default(int?),
+        defaultBindingMode: BindingMode.TwoWay);
+
     public string Label
     {
         get => GetValue(LabelProperty) as string ?? string.Empty;
@@ -117,6 +125,12 @@ public partial class LabelEntryView : ContentView
         set => SetValue(KeyboardProperty, value);
     }
 
+    public int DecimalPlace
+    {
+        get => GetValue(DecimalPlaceProperty) as int? ?? DefaultDecimalPlace;
+        set => SetValue(DecimalPlaceProperty, value);
+    }
+
     public LabelEntryView()
     {
         InitializeComponent();
@@ -135,7 +149,7 @@ public partial class LabelEntryView : ContentView
             return DefaultNumericText;
 
         var number = decimal.Parse(text, Thread.CurrentThread.CurrentCulture.NumberFormat);
-        return number.ToString("N2", Thread.CurrentThread.CurrentCulture.NumberFormat);
+        return number.ToString($"N{DecimalPlace}", Thread.CurrentThread.CurrentCulture.NumberFormat);
     }
 
     private string GetNumericText()

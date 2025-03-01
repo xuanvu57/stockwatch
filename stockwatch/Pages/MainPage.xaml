@@ -47,6 +47,7 @@
                     x:Name="entReferencePrice"
                     Grid.Row="1"
                     Keyboard="Numeric"
+                    DecimalPlace="0"
                     LabelWidth="155"
                     TextWidth="150"
                     IsEnabled="{Binding IsWatcherStopped, Source={x:Reference mainPage}}"
