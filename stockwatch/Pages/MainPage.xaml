@@ -120,6 +120,16 @@
             <HorizontalStackLayout>
                 <Label 
                     Padding="0,0,5,0"
+                    Text="{Binding Source={x:Static strings:AppResources.LBL_PercentageInDay}, StringFormat='{0}:'}"/>
+                <Label
+                    FontAttributes="Bold"
+                    Text="{Binding LatestPrice.PercentageInDay, Source={x:Reference mainPage}, StringFormat='{0:F2}%', TargetNullValue='N/A'}"
+                    TextColor="{Binding LatestPrice.PercentageInDay, Source={x:Reference mainPage}, Converter={x:StaticResource PercentageTextColorConverter}}"/>
+            </HorizontalStackLayout>
+
+            <HorizontalStackLayout>
+                <Label 
+                    Padding="0,0,5,0"
                     Text="{Binding Source={x:Static strings:AppResources.LBL_LatestDataAtTime}, StringFormat='{0}:'}"/>
                 <Label
                     Text="{Binding LatestPrice.AtTime, Source={x:Reference mainPage}, StringFormat='{0:yyyy-MM-dd HH:mm:ss}', TargetNullValue='N/A'}"/>

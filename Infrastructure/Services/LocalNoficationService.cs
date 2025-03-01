@@ -11,6 +11,8 @@ namespace Infrastructure.Services
     {
         protected override async Task SendNotification(int notificationId, string title, string subtitle, string description)
         {
+            const int delaySecondBeforeSendNotification = 1;
+
             var request = new NotificationRequest
             {
                 NotificationId = notificationId,
@@ -19,7 +21,7 @@ namespace Infrastructure.Services
                 Description = description,
                 Schedule = new NotificationRequestSchedule
                 {
-                    NotifyTime = DateTime.Now.AddSeconds(1),
+                    NotifyTime = DateTime.Now.AddSeconds(delaySecondBeforeSendNotification),
                 }
             };
 

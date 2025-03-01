@@ -12,8 +12,9 @@ namespace Infrastructure.Repositories
     public class ReferenceSymbolRepository(
         ILogger<ReferenceSymbolRepository> logger,
         ILocalFileService localFileService,
-        IToastManagerService toastManagerService) :
-        BaseRepository<ReferenceSymbolRepository, ReferenceSymbolEntity>(logger, localFileService, toastManagerService), IReferenceSymbolRepository
+        IToastManagerService toastManagerService,
+        IMessageService messageService) :
+        BaseRepository<ReferenceSymbolRepository, ReferenceSymbolEntity>(logger, localFileService, toastManagerService, messageService), IReferenceSymbolRepository
     {
         public async Task<ReferenceSymbolEntity?> Get()
         {

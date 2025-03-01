@@ -20,6 +20,12 @@
             public const int DefaultPageSize = 50;
         }
 
+        public static class Response
+        {
+            public const string DefaultResponseNonSuccessMessage = "There is an error with status code";
+            public const string DefaultErrorLogMessage = "An error occurred while processing your request to SSI API";
+        }
+
         public static class ResponseStatus
         {
             public const string SsiClientException = "SsiClientException";

@@ -1,4 +1,5 @@
-﻿using Application.Services.Interfaces;
+﻿using Application.Constants;
+using Application.Services.Interfaces;
 using Domain.Entities.Bases;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
@@ -9,12 +10,14 @@ namespace Infrastructure.Repositories.Bases
 {
     public abstract class BaseFileRepository<TRepository, TEntity>(
         ILogger<TRepository> logger,
-        ILocalFileService localFileService,
-        IToastManagerService toastManagerService)
+        ILocalFileService localFileService)
         where TRepository : class
         where TEntity : StockBaseEntity
     {
-        private string FilePath { get; } = Path.Combine(localFileService.GetRootDirectory(), $"{GetEntityName()}.json");
+
+        protected ILogger<TRepository> logger = logger;
+
+        private string FilePath => Path.Combine(localFileService.GetRootDirectory(), $"{GetEntityName()}.json");
 
         protected async Task<List<TEntity>?> ReadFromFile()
         {
@@ -31,53 +34,34 @@ namespace Infrastructure.Repositories.Bases
             }
             catch (FileNotFoundException ex)
             {
-                logger.LogError(ex, $"Error in getting {nameof(TEntity)}");
-
-                return null;
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, $"Error in getting {nameof(TEntity)}");
-
-                await toastManagerService.Show($"Cannot read data, {ex.Message}");
+                logger.LogError(ex, $"{nameof(TEntity)} {ApplicationConsts.LoggedErrorMessage.ErrorMessageWhenFileNotFound}");
                 return null;
             }
         }
 
         protected async Task<bool> SaveToFile(IEnumerable<TEntity> datas, bool overwrite = false)
         {
-            try
+            if (!datas.Any())
             {
-                if (!datas.Any())
-                {
-                    if (overwrite)
-                    {
-                        await File.WriteAllTextAsync(FilePath, string.Empty);
-                    }
-                    return true;
-                }
-
-                var serializedDatas = datas.Select(x => JsonSerializer.Serialize(x)).ToList();
-
                 if (overwrite)
                 {
-                    await File.WriteAllLinesAsync(FilePath, serializedDatas);
+                    await File.WriteAllTextAsync(FilePath, string.Empty);
                 }
-                else
-                {
-                    await File.AppendAllLinesAsync(FilePath, serializedDatas);
-                }
-
                 return true;
             }
-            catch (Exception ex)
+
+            var serializedDatas = datas.Select(x => JsonSerializer.Serialize(x)).ToList();
+
+            if (overwrite)
             {
-                logger.LogError(ex, $"Error in saving {nameof(TEntity)}");
-
-                await toastManagerService.Show($"Cannot write data, {ex.Message}");
-
-                return false;
+                await File.WriteAllLinesAsync(FilePath, serializedDatas);
             }
+            else
+            {
+                await File.AppendAllLinesAsync(FilePath, serializedDatas);
+            }
+
+            return true;
         }
 
         private static string GetEntityName()

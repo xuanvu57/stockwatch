@@ -165,6 +165,9 @@
   <data name="LBL_Percentage" xml:space="preserve">
     <value>Percentage</value>
   </data>
+  <data name="LBL_PercentageInDay" xml:space="preserve">
+    <value>Percentage in day</value>
+  </data>
   <data name="LBL_PotentialSymbols" xml:space="preserve">
     <value>Potential symbols</value>
   </data>
@@ -197,6 +200,12 @@
   </data>
   <data name="MSG_AddToFavoriteSuccessfully" xml:space="preserve">
     <value>Added "{0}" to favorite list</value>
+  </data>
+  <data name="MSG_CannotAccessResourceToReadData" xml:space="preserve">
+    <value>Cannot access resource to read data</value>
+  </data>
+  <data name="MSG_CannotAccessResourceToWriteData" xml:space="preserve">
+    <value>Cannot access resource to write data</value>
   </data>
   <data name="MSG_PleaseInputSymbol" xml:space="preserve">
     <value>Please input a symbol</value>

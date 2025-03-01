@@ -1,4 +1,5 @@
-﻿using Application.Dtos;
+﻿using Application.Constants;
+using Application.Dtos;
 using Application.Services.Interfaces;
 using Domain.Constants;
 using static Domain.Constants.StockWatchEnums;
@@ -18,7 +19,7 @@ namespace Application.Services.Abstracts
 
             var description = messageService.GetMessage(
                 MessageConstants.MSG_PriceDescription,
-                $"{stockPrice.Price:N} VND",
+                $"{stockPrice.Price:N} {ApplicationConsts.CurrencyVND}",
                 $"{stockPrice.AtTime:HH:mm:ss}");
 
             await SendNotification(NotificationIdWhenExpectationReached, title, string.Empty, description);

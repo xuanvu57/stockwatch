@@ -205,6 +205,15 @@ namespace stockwatch.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Percentage in day.
+        /// </summary>
+        internal static string LBL_PercentageInDay {
+            get {
+                return ResourceManager.GetString("LBL_PercentageInDay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Potential symbols.
         /// </summary>
         internal static string LBL_PotentialSymbols {
@@ -300,6 +309,24 @@ namespace stockwatch.Resources.Strings {
         internal static string MSG_AddToFavoriteSuccessfully {
             get {
                 return ResourceManager.GetString("MSG_AddToFavoriteSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot access resource to read data.
+        /// </summary>
+        internal static string MSG_CannotAccessResourceToReadData {
+            get {
+                return ResourceManager.GetString("MSG_CannotAccessResourceToReadData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot access resource to write data.
+        /// </summary>
+        internal static string MSG_CannotAccessResourceToWriteData {
+            get {
+                return ResourceManager.GetString("MSG_CannotAccessResourceToWriteData", resourceCulture);
             }
         }
         

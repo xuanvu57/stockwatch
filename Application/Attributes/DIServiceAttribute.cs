@@ -7,5 +7,4 @@ namespace Application.Attributes
     {
         public DIServiceLifetime Lifetime { get; } = lifetime;
     }
-
 }

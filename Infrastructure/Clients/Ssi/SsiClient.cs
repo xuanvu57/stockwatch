@@ -35,8 +35,8 @@ namespace Infrastructure.Clients.Ssi
         {
             var request = new DailyStockPriceRequest()
             {
-                FromDate = fromDate.ToString("dd/MM/yyyy"),
-                ToDate = toDate.ToString("dd/MM/yyyy"),
+                FromDate = fromDate.ToString(SsiConstants.Format.Date),
+                ToDate = toDate.ToString(SsiConstants.Format.Date),
                 Symbol = symbol,
                 PageIndex = pageIndex ?? SsiConstants.Request.DefaultPageIndex,
                 PageSize = pageSize ?? SsiConstants.Request.DefaultPageSize
@@ -49,8 +49,8 @@ namespace Infrastructure.Clients.Ssi
         {
             var request = new IntradayOhlcRequest()
             {
-                FromDate = fromDate.ToString("dd/MM/yyyy"),
-                ToDate = toDate.ToString("dd/MM/yyyy"),
+                FromDate = fromDate.ToString(SsiConstants.Format.Date),
+                ToDate = toDate.ToString(SsiConstants.Format.Date),
                 Symbol = symbol,
                 PageIndex = pageIndex ?? SsiConstants.Request.DefaultPageIndex,
                 PageSize = pageSize ?? SsiConstants.Request.DefaultPageSize,
@@ -65,8 +65,8 @@ namespace Infrastructure.Clients.Ssi
         {
             var request = new DailyOhlcRequest()
             {
-                FromDate = fromDate.ToString("dd/MM/yyyy"),
-                ToDate = toDate.ToString("dd/MM/yyyy"),
+                FromDate = fromDate.ToString(SsiConstants.Format.Date),
+                ToDate = toDate.ToString(SsiConstants.Format.Date),
                 Symbol = symbol,
                 PageIndex = pageIndex ?? SsiConstants.Request.DefaultPageIndex,
                 PageSize = pageSize ?? SsiConstants.Request.DefaultPageSize,
@@ -115,7 +115,7 @@ namespace Infrastructure.Clients.Ssi
 
         private BaseResponse<T> HandleException<T>(Exception ex) where T : class
         {
-            logger.LogError(ex, $"Error in calling to Ssi API");
+            logger.LogError(ex, SsiConstants.Response.DefaultErrorLogMessage);
 
             var response = new BaseResponse<T>()
             {

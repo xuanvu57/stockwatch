@@ -18,16 +18,29 @@ namespace Infrastructure.Services
     {
         public async Task<Dictionary<string, IEnumerable<StockPriceHistoryDto>>> GetByMarket(Market market, int maxSymbolCountFromMarket, int months)
         {
-            var symbolIds = Enumerable.Empty<string>();
-            var securitiesResponse = await ssiClient.Securities(market.ToString(), 1, maxSymbolCountFromMarket);
+            var symbolIds = new List<string>();
 
-            if (securitiesResponse.Status == SsiConstants.ResponseStatus.Success &&
+            var pageIndex = 1;
+            var pageSize = 1_000;
+            var securitiesResponse = await ssiClient.Securities(market.ToString(), pageIndex, pageSize);
+
+            while (securitiesResponse.Status == SsiConstants.ResponseStatus.Success &&
                 securitiesResponse.Data is not null &&
                 securitiesResponse.Data.Length > 0)
             {
-                symbolIds = securitiesResponse.Data
+                var maxSymbolCountInThisRequest = maxSymbolCountFromMarket - symbolIds.Count;
+
+                var symbolIdsFromRequest = securitiesResponse.Data
                     .Select(x => x.Symbol)
-                    .Take(maxSymbolCountFromMarket);
+                    .Take(maxSymbolCountInThisRequest);
+
+                symbolIds.AddRange(symbolIdsFromRequest);
+
+                if (symbolIds.Count >= maxSymbolCountFromMarket)
+                    break;
+
+                pageIndex++;
+                securitiesResponse = await ssiClient.Securities(market.ToString(), pageIndex, pageSize);
             }
 
             return await GetBySymbols(symbolIds, months);

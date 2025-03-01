@@ -1,4 +1,5 @@
-﻿using Infrastructure.Clients.Ssi.Exceptions;
+﻿using Infrastructure.Clients.Ssi.Constants;
+using Infrastructure.Clients.Ssi.Exceptions;
 using Infrastructure.Clients.Ssi.Models.Responses;
 using System.Net;
 using System.Text.Json;
@@ -19,7 +20,7 @@ namespace Infrastructure.Clients.Ssi.Extensions
                 return responseData;
             }
 
-            throw new SsiException($"There is an error with {response.StatusCode}");
+            throw new SsiException($"{SsiConstants.Response.DefaultResponseNonSuccessMessage} {response.StatusCode}");
         }
 
         public static async Task<AccessTokenResponse> ConvertToAuthenticationResponse(this HttpResponseMessage response)
@@ -35,7 +36,7 @@ namespace Infrastructure.Clients.Ssi.Extensions
                 }
             }
 
-            throw new SsiException($"There is an error with {response.StatusCode}");
+            throw new SsiException($"{SsiConstants.Response.DefaultResponseNonSuccessMessage} {response.StatusCode}");
         }
     }
 }

@@ -7,6 +7,7 @@ using Android.Views;
 using Android.Widget;
 using Application.Dtos;
 using Application.Services.Interfaces;
+using stockwatch.Constants;
 using stockwatch.Services.Providers;
 using static Android.Views.View;
 using Color = Android.Graphics.Color;
@@ -132,10 +133,10 @@ namespace stockwatch.Platforms.Android
 
             layoutParams.Format = Format.Translucent;
             layoutParams.Gravity = GravityFlags.Top | GravityFlags.Left;
-            layoutParams.Width = 150;
-            layoutParams.Height = 150;
+            layoutParams.Width = DisplayConstants.FloatingWindowWidth;
+            layoutParams.Height = DisplayConstants.FloatingWindowHeight;
             layoutParams.X = displayMetrics.WidthPixels - layoutParams.Width;
-            layoutParams.Y = 300;
+            layoutParams.Y = displayMetrics.HeightPixels / 2;
         }
 
         private void SetCurrentPosition(MotionEvent e)
@@ -197,11 +198,21 @@ namespace stockwatch.Platforms.Android
 
         private void UpdatePercentageView(SymbolAnalyzingResultDto? symbolAnalyzingResult)
         {
-            var percentageView = floatView?.FindViewById<TextView>(Resource.Id.tv1);
+            UpdatePercentageView(Resource.Id.tv1, symbolAnalyzingResult?.Percentage);
+            UpdatePercentageView(Resource.Id.tv2, symbolAnalyzingResult?.PercentageInDay);
+        }
+
+        private void UpdatePercentageView(int viewId, decimal? percentage)
+        {
+            var percentageView = floatView?.FindViewById<TextView>(viewId);
             if (percentageView is not null)
             {
-                percentageView.SetTextColor(Color.ParseColor(symbolAnalyzingResult?.Percentage > 0 ? "#00FFAA" : "#FF5555"));
-                percentageView.SetText($"{symbolAnalyzingResult?.Percentage ?? 0:F2}%", TextView.BufferType.Editable);
+                var signUpDown = percentage > 0 ? DisplayConstants.ArrowUp : DisplayConstants.ArrowDown;
+                var absPercentage = Math.Abs(percentage ?? 0);
+                var textColor = Color.ParseColor(percentage > 0 ? DisplayConstants.ColorUp : DisplayConstants.ColorDown);
+
+                percentageView.SetTextColor(textColor);
+                percentageView.SetText($"{signUpDown}{absPercentage:F2}%", TextView.BufferType.Editable);
             }
         }
     }

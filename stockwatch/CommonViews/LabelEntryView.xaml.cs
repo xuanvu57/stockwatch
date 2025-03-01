@@ -1,3 +1,4 @@
+using stockwatch.Constants;
 using System.ComponentModel;
 
 namespace stockwatch.CommonViews;
@@ -125,7 +126,7 @@ public partial class LabelEntryView : ContentView
     private string GetNumericText()
     {
         if (Keyboard != Keyboard.Numeric || string.IsNullOrEmpty(Text))
-            return "0";
+            return DisplayConstants.DefaultNumericText;
 
         var number = decimal.Parse(Text, Thread.CurrentThread.CurrentCulture.NumberFormat);
         return number.ToString();

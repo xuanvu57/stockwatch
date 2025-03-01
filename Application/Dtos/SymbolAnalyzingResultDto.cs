@@ -8,6 +8,7 @@ namespace Application.Dtos
     {
         public new decimal? Price { get; init; }
         public decimal? Percentage { get; init; }
+        public decimal? PercentageInDay { get; init; }
         public DateTime AtTime { get; init; }
 
         public static SymbolAnalyzingResultDto FromStockPriceInRealtimeDto(
@@ -16,9 +17,14 @@ namespace Application.Dtos
             DateTime atTime)
         {
             decimal? percentage = null;
+            decimal? percentageInDay = null;
             if (stockPrice is not null)
             {
                 percentage = StockRulesService.CalculatePercentage(stockPrice.Price, referenceSymbolEntity!.InitializedPrice);
+                if (stockPrice.RefPrice is not null)
+                {
+                    percentageInDay = StockRulesService.CalculatePercentage(stockPrice.Price, stockPrice.RefPrice.Value);
+                }
             }
 
             return new()
@@ -26,6 +32,7 @@ namespace Application.Dtos
                 SymbolId = referenceSymbolEntity!.Id,
                 Price = stockPrice?.Price,
                 Percentage = percentage,
+                PercentageInDay = percentageInDay,
                 AtTime = atTime,
             };
         }

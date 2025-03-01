@@ -9,5 +9,7 @@
         public const string MSG_StartFollowingSymbol = "MSG_StartFollowingSymbol";
         public const string MSG_SymbolPriceIsOverExpectation = "MSG_SymbolPriceIsOverExpectation";
         public const string MSG_PriceDescription = "MSG_PriceDescription";
+        public const string MSG_CannotAccessResourceToReadData = "MSG_CannotAccessResourceToReadData";
+        public const string MSG_CannotAccessResourceToWriteData = "MSG_CannotAccessResourceToWriteData";
     }
 }

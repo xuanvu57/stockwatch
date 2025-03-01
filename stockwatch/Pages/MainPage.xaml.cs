@@ -161,6 +161,7 @@ namespace stockwatch.Pages
                 symbolAnalyzingResult.SymbolId,
                 symbolAnalyzingResult.Price,
                 symbolAnalyzingResult.Percentage,
+                symbolAnalyzingResult.PercentageInDay,
                 symbolAnalyzingResult.AtTime);
 
             LatestPrice.NotifyPropertyChanged();

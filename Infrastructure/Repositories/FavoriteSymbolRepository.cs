@@ -13,8 +13,9 @@ namespace Infrastructure.Repositories
         ILogger<FavoriteSymbolRepository> logger,
         ILocalFileService localFileService,
         IToastManagerService toastManagerService,
-        IDateTimeService dateTimeService) :
-        BaseRepository<FavoriteSymbolRepository, FavoriteSymbolEntity>(logger, localFileService, toastManagerService), IFavoriteSymbolRepository
+        IDateTimeService dateTimeService,
+        IMessageService messageService) :
+        BaseRepository<FavoriteSymbolRepository, FavoriteSymbolEntity>(logger, localFileService, toastManagerService, messageService), IFavoriteSymbolRepository
     {
         public async Task<IList<string>> Get()
         {

@@ -1,4 +1,5 @@
 ﻿using Application.Attributes;
+using Application.Constants;
 using Application.Dtos;
 using Application.Services.Interfaces;
 using Application.Settings;
@@ -18,6 +19,7 @@ namespace Application.Services
         IMySymbolAnalyzingService mySymbolAnalyzingService,
         IReferenceSymbolRepository referenceSymbolRepository) : IBackgroundService
     {
+
         private Timer? timer;
         private readonly List<IBackgroundServiceSubscriber> subscribers = [];
         public bool IsRunning { get; private set; } = false;
@@ -80,7 +82,7 @@ namespace Application.Services
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, $"Error run my symbol analyzation");
+                logger.LogError(ex, ApplicationConsts.LoggedErrorMessage.ErrorMessageWhenAnalyzeMySymbolFailed);
 
                 if (subscribers.Count > 0)
                 {

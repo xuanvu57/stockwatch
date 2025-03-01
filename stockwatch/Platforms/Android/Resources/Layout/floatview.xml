@@ -1,23 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
-   android:orientation="horizontal"
+   android:orientation="vertical"
    android:layout_width="match_parent"
-   android:layout_height="match_parent">
+   android:layout_height="match_parent"
+   android:gravity="center_horizontal"
+   android:background="@drawable/appicon_fg">
 
 
 <TextView    
     android:id="@+id/tv1"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:text="-"
+    android:layout_height="wrap_content"
+    android:layout_weight="4"
+    android:text=""
     android:textAlignment="center"
     android:gravity="center"
+    android:layout_marginTop="13sp"
     android:maxLines="1"    
-    android:autoSizeTextType="uniform"
-    android:autoSizeMaxTextSize="12sp"
-    android:autoSizeMinTextSize="5sp"
-    android:padding="@dimen/abc_control_padding_material"
-    android:background="@drawable/appicon_fg"/>
+    android:textSize="13sp"/>
+
+<TextView    
+    android:id="@+id/tv2"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:text=""
+    android:textAlignment="center"
+    android:gravity="center"
+    android:layout_marginBottom="10sp"
+    android:maxLines="1"    
+    android:textSize="8sp"/>
 
 </LinearLayout>
