@@ -2,10 +2,11 @@
 {
     public interface IBackgroundService
     {
-        public bool IsRunning { get; }
-        void Start();
+        bool IsRunning { get; }
+
+        void Restart();
         void Stop();
-        void Subscribe(IBackgroundServiceSubscriber subscriber);
-        void Unsubscribe(IBackgroundServiceSubscriber subscriber);
+        void AddSubscriber(IBackgroundServiceSubscriber subscriber);
+        void RemoveSubscriber(IBackgroundServiceSubscriber subscriber);
     }
 }

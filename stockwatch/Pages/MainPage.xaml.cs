@@ -69,7 +69,7 @@ namespace stockwatch.Pages
         {
             base.OnDisappearing();
 
-            backgroundService.Unsubscribe(this);
+            backgroundService.RemoveSubscriber(this);
         }
 
         private async void OnWatchButtonClicked(object sender, EventArgs e)
@@ -104,13 +104,13 @@ namespace stockwatch.Pages
         {
             IsWatcherStopped = false;
 
-            backgroundService.Subscribe(this);
-            backgroundService.Start();
+            backgroundService.AddSubscriber(this);
+            backgroundService.Restart();
         }
 
         private void StopWatching()
         {
-            backgroundService.Unsubscribe(this);
+            backgroundService.RemoveSubscriber(this);
             backgroundService.Stop();
 
             IsWatcherStopped = true;

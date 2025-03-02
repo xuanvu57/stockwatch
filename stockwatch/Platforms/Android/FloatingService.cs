@@ -1,4 +1,5 @@
-﻿using Android.App;
+﻿using Android.Animation;
+using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
@@ -51,7 +52,7 @@ namespace stockwatch.Platforms.Android
         {
             windowManager?.RemoveView(floatView);
 
-            backgroundService?.Unsubscribe(this);
+            backgroundService?.RemoveSubscriber(this);
 
             base.OnDestroy();
         }
@@ -60,7 +61,7 @@ namespace stockwatch.Platforms.Android
         {
             if (data is SymbolAnalyzingResultDto symbolAnalyzingResult)
             {
-                UpdatePercentageView(symbolAnalyzingResult);
+                UpdatePercentage(symbolAnalyzingResult);
             }
 
             return Task.CompletedTask;
@@ -153,8 +154,8 @@ namespace stockwatch.Platforms.Android
             var movedY = nowY - positionY;
             positionX = nowX;
             positionY = nowY;
-            layoutParams.X = layoutParams.X + movedX;
-            layoutParams.Y = layoutParams.Y + movedY;
+            layoutParams.X += movedX;
+            layoutParams.Y += movedY;
 
             EnsureFloatingWindowInsideScreenView();
             windowManager?.UpdateViewLayout(floatView, layoutParams);
@@ -191,12 +192,12 @@ namespace stockwatch.Platforms.Android
             backgroundService = PlatformsServiceProvider.ServiceProvider.GetRequiredService<IBackgroundService>();
             if (backgroundService?.IsRunning == true)
             {
-                backgroundService.Subscribe(subscriber);
-                backgroundService.Start();
+                backgroundService.AddSubscriber(subscriber);
+                backgroundService.Restart();
             }
         }
 
-        private void UpdatePercentageView(SymbolAnalyzingResultDto? symbolAnalyzingResult)
+        private void UpdatePercentage(SymbolAnalyzingResultDto? symbolAnalyzingResult)
         {
             UpdatePercentageView(Resource.Id.tv1, symbolAnalyzingResult?.Percentage);
             UpdatePercentageView(Resource.Id.tv2, symbolAnalyzingResult?.PercentageInDay);
@@ -218,10 +219,34 @@ namespace stockwatch.Platforms.Android
                     signUpDown = string.Empty;
                     formattedAbsPercentage = DisplayConstants.NotAvailableValue;
                 }
+                var finalText = $"{signUpDown}{formattedAbsPercentage}%";
 
-                percentageView.SetTextColor(textColor);
-                percentageView.SetText($"{signUpDown}{formattedAbsPercentage}%", TextView.BufferType.Editable);
+                percentageView.Post(() => AnimatePercentageView(floatView!, percentageView, finalText, textColor));
             }
+        }
+
+        private static void AnimatePercentageView(View floatView, TextView percentageView, string finalText, Color textColor)
+        {
+            const long durationOfStarting = 1000;
+            const long durationOfReverse = 500;
+
+            var alpha = ObjectAnimator.OfFloat(percentageView, "Alpha", 1.0f, 0.0f)!;
+            var rotation = ObjectAnimator.OfFloat(floatView, "Rotation", 0, 360)!;
+
+            var animatorSet = new AnimatorSet();
+            animatorSet.PlayTogether(alpha, rotation);
+            animatorSet.SetDuration(durationOfStarting);
+            animatorSet.Start();
+
+            animatorSet.AnimationEnd += (_, _) =>
+            {
+                percentageView.SetTextColor(textColor);
+                percentageView.SetText(finalText, TextView.BufferType.Editable);
+
+                animatorSet.RemoveAllListeners();
+                animatorSet.SetDuration(durationOfReverse);
+                animatorSet.Reverse();
+            };
         }
     }
 }

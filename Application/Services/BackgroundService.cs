@@ -19,14 +19,15 @@ namespace Application.Services
         IMySymbolAnalyzingService mySymbolAnalyzingService,
         IReferenceSymbolRepository referenceSymbolRepository) : IBackgroundService
     {
+        public bool IsRunning { get; private set; } = false;
 
         private Timer? timer;
         private readonly List<IBackgroundServiceSubscriber> subscribers = [];
-        public bool IsRunning { get; private set; } = false;
+        private ScheduleSettings? scheduleSettings;
 
-        public void Start()
+        public void Restart()
         {
-            var scheduleSettings = configuration.GetRequiredSection(nameof(ScheduleSettings)).Get<ScheduleSettings>()!;
+            scheduleSettings ??= configuration.GetRequiredSection(nameof(ScheduleSettings)).Get<ScheduleSettings>()!;
 
             timer ??= new(HandleTimerCallback);
             timer.Change(TimeSpan.Zero, TimeSpan.FromSeconds(scheduleSettings.FetchDataIntervalInSecond));
@@ -39,7 +40,7 @@ namespace Application.Services
             IsRunning = false;
         }
 
-        public void Subscribe(IBackgroundServiceSubscriber subscriber)
+        public void AddSubscriber(IBackgroundServiceSubscriber subscriber)
         {
             if (!subscribers.Contains(subscriber))
             {
@@ -47,7 +48,7 @@ namespace Application.Services
             }
         }
 
-        public void Unsubscribe(IBackgroundServiceSubscriber subscriber)
+        public void RemoveSubscriber(IBackgroundServiceSubscriber subscriber)
         {
             subscribers.Remove(subscriber);
         }
