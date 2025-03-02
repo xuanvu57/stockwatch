@@ -399,3 +399,7 @@ FodyWeavers.xsd
 
 # Ignore local appSettings
 appsettings.*.json
+
+# Ignore keystore
+*.keystore
+*.keyinfo
