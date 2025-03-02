@@ -17,9 +17,11 @@ namespace Application.Services.Abstracts
                 stockPrice.SymbolId,
                 upDownStatus.ToString().ToUpper());
 
+            var formattedPrice = stockPrice.Price.ToString($"N{ApplicationConsts.CurrencyDecimalPlace}");
+
             var description = messageService.GetMessage(
                 MessageConstants.MSG_PriceDescription,
-                $"{stockPrice.Price:N} {ApplicationConsts.CurrencyVND}",
+                $"{formattedPrice} {ApplicationConsts.CurrencyVND}",
                 $"{stockPrice.AtTime:HH:mm:ss}");
 
             await SendNotification(NotificationIdWhenExpectationReached, title, string.Empty, description);

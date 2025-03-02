@@ -3,6 +3,7 @@
     public static class ApplicationConsts
     {
         public const string CurrencyVND = "VND";
+        public const int CurrencyDecimalPlace = 0;
 
         public static class LoggedErrorMessage
         {

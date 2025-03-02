@@ -1,4 +1,5 @@
-﻿using Application.Dtos;
+﻿using Application.Constants;
+using Application.Dtos;
 using Application.Services.Interfaces;
 using Domain.Constants;
 using Domain.Entities;
@@ -14,10 +15,6 @@ namespace stockwatch.Pages
         private readonly IReferenceSymbolRepository referenceSymbolRepository;
         private readonly IBackgroundService backgroundService;
 
-        private ReferenceSymbolEntity? targetSymbol;
-
-        public LatestPriceModel LatestPrice { get; private set; } = new();
-
         private readonly BindableProperty IsWatcherStoppedProperty = BindableProperty.Create(
             propertyName: nameof(IsWatcherStopped),
             returnType: typeof(bool),
@@ -28,6 +25,12 @@ namespace stockwatch.Pages
             get => (bool)GetValue(IsWatcherStoppedProperty);
             private set => SetValue(IsWatcherStoppedProperty, value);
         }
+
+        public int CurrencyDecimalPlace { get; } = ApplicationConsts.CurrencyDecimalPlace;
+
+        private ReferenceSymbolEntity? targetSymbol;
+
+        public LatestPriceModel LatestPrice { get; private set; } = new();
 
         public MainPage(
             IToastManagerService toastManagerService,

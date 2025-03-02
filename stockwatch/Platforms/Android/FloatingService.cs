@@ -208,11 +208,19 @@ namespace stockwatch.Platforms.Android
             if (percentageView is not null)
             {
                 var signUpDown = percentage > 0 ? DisplayConstants.ArrowUp : DisplayConstants.ArrowDown;
-                var absPercentage = Math.Abs(percentage ?? 0);
                 var textColor = Color.ParseColor(percentage > 0 ? DisplayConstants.ColorUp : DisplayConstants.ColorDown);
 
+                var absPercentage = Math.Abs(percentage ?? 0);
+                var formattedAbsPercentage = absPercentage < 100 ? $"{absPercentage:F2}" : $"{absPercentage:F0}";
+
+                if (percentage is null)
+                {
+                    signUpDown = string.Empty;
+                    formattedAbsPercentage = DisplayConstants.NotAvailableValue;
+                }
+
                 percentageView.SetTextColor(textColor);
-                percentageView.SetText($"{signUpDown}{absPercentage:F2}%", TextView.BufferType.Editable);
+                percentageView.SetText($"{signUpDown}{formattedAbsPercentage}%", TextView.BufferType.Editable);
             }
         }
     }
