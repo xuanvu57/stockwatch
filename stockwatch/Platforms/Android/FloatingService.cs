@@ -29,7 +29,8 @@ namespace stockwatch.Platforms.Android
 
         private int positionX;
         private int positionY;
-        private bool isMoving;
+        private int touchedPositionX;
+        private int touchedPositionY;
 
         public override IBinder? OnBind(Intent? intent)
         {
@@ -79,20 +80,11 @@ namespace stockwatch.Platforms.Android
                     break;
 
                 case MotionEventActions.Move:
-                    isMoving = true;
                     DragFloatingWindow(e);
                     break;
 
                 case MotionEventActions.Up:
-                    if (isMoving)
-                    {
-                        MoveFloatingWindowToEdge();
-                    }
-                    else
-                    {
-                        LaunchApp();
-                    }
-                    isMoving = false;
+                    DecideActionWhenMotionUp(e);
                     break;
 
                 default:
@@ -144,6 +136,9 @@ namespace stockwatch.Platforms.Android
         {
             positionX = (int)e.RawX;
             positionY = (int)e.RawY;
+
+            touchedPositionX = (int)e.RawX;
+            touchedPositionY = (int)e.RawY;
         }
 
         private void DragFloatingWindow(MotionEvent e)
@@ -159,6 +154,29 @@ namespace stockwatch.Platforms.Android
 
             EnsureFloatingWindowInsideScreenView();
             windowManager?.UpdateViewLayout(floatView, layoutParams);
+        }
+
+        private void DecideActionWhenMotionUp(MotionEvent e)
+        {
+            var nowX = (int)e.RawX;
+            var nowY = (int)e.RawY;
+
+            var movingDistance = GetDistance(touchedPositionX, touchedPositionY, nowX, nowY);
+            var isMoving = movingDistance > DisplayConstants.MinimumDistanceToConsiderMoving;
+
+            if (isMoving)
+            {
+                MoveFloatingWindowToEdge();
+            }
+            else
+            {
+                LaunchApp();
+            }
+        }
+
+        private static double GetDistance(int x1, int y1, int x2, int y2)
+        {
+            return Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
         }
 
         private void MoveFloatingWindowToEdge()

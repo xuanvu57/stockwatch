@@ -17,8 +17,8 @@
                 FalseObject="{x:Static strings:AppResources.LBL_StopWatch}"/>
             <toolkit:BoolToObjectConverter 
                 x:Key="WatchButtonColorConverter" 
-                TrueObject="#512bd4"
-                FalseObject="IndianRed"/>
+                TrueObject="{x:StaticResource Primary}"
+                FalseObject="{x:StaticResource Magenta}"/>
             <toolkit:CompareConverter x:Key="PercentageTextColorConverter"
                 ComparisonOperator="GreaterOrEqual"
                 ComparingValue="{x:StaticResource Threshold}"
