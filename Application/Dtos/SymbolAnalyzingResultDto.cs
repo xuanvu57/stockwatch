@@ -9,7 +9,7 @@ namespace Application.Dtos
         public new decimal? Price { get; init; }
         public decimal? Percentage { get; init; }
         public decimal? PercentageInDay { get; init; }
-        public DateTime AtTime { get; init; }
+        public DateTime AtTime { get; init; } = DateTime.Now;
 
         public static SymbolAnalyzingResultDto FromStockPriceInRealtimeDto(
             StockPriceInRealtimeDto? stockPrice,

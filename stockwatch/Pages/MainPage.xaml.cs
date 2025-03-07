@@ -1,10 +1,8 @@
-﻿using Application.Constants;
-using Application.Dtos;
+﻿using Application.Dtos;
 using Application.Services.Interfaces;
 using Domain.Constants;
 using Domain.Entities;
 using Domain.Repositories.Interfaces;
-using stockwatch.Models;
 
 namespace stockwatch.Pages
 {
@@ -26,11 +24,7 @@ namespace stockwatch.Pages
             private set => SetValue(IsWatcherStoppedProperty, value);
         }
 
-        public int CurrencyDecimalPlace { get; } = ApplicationConsts.CurrencyDecimalPlace;
-
         private ReferenceSymbolEntity? targetSymbol;
-
-        public LatestPriceModel LatestPrice { get; private set; } = new();
 
         public MainPage(
             IToastManagerService toastManagerService,
@@ -55,7 +49,7 @@ namespace stockwatch.Pages
 
             if (targetSymbol is not null)
             {
-                InitReferenceSymbolInfo(targetSymbol);
+                mySymbolSettingView.InitReferenceSymbolInfo(targetSymbol);
 
                 StartWatching();
             }
@@ -86,16 +80,17 @@ namespace stockwatch.Pages
 
         private async Task StartNewWatchingManual()
         {
-            if (!AreValidInputs(out var errorMessage))
+            if (!mySymbolSettingView.AreValidInputs(out var errorMessage))
             {
                 await toastManagerService.Show(errorMessage);
                 return;
             }
 
-            targetSymbol = CreateReferenceSymbolInfo();
+            targetSymbol = mySymbolSettingView.CreateReferenceSymbolInfo();
             await referenceSymbolRepository.Save(targetSymbol);
 
             await toastManagerService.Show(messageService.GetMessage(MessageConstants.MSG_StartFollowingSymbol, targetSymbol.Id));
+            mySymbolAnalyzingResultView.ClearLatestData(targetSymbol.Id);
 
             StartWatching();
         }
@@ -116,65 +111,11 @@ namespace stockwatch.Pages
             IsWatcherStopped = true;
         }
 
-        private bool AreValidInputs(out string errorMessage)
-        {
-            if (string.IsNullOrWhiteSpace(entSymbol.Text))
-            {
-                errorMessage = messageService.GetMessage(MessageConstants.MSG_PleaseInputSymbol);
-                return false;
-            }
-
-            var isNumber = decimal.TryParse(entReferencePrice.NumericText, out var price);
-            if (!isNumber || price <= 0)
-            {
-                errorMessage = messageService.GetMessage(MessageConstants.MSG_PleaseInputValidPrice);
-                return false;
-            }
-
-            errorMessage = string.Empty;
-            return true;
-        }
-
-        private void InitReferenceSymbolInfo(ReferenceSymbolEntity symbol)
-        {
-            entSymbol.Text = symbol.Id;
-            entReferencePrice.Text = symbol.InitializedPrice.ToString();
-            entCeilingPrice.Text = symbol.CeilingPricePercentage.ToString();
-            entFloorPrice.Text = symbol.FloorPricePercentage.ToString();
-        }
-
-        private ReferenceSymbolEntity CreateReferenceSymbolInfo()
-        {
-            var price = decimal.Parse(entReferencePrice.NumericText);
-            var ceilingPrice = decimal.Parse(entCeilingPrice.NumericText);
-            var floorPrice = decimal.Parse(entFloorPrice.NumericText);
-
-            return new()
-            {
-                Id = entSymbol.Text,
-                InitializedPrice = price,
-                CeilingPricePercentage = ceilingPrice,
-                FloorPricePercentage = floorPrice
-            };
-        }
-
-        private void SetLatestData(SymbolAnalyzingResultDto symbolAnalyzingResult)
-        {
-            LatestPrice = LatestPrice.With(
-                symbolAnalyzingResult.SymbolId,
-                symbolAnalyzingResult.Price,
-                symbolAnalyzingResult.Percentage,
-                symbolAnalyzingResult.PercentageInDay,
-                symbolAnalyzingResult.AtTime);
-
-            LatestPrice.NotifyPropertyChanged();
-        }
-
         public Task HandleBackgroundServiceEvent<T>(T data)
         {
             if (data is SymbolAnalyzingResultDto symbolAnalyzingResult)
             {
-                SetLatestData(symbolAnalyzingResult);
+                mySymbolAnalyzingResultView.SetLatestData(symbolAnalyzingResult);
             }
 
             return Task.CompletedTask;

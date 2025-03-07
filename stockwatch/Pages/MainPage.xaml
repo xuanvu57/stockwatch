@@ -4,27 +4,18 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:strings="clr-namespace:stockwatch.Resources.Strings"
              xmlns:commonViews="clr-namespace:stockwatch.CommonViews"
+             xmlns:childViews="clr-namespace:stockwatch.ChildViews"
              xmlns:local="clr-namespace:stockwatch.Pages"
              x:Class="stockwatch.Pages.MainPage"
              x:Name="mainPage"
              Title="{Binding Source={x:Static strings:AppResources.LBL_MySymbol}}">
     <ContentPage.Resources>
         <ResourceDictionary>
-            <x:Decimal x:Key="Threshold">0</x:Decimal>
             <toolkit:BoolToObjectConverter 
                 x:Key="WatchButtonTextConverter" 
                 TrueObject="{x:Static strings:AppResources.LBL_Watch}"
                 FalseObject="{x:Static strings:AppResources.LBL_StopWatch}"/>
-            <toolkit:BoolToObjectConverter 
-                x:Key="WatchButtonColorConverter" 
-                TrueObject="{x:StaticResource Primary}"
-                FalseObject="{x:StaticResource Magenta}"/>
-            <toolkit:CompareConverter x:Key="PercentageTextColorConverter"
-                ComparisonOperator="GreaterOrEqual"
-                ComparingValue="{x:StaticResource Threshold}"
-                TrueObject="Green"
-                FalseObject="Red" 
-                DefaultConvertReturnValue="Black"/>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter"></toolkit:InvertedBoolConverter>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -32,109 +23,41 @@
         <VerticalStackLayout
             Padding="10,0"
             Spacing="25">
-            <Grid RowDefinitions="Auto,Auto,Auto,*" ColumnDefinitions="*">
-                <commonViews:LabelEntryView
-                    x:Name="entSymbol"
-                    Grid.Row="0"
-                    LabelWidth="155"
-                    IsEnabled="{Binding IsWatcherStopped, Source={x:Reference mainPage}}"
-                    Label="{Binding Source={x:Static strings:AppResources.LBL_SymbolID}}"
-                    EntryPlaceholder="{Binding Source={x:Static strings:AppResources.LBL_ExampleOfSymbolID}}"
-                    EntryTextTransform="Uppercase">
-                </commonViews:LabelEntryView>
-
-                <commonViews:LabelEntryView
-                    x:Name="entReferencePrice"
-                    Grid.Row="1"
-                    Keyboard="Numeric"
-                    DecimalPlace="{Binding CurrencyDecimalPlace, Source={x:Reference mainPage}}"
-                    LabelWidth="155"
-                    TextWidth="150"
-                    IsEnabled="{Binding IsWatcherStopped, Source={x:Reference mainPage}}"
-                    Label="{Binding Source={x:Static strings:AppResources.LBL_ReferencePrice}}"
-                    Text="0.00"
-                    Unit="{Binding Source={x:Static strings:AppResources.LBL_VND}}">
-                </commonViews:LabelEntryView>
-
-                <commonViews:LabelEntryView
-                    x:Name="entCeilingPrice"
-                    Grid.Row="2"
-                    Keyboard="Numeric"
-                    LabelWidth="155"
-                    TextWidth="100"
-                    IsEnabled="{Binding IsWatcherStopped, Source={x:Reference mainPage}}"
-                    Label="{Binding Source={x:Static strings:AppResources.LBL_ExpectedPercentage}}"
-                    Text="5.00"
-                    Unit="{Binding Source={x:Static strings:AppResources.LBL_Higher}, StringFormat='% ({0})'}">
-                </commonViews:LabelEntryView>
-
-                <commonViews:LabelEntryView
-                    x:Name="entFloorPrice"
-                    Grid.Row="3"
-                    Keyboard="Numeric"
-                    LabelWidth="155"
-                    TextWidth="100"
-                    IsEnabled="{Binding IsWatcherStopped, Source={x:Reference mainPage}}"
-                    Label="{Binding Source={x:Static strings:AppResources.LBL_UnexpectedPercentage}}"
-                    Text="5.00"
-                    Unit="{Binding Source={x:Static strings:AppResources.LBL_Lower}, StringFormat='% ({0})'}">
-                </commonViews:LabelEntryView>
-            </Grid>
+            
+            <childViews:MySymbolSettingView
+                x:Name="mySymbolSettingView"
+                IsEnabled="{Binding IsWatcherStopped, Source={x:Reference mainPage}}"></childViews:MySymbolSettingView>
 
             <Button
                 x:Name="btnWatch"
                 Clicked="OnWatchButtonClicked"
                 HorizontalOptions="Fill"
                 Text="{Binding Source={x:Reference mainPage}, Path=IsWatcherStopped, Converter={x:StaticResource WatchButtonTextConverter}}"
-                BackgroundColor="{Binding Source={x:Reference mainPage}, Path=IsWatcherStopped, Converter={x:StaticResource WatchButtonColorConverter}}"
-                TextColor="White"/>
+                TextColor="White">
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroupList>
+                        <VisualStateGroup>
+                            <VisualState Name="Normal">
+                                <VisualState.StateTriggers>
+                                    <StateTrigger IsActive="{Binding IsWatcherStopped, Source={x:Reference mainPage}}"/>
+                                </VisualState.StateTriggers>
+                            </VisualState>
+                            <VisualState Name="Running">
+                                <VisualState.StateTriggers>
+                                    <StateTrigger IsActive="{Binding IsWatcherStopped, Source={x:Reference mainPage}, Converter={x:StaticResource InvertedBoolConverter}}"/>
+                                </VisualState.StateTriggers>
+                                <VisualState.Setters>
+                                    <Setter Property="BackgroundColor"
+                                            Value="{StaticResource Magenta}"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </VisualStateManager.VisualStateGroups>
+            </Button>
 
-            <HorizontalStackLayout>
-                <Label 
-                    Padding="0,0,5,0"
-                    Text="{Binding Source={x:Static strings:AppResources.LBL_SymbolID}, StringFormat='{0}:'}"/>
-                <Label                    
-                    FontAttributes="Bold"
-                    Text="{Binding LatestPrice.SymbolId, Source={x:Reference mainPage}}"/>
-            </HorizontalStackLayout>
-
-            <HorizontalStackLayout>
-                <Label 
-                    Padding="0,0,5,0"
-                    Text="{Binding Source={x:Static strings:AppResources.LBL_Price}, StringFormat='{0}:'}"/>
-                <Label
-                    FontAttributes="Bold"
-                    Text="{Binding LatestPrice.Price, Source={x:Reference mainPage}, StringFormat='{0:N0} VND', TargetNullValue='N/A'}"
-                    TextColor="{Binding LatestPrice.Percentage, Source={x:Reference mainPage}, Converter={x:StaticResource PercentageTextColorConverter}}"/>
-            </HorizontalStackLayout>
-
-            <HorizontalStackLayout>
-                <Label 
-                    Padding="0,0,5,0"
-                    Text="{Binding Source={x:Static strings:AppResources.LBL_Percentage}, StringFormat='{0}:'}"/>
-                <Label
-                    FontAttributes="Bold"
-                    Text="{Binding LatestPrice.Percentage, Source={x:Reference mainPage}, StringFormat='{0:F2}%', TargetNullValue='N/A'}"
-                    TextColor="{Binding LatestPrice.Percentage, Source={x:Reference mainPage}, Converter={x:StaticResource PercentageTextColorConverter}}"/>
-            </HorizontalStackLayout>
-
-            <HorizontalStackLayout>
-                <Label 
-                    Padding="0,0,5,0"
-                    Text="{Binding Source={x:Static strings:AppResources.LBL_PercentageInDay}, StringFormat='{0}:'}"/>
-                <Label
-                    FontAttributes="Bold"
-                    Text="{Binding LatestPrice.PercentageInDay, Source={x:Reference mainPage}, StringFormat='{0:F2}%', TargetNullValue='N/A'}"
-                    TextColor="{Binding LatestPrice.PercentageInDay, Source={x:Reference mainPage}, Converter={x:StaticResource PercentageTextColorConverter}}"/>
-            </HorizontalStackLayout>
-
-            <HorizontalStackLayout>
-                <Label 
-                    Padding="0,0,5,0"
-                    Text="{Binding Source={x:Static strings:AppResources.LBL_LatestDataAtTime}, StringFormat='{0}:'}"/>
-                <Label
-                    Text="{Binding LatestPrice.AtTime, Source={x:Reference mainPage}, StringFormat='{0:yyyy-MM-dd HH:mm:ss}', TargetNullValue='N/A'}"/>
-            </HorizontalStackLayout>
+            <childViews:MySymbolAnalyzingResultView
+                x:Name="mySymbolAnalyzingResultView"></childViews:MySymbolAnalyzingResultView>
         </VerticalStackLayout>
     </ScrollView>
 
