@@ -13,13 +13,13 @@ namespace stockwatch
     {
         protected override void OnStart()
         {
-            StopService(new Intent(this, typeof(AndroidFloatingService)));
+            StopService(new Intent(this, typeof(AndroidFloatingViewService)));
             base.OnStart();
         }
 
         protected override void OnResume()
         {
-            StopService(new Intent(this, typeof(AndroidFloatingService)));
+            StopService(new Intent(this, typeof(AndroidFloatingViewService)));
             base.OnResume();
         }
 
@@ -49,7 +49,7 @@ namespace stockwatch
             var backgroundService = PlatformsServiceProvider.ServiceProvider.GetRequiredService<IBackgroundService>();
             if (backgroundService?.IsRunning == true)
             {
-                StartService(new Intent(this, typeof(AndroidFloatingService)));
+                StartService(new Intent(this, typeof(AndroidFloatingViewService)));
             }
         }
     }

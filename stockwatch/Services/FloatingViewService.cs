@@ -6,7 +6,7 @@ using static Application.Constants.ApplicationEnums;
 namespace stockwatch.Services
 {
     [DIService(DIServiceLifetime.Scoped)]
-    public class FloatingService : IFloatingService
+    public class FloatingViewService : IFloatingViewService
     {
         private (int x, int y) currentTouchPosition;
         private (int x, int y) latestTouchDownPosition;
@@ -19,18 +19,10 @@ namespace stockwatch.Services
             this.floatingWindowPosition = floatingWindowPosition;
         }
 
-        public (int, int)? ConsiderToMoveFloatingWindow(int x, int y)
+        public void SetTouchDownPosition(int x, int y)
         {
-            var movingDistance = GetDistance(latestTouchDownPosition, (x, y));
-            var acceptOfMoving = movingDistance > DisplayConstants.MinimumDistanceToConsiderMoving;
-
-            if (acceptOfMoving)
-            {
-                MoveFloatingWindowToTheSides();
-                return floatingWindowPosition;
-            }
-
-            return null;
+            latestTouchDownPosition = (x, y);
+            currentTouchPosition = (x, y);
         }
 
         public (int, int) MoveFloatingWindow(int x, int y)
@@ -50,10 +42,18 @@ namespace stockwatch.Services
             return floatingWindowPosition;
         }
 
-        public void SetTouchDownPosition(int x, int y)
+        public (int, int)? ConsiderToMoveFloatingWindow(int x, int y)
         {
-            latestTouchDownPosition = (x, y);
-            currentTouchPosition = (x, y);
+            var movingDistance = GetDistance(latestTouchDownPosition, (x, y));
+            var acceptOfMoving = movingDistance > DisplayConstants.MinimumDistanceToConsiderMoving;
+
+            if (acceptOfMoving)
+            {
+                MoveFloatingWindowToTheSides();
+                return floatingWindowPosition;
+            }
+
+            return null;
         }
 
         private void EnsureFloatingWindowInsideScreenView()
@@ -64,7 +64,7 @@ namespace stockwatch.Services
 
         private void MoveFloatingWindowToTheSides()
         {
-            if (floatingWindowPosition.x < screenSize.width / 2)
+            if (floatingWindowPosition.x + (DisplayConstants.FloatingWindowWidth / 2) < screenSize.width / 2)
             {
                 floatingWindowPosition.x = 0;
             }

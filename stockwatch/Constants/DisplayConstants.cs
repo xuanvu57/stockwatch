@@ -14,5 +14,6 @@
 
         public const int FloatingWindowWidth = 200;
         public const int FloatingWindowHeight = 200;
+        public const int FloatingWindowBounceLength = 40;
     }
 }

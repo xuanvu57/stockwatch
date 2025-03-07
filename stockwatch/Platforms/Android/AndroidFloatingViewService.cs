@@ -5,6 +5,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Util;
 using Android.Views;
+using Android.Views.Animations;
 using Android.Widget;
 using Application.Dtos;
 using Application.Services.Interfaces;
@@ -19,16 +20,15 @@ using View = Android.Views.View;
 namespace stockwatch.Platforms.Android
 {
     [Service]
-    public class AndroidFloatingService : Service, IOnTouchListener, IBackgroundServiceSubscriber
+    public class AndroidFloatingViewService : Service, IOnTouchListener, IBackgroundServiceSubscriber
     {
         private IBackgroundService? backgroundService;
-        private IFloatingService? floatingService;
+        private IFloatingViewService? floatingViewService;
 
         private readonly DisplayMetrics displayMetrics = new();
-        private IWindowManager? windowManager;
         private readonly WindowManagerLayoutParams layoutParams = new();
+        private IWindowManager? windowManager;
         private View? floatView;
-
 
         public override IBinder? OnBind(Intent? intent)
         {
@@ -39,7 +39,7 @@ namespace stockwatch.Platforms.Android
         public override StartCommandResult OnStartCommand(Intent? intent, [GeneratedEnum] StartCommandFlags flags, int startId)
         {
             SubscribeBackgroundService(this);
-            floatingService = PlatformsServiceProvider.ServiceProvider.GetRequiredService<IFloatingService>();
+            floatingViewService = PlatformsServiceProvider.ServiceProvider.GetRequiredService<IFloatingViewService>();
 
             InitializeParamsToShowFloatingWindow();
 
@@ -73,7 +73,7 @@ namespace stockwatch.Platforms.Android
             switch (e.Action)
             {
                 case MotionEventActions.Down:
-                    floatingService?.SetTouchDownPosition((int)e.RawX, (int)e.RawY);
+                    floatingViewService?.SetTouchDownPosition((int)e.RawX, (int)e.RawY);
                     break;
 
                 case MotionEventActions.Move:
@@ -105,7 +105,7 @@ namespace stockwatch.Platforms.Android
             SetLayoutParams(displayMetrics);
 
             windowManager?.AddView(floatView, layoutParams);
-            floatingService?.InitFloatingWindow((displayMetrics.HeightPixels, displayMetrics.WidthPixels), (layoutParams.X, layoutParams.Y));
+            floatingViewService?.InitFloatingWindow((displayMetrics.HeightPixels, displayMetrics.WidthPixels), (layoutParams.X, layoutParams.Y));
         }
 
         private void SetLayoutParams(DisplayMetrics displayMetrics)
@@ -134,7 +134,7 @@ namespace stockwatch.Platforms.Android
 
         private void DragFloatingWindow(MotionEvent e)
         {
-            var newPostion = floatingService?.MoveFloatingWindow((int)e.RawX, (int)e.RawY) ?? (layoutParams.X, layoutParams.Y);
+            var newPostion = floatingViewService?.MoveFloatingWindow((int)e.RawX, (int)e.RawY) ?? (layoutParams.X, layoutParams.Y);
 
             (layoutParams.X, layoutParams.Y) = newPostion;
             windowManager?.UpdateViewLayout(floatView, layoutParams);
@@ -142,12 +142,13 @@ namespace stockwatch.Platforms.Android
 
         private void DecideActionWhenMotionUp(MotionEvent e)
         {
-            var newPostion = floatingService?.ConsiderToMoveFloatingWindow((int)e.RawX, (int)e.RawY);
+            var newPostion = floatingViewService?.ConsiderToMoveFloatingWindow((int)e.RawX, (int)e.RawY);
 
             if (newPostion is not null)
             {
                 (layoutParams.X, layoutParams.Y) = newPostion.Value;
                 windowManager?.UpdateViewLayout(floatView, layoutParams);
+                floatView?.Post(() => AnimateUntouchFloatView(floatView, layoutParams.X));
             }
             else
             {
@@ -195,11 +196,11 @@ namespace stockwatch.Platforms.Android
                 }
                 var finalText = $"{signUpDown}{formattedAbsPercentage}%";
 
-                percentageView.Post(() => AnimatePercentageView(floatView!, percentageView, finalText, textColor));
+                percentageView.Post(() => AnimateUpdatingPercentageView(floatView!, percentageView, finalText, textColor));
             }
         }
 
-        private static void AnimatePercentageView(View floatView, TextView percentageView, string finalText, Color textColor)
+        private static void AnimateUpdatingPercentageView(View floatView, TextView percentageView, string finalText, Color textColor)
         {
             const long durationOfStarting = 1000;
             const long durationOfReverse = 500;
@@ -221,6 +222,18 @@ namespace stockwatch.Platforms.Android
                 animatorSet.SetDuration(durationOfReverse);
                 animatorSet.Reverse();
             };
+        }
+
+        private static void AnimateUntouchFloatView(View floatView, int positionX)
+        {
+            var bounceX = (positionX == 0 ? -1 : 1) * DisplayConstants.FloatingWindowBounceLength;
+            floatView.TranslationX = bounceX;
+
+            var translationX = ObjectAnimator.OfFloat(floatView, "TranslationX", 0)!;
+            translationX.SetDuration(500);
+            translationX.SetInterpolator(new AccelerateInterpolator());
+            translationX.SetInterpolator(new BounceInterpolator());
+            translationX.Start();
         }
     }
 }
