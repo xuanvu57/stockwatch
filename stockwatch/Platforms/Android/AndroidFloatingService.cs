@@ -9,6 +9,7 @@ using Android.Widget;
 using Application.Dtos;
 using Application.Services.Interfaces;
 using stockwatch.Constants;
+using stockwatch.Services.Interfaces;
 using stockwatch.Services.Providers;
 using static Android.Views.View;
 using Color = Android.Graphics.Color;
@@ -18,19 +19,16 @@ using View = Android.Views.View;
 namespace stockwatch.Platforms.Android
 {
     [Service]
-    public class FloatingService : Service, IOnTouchListener, IBackgroundServiceSubscriber
+    public class AndroidFloatingService : Service, IOnTouchListener, IBackgroundServiceSubscriber
     {
         private IBackgroundService? backgroundService;
+        private IFloatingService? floatingService;
 
         private readonly DisplayMetrics displayMetrics = new();
         private IWindowManager? windowManager;
         private readonly WindowManagerLayoutParams layoutParams = new();
         private View? floatView;
 
-        private int positionX;
-        private int positionY;
-        private int touchedPositionX;
-        private int touchedPositionY;
 
         public override IBinder? OnBind(Intent? intent)
         {
@@ -40,11 +38,10 @@ namespace stockwatch.Platforms.Android
         [return: GeneratedEnum]
         public override StartCommandResult OnStartCommand(Intent? intent, [GeneratedEnum] StartCommandFlags flags, int startId)
         {
-            InitializeParamsToShowFloatingWindow();
-
-            windowManager?.AddView(floatView, layoutParams);
-
             SubscribeBackgroundService(this);
+            floatingService = PlatformsServiceProvider.ServiceProvider.GetRequiredService<IFloatingService>();
+
+            InitializeParamsToShowFloatingWindow();
 
             return StartCommandResult.NotSticky;
         }
@@ -76,7 +73,7 @@ namespace stockwatch.Platforms.Android
             switch (e.Action)
             {
                 case MotionEventActions.Down:
-                    SetCurrentPosition(e);
+                    floatingService?.SetTouchDownPosition((int)e.RawX, (int)e.RawY);
                     break;
 
                 case MotionEventActions.Move:
@@ -106,6 +103,9 @@ namespace stockwatch.Platforms.Android
             floatView.SetOnTouchListener(this);
 
             SetLayoutParams(displayMetrics);
+
+            windowManager?.AddView(floatView, layoutParams);
+            floatingService?.InitFloatingWindow((displayMetrics.HeightPixels, displayMetrics.WidthPixels), (layoutParams.X, layoutParams.Y));
         }
 
         private void SetLayoutParams(DisplayMetrics displayMetrics)
@@ -132,71 +132,27 @@ namespace stockwatch.Platforms.Android
             layoutParams.Y = displayMetrics.HeightPixels / 2;
         }
 
-        private void SetCurrentPosition(MotionEvent e)
-        {
-            positionX = (int)e.RawX;
-            positionY = (int)e.RawY;
-
-            touchedPositionX = (int)e.RawX;
-            touchedPositionY = (int)e.RawY;
-        }
-
         private void DragFloatingWindow(MotionEvent e)
         {
-            var nowX = (int)e.RawX;
-            var nowY = (int)e.RawY;
-            var movedX = nowX - positionX;
-            var movedY = nowY - positionY;
-            positionX = nowX;
-            positionY = nowY;
-            layoutParams.X += movedX;
-            layoutParams.Y += movedY;
+            var newPostion = floatingService?.MoveFloatingWindow((int)e.RawX, (int)e.RawY) ?? (layoutParams.X, layoutParams.Y);
 
-            EnsureFloatingWindowInsideScreenView();
+            (layoutParams.X, layoutParams.Y) = newPostion;
             windowManager?.UpdateViewLayout(floatView, layoutParams);
         }
 
         private void DecideActionWhenMotionUp(MotionEvent e)
         {
-            var nowX = (int)e.RawX;
-            var nowY = (int)e.RawY;
+            var newPostion = floatingService?.ConsiderToMoveFloatingWindow((int)e.RawX, (int)e.RawY);
 
-            var movingDistance = GetDistance(touchedPositionX, touchedPositionY, nowX, nowY);
-            var isMoving = movingDistance > DisplayConstants.MinimumDistanceToConsiderMoving;
-
-            if (isMoving)
+            if (newPostion is not null)
             {
-                MoveFloatingWindowToEdge();
+                (layoutParams.X, layoutParams.Y) = newPostion.Value;
+                windowManager?.UpdateViewLayout(floatView, layoutParams);
             }
             else
             {
                 LaunchApp();
             }
-        }
-
-        private static double GetDistance(int x1, int y1, int x2, int y2)
-        {
-            return Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
-        }
-
-        private void MoveFloatingWindowToEdge()
-        {
-            if (layoutParams.X < displayMetrics.WidthPixels / 2)
-            {
-                layoutParams.X = 0;
-            }
-            else
-            {
-                layoutParams.X = displayMetrics.WidthPixels - layoutParams.Width;
-            }
-
-            windowManager?.UpdateViewLayout(floatView, layoutParams);
-        }
-
-        private void EnsureFloatingWindowInsideScreenView()
-        {
-            layoutParams.X = Math.Max(0, Math.Min(displayMetrics.WidthPixels - layoutParams.Width, layoutParams.X));
-            layoutParams.Y = Math.Max(0, Math.Min(displayMetrics.HeightPixels - layoutParams.Height, layoutParams.Y));
         }
 
         private void LaunchApp()

@@ -23,10 +23,10 @@
         <VerticalStackLayout
             Padding="10,0"
             Spacing="25">
-            
+
             <childViews:MySymbolSettingView
                 x:Name="mySymbolSettingView"
-                IsEnabled="{Binding IsWatcherStopped, Source={x:Reference mainPage}}"></childViews:MySymbolSettingView>
+                IsEnabled="{Binding IsWatcherStopped, Source={x:Reference mainPage}}"/>
 
             <Button
                 x:Name="btnWatch"
@@ -57,7 +57,7 @@
             </Button>
 
             <childViews:MySymbolAnalyzingResultView
-                x:Name="mySymbolAnalyzingResultView"></childViews:MySymbolAnalyzingResultView>
+                x:Name="mySymbolAnalyzingResultView"/>
         </VerticalStackLayout>
     </ScrollView>
 
