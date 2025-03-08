@@ -11,8 +11,7 @@
         </ResourceDictionary>
     </ContentView.Resources>
     <VerticalStackLayout
-            Padding="10,0"
-            Spacing="25">
+            Padding="10,0">
         <commonViews:LabelEntryView
             x:Name="entSymbol"
             LabelWidth="155"

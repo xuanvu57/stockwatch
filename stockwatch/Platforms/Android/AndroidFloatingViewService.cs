@@ -20,10 +20,10 @@ using View = Android.Views.View;
 namespace stockwatch.Platforms.Android
 {
     [Service]
-    public class AndroidFloatingViewService : Service, IOnTouchListener, IBackgroundServiceSubscriber
+    public class AndroidFloatingViewService : Service, IOnTouchListener, IBackgroundServiceSubscriber, IFloatingViewMovingHandlerService
     {
         private IBackgroundService? backgroundService;
-        private IFloatingViewService? floatingViewService;
+        private IFloatingViewMovingService? floatingViewMovingService;
 
         private readonly DisplayMetrics displayMetrics = new();
         private readonly WindowManagerLayoutParams layoutParams = new();
@@ -38,10 +38,9 @@ namespace stockwatch.Platforms.Android
         [return: GeneratedEnum]
         public override StartCommandResult OnStartCommand(Intent? intent, [GeneratedEnum] StartCommandFlags flags, int startId)
         {
-            SubscribeBackgroundService(this);
-            floatingViewService = PlatformsServiceProvider.ServiceProvider.GetRequiredService<IFloatingViewService>();
-
+            SubscribeBackgroundService();
             InitializeParamsToShowFloatingWindow();
+            SubcribeFloatingViewMovingService();
 
             return StartCommandResult.NotSticky;
         }
@@ -65,6 +64,12 @@ namespace stockwatch.Platforms.Android
             return Task.CompletedTask;
         }
 
+        public void MovingHandler((int x, int y) toPosition)
+        {
+            (layoutParams.X, layoutParams.Y) = toPosition;
+            windowManager?.UpdateViewLayout(floatView, layoutParams);
+        }
+
         public bool OnTouch(global::Android.Views.View? v, MotionEvent? e)
         {
             if (e is null)
@@ -73,15 +78,16 @@ namespace stockwatch.Platforms.Android
             switch (e.Action)
             {
                 case MotionEventActions.Down:
-                    floatingViewService?.SetTouchDownPosition((int)e.RawX, (int)e.RawY);
+                    floatingViewMovingService!.SetTouchDownPosition((int)e.RawX, (int)e.RawY);
+                    floatView?.Post(() => AnimateTouchFloatView(floatView));
                     break;
 
                 case MotionEventActions.Move:
-                    DragFloatingWindow(e);
+                    floatingViewMovingService!.MoveFloatingWindow((int)e.RawX, (int)e.RawY);
                     break;
 
                 case MotionEventActions.Up:
-                    DecideActionWhenMotionUp(e);
+                    ConsiderActionWhenMotionUp(e);
                     break;
 
                 default:
@@ -102,22 +108,17 @@ namespace stockwatch.Platforms.Android
             floatView = mLayoutInflater.Inflate(Resource.Layout.floatview, null)!;
             floatView.SetOnTouchListener(this);
 
-            SetLayoutParams(displayMetrics);
+            InitLayoutParams();
 
             windowManager?.AddView(floatView, layoutParams);
-            floatingViewService?.InitFloatingWindow((displayMetrics.HeightPixels, displayMetrics.WidthPixels), (layoutParams.X, layoutParams.Y));
         }
 
-        private void SetLayoutParams(DisplayMetrics displayMetrics)
+        private void InitLayoutParams()
         {
-            if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
-            {
-                layoutParams.Type = WindowManagerTypes.ApplicationOverlay;
-            }
-            else
-            {
-                layoutParams.Type = WindowManagerTypes.Phone;
-            }
+            layoutParams.Type = Build.VERSION.SdkInt >= BuildVersionCodes.O
+                ? WindowManagerTypes.ApplicationOverlay
+                : WindowManagerTypes.Phone;
+
             layoutParams.Flags =
                 WindowManagerFlags.LayoutNoLimits |
                 WindowManagerFlags.NotFocusable |
@@ -132,23 +133,32 @@ namespace stockwatch.Platforms.Android
             layoutParams.Y = displayMetrics.HeightPixels / 2;
         }
 
-        private void DragFloatingWindow(MotionEvent e)
+        private void SubcribeFloatingViewMovingService()
         {
-            var newPostion = floatingViewService?.MoveFloatingWindow((int)e.RawX, (int)e.RawY) ?? (layoutParams.X, layoutParams.Y);
-
-            (layoutParams.X, layoutParams.Y) = newPostion;
-            windowManager?.UpdateViewLayout(floatView, layoutParams);
+            floatingViewMovingService = PlatformsServiceProvider.ServiceProvider.GetRequiredService<IFloatingViewMovingService>();
+            floatingViewMovingService!.InitFloatingWindow(
+                (displayMetrics.HeightPixels, displayMetrics.WidthPixels),
+                (layoutParams.X, layoutParams.Y),
+                this);
         }
 
-        private void DecideActionWhenMotionUp(MotionEvent e)
+        private void SubscribeBackgroundService()
         {
-            var newPostion = floatingViewService?.ConsiderToMoveFloatingWindow((int)e.RawX, (int)e.RawY);
-
-            if (newPostion is not null)
+            backgroundService = PlatformsServiceProvider.ServiceProvider.GetRequiredService<IBackgroundService>();
+            if (backgroundService?.IsRunning == true)
             {
-                (layoutParams.X, layoutParams.Y) = newPostion.Value;
-                windowManager?.UpdateViewLayout(floatView, layoutParams);
-                floatView?.Post(() => AnimateUntouchFloatView(floatView, layoutParams.X));
+                backgroundService.AddSubscriber(this);
+                backgroundService.Restart();
+            }
+        }
+
+        private void ConsiderActionWhenMotionUp(MotionEvent e)
+        {
+            var isMoved = floatingViewMovingService!.ConsiderToMoveFloatingWindow((int)e.RawX, (int)e.RawY);
+
+            if (isMoved)
+            {
+                floatView?.Post(() => AnimateDropFloatView(floatView, layoutParams.X));
             }
             else
             {
@@ -160,16 +170,6 @@ namespace stockwatch.Platforms.Android
         {
             var main = PackageManager!.GetLaunchIntentForPackage(PackageName!);
             StartActivity(main);
-        }
-
-        private void SubscribeBackgroundService(IBackgroundServiceSubscriber subscriber)
-        {
-            backgroundService = PlatformsServiceProvider.ServiceProvider.GetRequiredService<IBackgroundService>();
-            if (backgroundService?.IsRunning == true)
-            {
-                backgroundService.AddSubscriber(subscriber);
-                backgroundService.Restart();
-            }
         }
 
         private void UpdatePercentage(SymbolAnalyzingResultDto? symbolAnalyzingResult)
@@ -224,13 +224,28 @@ namespace stockwatch.Platforms.Android
             };
         }
 
-        private static void AnimateUntouchFloatView(View floatView, int positionX)
+        private static void AnimateTouchFloatView(View floatView)
         {
+            const long duration = 500;
+            var scaleX = ObjectAnimator.OfFloat(floatView, "ScaleX", 1.0f, 0.8f, 1.0f)!;
+            var scaleY = ObjectAnimator.OfFloat(floatView, "ScaleY", 1.0f, 0.8f, 1.0f)!;
+
+            var animatorSet = new AnimatorSet();
+            animatorSet.PlayTogether(scaleX, scaleY);
+            animatorSet.SetInterpolator(new AccelerateInterpolator());
+            animatorSet.SetInterpolator(new BounceInterpolator());
+            animatorSet.SetDuration(duration);
+            animatorSet.Start();
+        }
+
+        private static void AnimateDropFloatView(View floatView, int positionX)
+        {
+            const long duration = 500;
             var bounceX = (positionX == 0 ? -1 : 1) * DisplayConstants.FloatingWindowBounceLength;
             floatView.TranslationX = bounceX;
 
             var translationX = ObjectAnimator.OfFloat(floatView, "TranslationX", 0)!;
-            translationX.SetDuration(500);
+            translationX.SetDuration(duration);
             translationX.SetInterpolator(new AccelerateInterpolator());
             translationX.SetInterpolator(new BounceInterpolator());
             translationX.Start();

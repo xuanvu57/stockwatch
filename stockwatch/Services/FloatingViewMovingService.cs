@@ -6,17 +6,20 @@ using static Application.Constants.ApplicationEnums;
 namespace stockwatch.Services
 {
     [DIService(DIServiceLifetime.Scoped)]
-    public class FloatingViewService : IFloatingViewService
+    public class FloatingViewMovingService : IFloatingViewMovingService
     {
         private (int x, int y) currentTouchPosition;
         private (int x, int y) latestTouchDownPosition;
         private (int x, int y) floatingWindowPosition;
         private (int height, int width) screenSize;
 
-        public void InitFloatingWindow((int height, int width) screenSize, (int x, int y) floatingWindowPosition)
+        private IFloatingViewMovingHandlerService? floatingViewMovingHandler;
+
+        public void InitFloatingWindow((int height, int width) screenSize, (int x, int y) floatingWindowPosition, IFloatingViewMovingHandlerService floatingViewMovingHandler)
         {
             this.screenSize = screenSize;
             this.floatingWindowPosition = floatingWindowPosition;
+            this.floatingViewMovingHandler = floatingViewMovingHandler;
         }
 
         public void SetTouchDownPosition(int x, int y)
@@ -25,7 +28,7 @@ namespace stockwatch.Services
             currentTouchPosition = (x, y);
         }
 
-        public (int, int) MoveFloatingWindow(int x, int y)
+        public void MoveFloatingWindow(int x, int y)
         {
             var nowX = x;
             var nowY = y;
@@ -39,10 +42,10 @@ namespace stockwatch.Services
 
             EnsureFloatingWindowInsideScreenView();
 
-            return floatingWindowPosition;
+            floatingViewMovingHandler!.MovingHandler(floatingWindowPosition);
         }
 
-        public (int, int)? ConsiderToMoveFloatingWindow(int x, int y)
+        public bool ConsiderToMoveFloatingWindow(int x, int y)
         {
             var movingDistance = GetDistance(latestTouchDownPosition, (x, y));
             var acceptOfMoving = movingDistance > DisplayConstants.MinimumDistanceToConsiderMoving;
@@ -50,10 +53,11 @@ namespace stockwatch.Services
             if (acceptOfMoving)
             {
                 MoveFloatingWindowToTheSides();
-                return floatingWindowPosition;
+
+                floatingViewMovingHandler!.MovingHandler(floatingWindowPosition);
             }
 
-            return null;
+            return acceptOfMoving;
         }
 
         private void EnsureFloatingWindowInsideScreenView()

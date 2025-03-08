@@ -19,7 +19,7 @@
     
     <VerticalStackLayout
             Padding="10,0"
-            Spacing="25">
+            Spacing="15">
         <HorizontalStackLayout>
             <Label 
         Padding="0,0,5,0"
