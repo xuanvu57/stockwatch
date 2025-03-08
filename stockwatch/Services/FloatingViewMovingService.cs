@@ -5,7 +5,7 @@ using static Application.Constants.ApplicationEnums;
 
 namespace stockwatch.Services
 {
-    [DIService(DIServiceLifetime.Scoped)]
+    [DIService(DIServiceLifetime.Singleton)]
     public class FloatingViewMovingService : IFloatingViewMovingService
     {
         private (int x, int y) currentTouchPosition;
@@ -15,10 +15,10 @@ namespace stockwatch.Services
 
         private IFloatingViewMovingHandlerService? floatingViewMovingHandler;
 
-        public void InitFloatingWindow((int height, int width) screenSize, (int x, int y) floatingWindowPosition, IFloatingViewMovingHandlerService floatingViewMovingHandler)
+        public void InitFloatingWindow((int height, int width) screenSize, IFloatingViewMovingHandlerService floatingViewMovingHandler)
         {
             this.screenSize = screenSize;
-            this.floatingWindowPosition = floatingWindowPosition;
+            floatingWindowPosition = GetLatestPosition();
             this.floatingViewMovingHandler = floatingViewMovingHandler;
         }
 
@@ -45,19 +45,26 @@ namespace stockwatch.Services
             floatingViewMovingHandler!.MovingHandler(floatingWindowPosition);
         }
 
-        public bool ConsiderToMoveFloatingWindow(int x, int y)
+        public bool ConsiderOfMovingActionAfterUntouch(int x, int y)
         {
             var movingDistance = GetDistance(latestTouchDownPosition, (x, y));
             var acceptOfMoving = movingDistance > DisplayConstants.MinimumDistanceToConsiderMoving;
 
-            if (acceptOfMoving)
-            {
-                MoveFloatingWindowToTheSides();
-
-                floatingViewMovingHandler!.MovingHandler(floatingWindowPosition);
-            }
+            MoveFloatingWindowToTheSides();
+            floatingViewMovingHandler!.MovingHandler(floatingWindowPosition);
 
             return acceptOfMoving;
+        }
+
+        public (int x, int y) GetLatestPosition()
+        {
+            if (floatingViewMovingHandler is null)
+            {
+                var defaultPositionX = screenSize.width - DisplayConstants.FloatingWindowWidth;
+                var defaultPositionY = (screenSize.height / 2) - (DisplayConstants.FloatingWindowHeight / 2);
+                return (defaultPositionX, defaultPositionY);
+            }
+            return floatingWindowPosition;
         }
 
         private void EnsureFloatingWindowInsideScreenView()

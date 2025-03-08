@@ -38,9 +38,14 @@ namespace stockwatch.Platforms.Android
         [return: GeneratedEnum]
         public override StartCommandResult OnStartCommand(Intent? intent, [GeneratedEnum] StartCommandFlags flags, int startId)
         {
+            windowManager = GetSystemService(WindowService).JavaCast<IWindowManager>()!;
+#pragma warning disable CA1422
+            windowManager?.DefaultDisplay?.GetMetrics(displayMetrics);
+#pragma warning restore CA1422
+
             SubscribeBackgroundService();
-            InitializeParamsToShowFloatingWindow();
             SubcribeFloatingViewMovingService();
+            InitializeParamsToShowFloatingWindow();
 
             return StartCommandResult.NotSticky;
         }
@@ -98,12 +103,6 @@ namespace stockwatch.Platforms.Android
 
         private void InitializeParamsToShowFloatingWindow()
         {
-            windowManager = GetSystemService(WindowService).JavaCast<IWindowManager>()!;
-
-#pragma warning disable CA1422
-            windowManager?.DefaultDisplay?.GetMetrics(displayMetrics);
-#pragma warning restore CA1422
-
             var mLayoutInflater = LayoutInflater.From(ApplicationContext)!;
             floatView = mLayoutInflater.Inflate(Resource.Layout.floatview, null)!;
             floatView.SetOnTouchListener(this);
@@ -129,8 +128,8 @@ namespace stockwatch.Platforms.Android
             layoutParams.Gravity = GravityFlags.Top | GravityFlags.Left;
             layoutParams.Width = DisplayConstants.FloatingWindowWidth;
             layoutParams.Height = DisplayConstants.FloatingWindowHeight;
-            layoutParams.X = displayMetrics.WidthPixels - layoutParams.Width;
-            layoutParams.Y = displayMetrics.HeightPixels / 2;
+
+            (layoutParams.X, layoutParams.Y) = floatingViewMovingService!.GetLatestPosition();
         }
 
         private void SubcribeFloatingViewMovingService()
@@ -138,7 +137,6 @@ namespace stockwatch.Platforms.Android
             floatingViewMovingService = PlatformsServiceProvider.ServiceProvider.GetRequiredService<IFloatingViewMovingService>();
             floatingViewMovingService!.InitFloatingWindow(
                 (displayMetrics.HeightPixels, displayMetrics.WidthPixels),
-                (layoutParams.X, layoutParams.Y),
                 this);
         }
 
@@ -154,7 +152,7 @@ namespace stockwatch.Platforms.Android
 
         private void ConsiderActionWhenMotionUp(MotionEvent e)
         {
-            var isMoved = floatingViewMovingService!.ConsiderToMoveFloatingWindow((int)e.RawX, (int)e.RawY);
+            var isMoved = floatingViewMovingService!.ConsiderOfMovingActionAfterUntouch((int)e.RawX, (int)e.RawY);
 
             if (isMoved)
             {
