@@ -1,19 +1,16 @@
-﻿using Android.Animation;
-using Android.App;
+﻿using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
 using Android.Util;
 using Android.Views;
-using Android.Views.Animations;
-using Android.Widget;
+using AndroidX.Core.App;
 using Application.Dtos;
 using Application.Services.Interfaces;
 using stockwatch.Constants;
 using stockwatch.Services.Interfaces;
 using stockwatch.Services.Providers;
 using static Android.Views.View;
-using Color = Android.Graphics.Color;
 using Format = Android.Graphics.Format;
 using View = Android.Views.View;
 
@@ -22,8 +19,13 @@ namespace stockwatch.Platforms.Android
     [Service]
     public class AndroidFloatingViewService : Service, IOnTouchListener, IBackgroundServiceSubscriber, IFloatingViewMovingHandlerService
     {
+        private const string ForegroundNotificationChannelId = "1000";
+        private const string ForegroundNotificationChannelName = "notification";
+        private const int ForegroundNotificationId = 1001;
+
         private IBackgroundService? backgroundService;
         private IFloatingViewMovingService? floatingViewMovingService;
+        private IFloatingViewAnimationService? floatingViewAnimationService;
 
         private readonly DisplayMetrics displayMetrics = new();
         private readonly WindowManagerLayoutParams layoutParams = new();
@@ -32,7 +34,7 @@ namespace stockwatch.Platforms.Android
 
         public override IBinder? OnBind(Intent? intent)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         [return: GeneratedEnum]
@@ -44,8 +46,10 @@ namespace stockwatch.Platforms.Android
 #pragma warning restore CA1422
 
             SubscribeBackgroundService();
-            SubcribeFloatingViewMovingService();
+            SubcribeMovingAndAnimationServices();
             InitializeParamsToShowFloatingWindow();
+
+            StartAsForegroundService();
 
             return StartCommandResult.NotSticky;
         }
@@ -63,7 +67,7 @@ namespace stockwatch.Platforms.Android
         {
             if (data is SymbolAnalyzingResultDto symbolAnalyzingResult)
             {
-                UpdatePercentage(symbolAnalyzingResult);
+                floatingViewAnimationService?.UpdateContent(floatView!, symbolAnalyzingResult);
             }
 
             return Task.CompletedTask;
@@ -84,7 +88,7 @@ namespace stockwatch.Platforms.Android
             {
                 case MotionEventActions.Down:
                     floatingViewMovingService!.SetTouchDownPosition((int)e.RawX, (int)e.RawY);
-                    floatView?.Post(() => AnimateTouchFloatView(floatView));
+                    floatingViewAnimationService!.TouchFloatView(floatView!);
                     break;
 
                 case MotionEventActions.Move:
@@ -132,9 +136,11 @@ namespace stockwatch.Platforms.Android
             (layoutParams.X, layoutParams.Y) = floatingViewMovingService!.GetLatestPosition();
         }
 
-        private void SubcribeFloatingViewMovingService()
+        private void SubcribeMovingAndAnimationServices()
         {
+            floatingViewAnimationService = PlatformsServiceProvider.ServiceProvider.GetRequiredService<IFloatingViewAnimationService>();
             floatingViewMovingService = PlatformsServiceProvider.ServiceProvider.GetRequiredService<IFloatingViewMovingService>();
+
             floatingViewMovingService!.InitFloatingWindow(
                 (displayMetrics.HeightPixels, displayMetrics.WidthPixels),
                 this);
@@ -150,13 +156,35 @@ namespace stockwatch.Platforms.Android
             }
         }
 
+        private void StartAsForegroundService()
+        {
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+            {
+                CreateNotificationChannel();
+            }
+
+            var notification = new NotificationCompat.Builder(this, ForegroundNotificationChannelId);
+            notification.SetAutoCancel(false);
+            notification.SetOngoing(true);
+            notification.SetSmallIcon(Resource.Mipmap.appicon);
+            notification.SetContentTitle("continue monitoring your symbol");
+            StartForeground(ForegroundNotificationId, notification.Build());
+        }
+
+        private void CreateNotificationChannel()
+        {
+            var notifcationManager = GetSystemService(Context.NotificationService) as NotificationManager;
+            var channel = new NotificationChannel(ForegroundNotificationChannelId, ForegroundNotificationChannelName, NotificationImportance.Low);
+            notifcationManager?.CreateNotificationChannel(channel);
+        }
+
         private void ConsiderActionWhenMotionUp(MotionEvent e)
         {
             var isMoved = floatingViewMovingService!.ConsiderOfMovingActionAfterUntouch((int)e.RawX, (int)e.RawY);
 
             if (isMoved)
             {
-                floatView?.Post(() => AnimateDropFloatView(floatView, layoutParams.X));
+                floatingViewAnimationService?.DropFloatView(floatView!, layoutParams.X);
             }
             else
             {
@@ -168,85 +196,6 @@ namespace stockwatch.Platforms.Android
         {
             var main = PackageManager!.GetLaunchIntentForPackage(PackageName!);
             StartActivity(main);
-        }
-
-        private void UpdatePercentage(SymbolAnalyzingResultDto? symbolAnalyzingResult)
-        {
-            UpdatePercentageView(Resource.Id.tv1, symbolAnalyzingResult?.Percentage);
-            UpdatePercentageView(Resource.Id.tv2, symbolAnalyzingResult?.PercentageInDay);
-        }
-
-        private void UpdatePercentageView(int viewId, decimal? percentage)
-        {
-            var percentageView = floatView?.FindViewById<TextView>(viewId);
-            if (percentageView is not null)
-            {
-                var signUpDown = percentage > 0 ? DisplayConstants.ArrowUp : DisplayConstants.ArrowDown;
-                var textColor = Color.ParseColor(percentage > 0 ? DisplayConstants.ColorUp : DisplayConstants.ColorDown);
-
-                var absPercentage = Math.Abs(percentage ?? 0);
-                var formattedAbsPercentage = absPercentage < 100 ? $"{absPercentage:F2}" : $"{absPercentage:F0}";
-
-                if (percentage is null)
-                {
-                    signUpDown = string.Empty;
-                    formattedAbsPercentage = DisplayConstants.NotAvailableValue;
-                }
-                var finalText = $"{signUpDown}{formattedAbsPercentage}%";
-
-                percentageView.Post(() => AnimateUpdatingPercentageView(floatView!, percentageView, finalText, textColor));
-            }
-        }
-
-        private static void AnimateUpdatingPercentageView(View floatView, TextView percentageView, string finalText, Color textColor)
-        {
-            const long durationOfStarting = 1000;
-            const long durationOfReverse = 500;
-
-            var alpha = ObjectAnimator.OfFloat(percentageView, "Alpha", 1.0f, 0.0f)!;
-            var rotation = ObjectAnimator.OfFloat(floatView, "Rotation", 0, 360)!;
-
-            var animatorSet = new AnimatorSet();
-            animatorSet.PlayTogether(alpha, rotation);
-            animatorSet.SetDuration(durationOfStarting);
-            animatorSet.Start();
-
-            animatorSet.AnimationEnd += (_, _) =>
-            {
-                percentageView.SetTextColor(textColor);
-                percentageView.SetText(finalText, TextView.BufferType.Editable);
-
-                animatorSet.RemoveAllListeners();
-                animatorSet.SetDuration(durationOfReverse);
-                animatorSet.Reverse();
-            };
-        }
-
-        private static void AnimateTouchFloatView(View floatView)
-        {
-            const long duration = 500;
-            var scaleX = ObjectAnimator.OfFloat(floatView, "ScaleX", 1.0f, 0.8f, 1.0f)!;
-            var scaleY = ObjectAnimator.OfFloat(floatView, "ScaleY", 1.0f, 0.8f, 1.0f)!;
-
-            var animatorSet = new AnimatorSet();
-            animatorSet.PlayTogether(scaleX, scaleY);
-            animatorSet.SetInterpolator(new AccelerateInterpolator());
-            animatorSet.SetInterpolator(new BounceInterpolator());
-            animatorSet.SetDuration(duration);
-            animatorSet.Start();
-        }
-
-        private static void AnimateDropFloatView(View floatView, int positionX)
-        {
-            const long duration = 500;
-            var bounceX = (positionX == 0 ? -1 : 1) * DisplayConstants.FloatingWindowBounceLength;
-            floatView.TranslationX = bounceX;
-
-            var translationX = ObjectAnimator.OfFloat(floatView, "TranslationX", 0)!;
-            translationX.SetDuration(duration);
-            translationX.SetInterpolator(new AccelerateInterpolator());
-            translationX.SetInterpolator(new BounceInterpolator());
-            translationX.Start();
         }
     }
 }

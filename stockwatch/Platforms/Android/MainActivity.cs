@@ -49,7 +49,7 @@ namespace stockwatch
             var backgroundService = PlatformsServiceProvider.ServiceProvider.GetRequiredService<IBackgroundService>();
             if (backgroundService?.IsRunning == true)
             {
-                StartService(new Intent(this, typeof(AndroidFloatingViewService)));
+                StartForegroundService(new Intent(this, typeof(AndroidFloatingViewService)));
             }
         }
     }
