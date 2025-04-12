@@ -4,6 +4,7 @@ The cross-flatform app is being built by .NET with MAUI and C#
 ### Feature:
 - Monitoring a symbol in real-time and alert when the price is higher or lower the threshold
 - Analyze the price history to find the potential symbols that match to the expectation
+- Save or remove favorite symbols
 
 # Project structure
 ## stockwatch
