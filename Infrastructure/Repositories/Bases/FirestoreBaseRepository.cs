@@ -13,7 +13,7 @@ using static Application.Constants.ApplicationEnums;
 
 namespace Infrastructure.Repositories.Bases
 {
-    [DIService(DIServiceLifetime.Scoped)]
+    [DIService(DIServiceLifetime.Skipped)]
     public class FirestoreBaseRepository<TEntity>(
         ILogger<FirestoreBaseRepository<TEntity>> logger,
         IToastManagerService toastManagerService,

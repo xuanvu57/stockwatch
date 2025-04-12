@@ -1,4 +1,6 @@
 ﻿using Application.Attributes;
+using Infrastructure.Repositories.Bases;
+using Infrastructure.Repositories.Bases.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using static Application.Constants.ApplicationEnums;
@@ -40,6 +42,28 @@ namespace Infrastructure.Configurations
                     .AsImplementedInterfaces()
                     .WithSingletonLifetime()
                 );
+
+            RegisterBaseRepository(serviceCollection);
+        }
+
+        private static void RegisterBaseRepository(IServiceCollection serviceCollection)
+        {
+            if (OperatingSystem.IsAndroid())
+            {
+                const int minAndroidVersionSupportFirebase = 29;
+                if (OperatingSystem.IsAndroidVersionAtLeast(minAndroidVersionSupportFirebase))
+                {
+                    serviceCollection.AddScoped(typeof(IBaseRepository<>), typeof(FirestoreBaseRepository<>));
+                }
+                else
+                {
+                    serviceCollection.AddScoped(typeof(IBaseRepository<>), typeof(FileBaseRepository<>));
+                }
+            }
+            else
+            {
+                serviceCollection.AddScoped(typeof(IBaseRepository<>), typeof(FirestoreBaseRepository<>));
+            }
         }
     }
 }
