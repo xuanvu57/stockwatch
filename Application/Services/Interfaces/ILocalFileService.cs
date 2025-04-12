@@ -2,6 +2,7 @@
 {
     public interface ILocalFileService
     {
-        public string GetRootDirectory();
+        string GetRootDirectory();
+        Task<string> ReadFileAsync(string filePath);
     }
 }

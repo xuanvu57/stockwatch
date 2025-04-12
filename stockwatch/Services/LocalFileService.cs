@@ -11,5 +11,13 @@ namespace stockwatch.Services
         {
             return FileSystem.AppDataDirectory;
         }
+
+        public async Task<string> ReadFileAsync(string filePath)
+        {
+            using var stream = await FileSystem.OpenAppPackageFileAsync(filePath);
+            var reader = new StreamReader(stream);
+
+            return reader.ReadToEnd();
+        }
     }
 }

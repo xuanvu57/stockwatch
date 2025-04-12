@@ -1,38 +1,31 @@
 ﻿using Application.Attributes;
-using Application.Services.Interfaces;
 using Domain.Entities;
 using Domain.Repositories.Interfaces;
-using Infrastructure.Repositories.Bases;
-using Microsoft.Extensions.Logging;
+using Infrastructure.Repositories.Bases.Interfaces;
 using static Application.Constants.ApplicationEnums;
 
 namespace Infrastructure.Repositories
 {
     [DIService(DIServiceLifetime.Scoped)]
-    public class ReferenceSymbolRepository(
-        ILogger<ReferenceSymbolRepository> logger,
-        ILocalFileService localFileService,
-        IToastManagerService toastManagerService,
-        IMessageService messageService) :
-        BaseRepository<ReferenceSymbolRepository, ReferenceSymbolEntity>(logger, localFileService, toastManagerService, messageService), IReferenceSymbolRepository
+    public class ReferenceSymbolRepository(IBaseRepository<ReferenceSymbolEntity> baseRepository) : IReferenceSymbolRepository
     {
         public async Task<ReferenceSymbolEntity?> Get()
         {
-            var entities = await GetAll();
+            var entities = await baseRepository.GetAll();
 
             return entities.FirstOrDefault();
         }
 
         public async Task Save(ReferenceSymbolEntity entity)
         {
-            var existingEntities = await GetAll();
+            var existingEntities = await baseRepository.GetAll();
 
             foreach (var existingEntity in existingEntities)
             {
-                await Delete(existingEntity.Id);
+                await baseRepository.Delete(existingEntity.Id);
             }
 
-            await Create(entity);
+            await baseRepository.Create(entity);
         }
     }
 }

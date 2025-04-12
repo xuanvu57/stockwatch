@@ -11,5 +11,6 @@
         public const string MSG_PriceDescription = "MSG_PriceDescription";
         public const string MSG_CannotAccessResourceToReadData = "MSG_CannotAccessResourceToReadData";
         public const string MSG_CannotAccessResourceToWriteData = "MSG_CannotAccessResourceToWriteData";
+        public const string MSG_CannotAccessResourceToDeleteData = "MSG_CannotAccessResourceToDeleteData";
     }
 }

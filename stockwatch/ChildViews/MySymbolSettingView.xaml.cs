@@ -57,9 +57,9 @@ public partial class MySymbolSettingView : ContentView
         return true;
     }
 
-    public void InitReferenceSymbolInfo(ReferenceSymbolEntity symbol)
+    public void SetReferenceSymbolInfo(ReferenceSymbolEntity symbol)
     {
-        SymbolId = symbol.Id;
+        SymbolId = symbol.SymbolId;
         ReferencePrice = symbol.InitializedPrice;
         CeilingPrice = symbol.CeilingPricePercentage;
         FloorPrice = symbol.FloorPricePercentage;
@@ -69,7 +69,7 @@ public partial class MySymbolSettingView : ContentView
     {
         return new()
         {
-            Id = SymbolId,
+            SymbolId = SymbolId,
             InitializedPrice = ReferencePrice,
             CeilingPricePercentage = CeilingPrice,
             FloorPricePercentage = FloorPrice

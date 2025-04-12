@@ -2,6 +2,7 @@
 {
     public abstract record StockBaseEntity
     {
-        public required string Id { get; init; }
+        public string Id { get; init; } = Guid.NewGuid().ToString();
+        public required string SymbolId { get; init; }
     }
 }

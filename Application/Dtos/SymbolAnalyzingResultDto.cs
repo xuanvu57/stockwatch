@@ -29,7 +29,7 @@ namespace Application.Dtos
 
             return new()
             {
-                SymbolId = referenceSymbolEntity!.Id,
+                SymbolId = referenceSymbolEntity!.SymbolId,
                 Price = stockPrice?.Price,
                 Percentage = percentage,
                 PercentageInDay = percentageInDay,

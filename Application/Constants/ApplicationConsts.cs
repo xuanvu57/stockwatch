@@ -10,6 +10,7 @@
             public const string ErrorMessageWhenAnalyzeMySymbolFailed = "An error occurred while analyzing your symbol";
             public const string ErrorMessageInReadingData = "Error in reading data from";
             public const string ErrorMessageInSavingData = "Error in saving data to";
+            public const string ErrorMessageInDeletingData = "Error in deleting data to";
             public const string ErrorMessageWhenFileNotFound = " file not found";
         }
     }

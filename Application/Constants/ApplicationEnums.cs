@@ -7,6 +7,7 @@
             Singleton,
             Scoped,
             Transient,
+            Skipped
         }
 
         public enum RequestInputTypes

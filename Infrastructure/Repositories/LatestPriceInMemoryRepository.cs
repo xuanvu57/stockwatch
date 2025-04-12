@@ -36,9 +36,9 @@ namespace Infrastructure.Repositories
 
         public async Task Save(LatestPriceEntity latestPrice)
         {
-            if (!latestPriceDictionary.TryAdd(latestPrice.Id, latestPrice))
+            if (!latestPriceDictionary.TryAdd(latestPrice.SymbolId, latestPrice))
             {
-                latestPriceDictionary[latestPrice.Id] = latestPrice;
+                latestPriceDictionary[latestPrice.SymbolId] = latestPrice;
             }
 
             await Task.CompletedTask;

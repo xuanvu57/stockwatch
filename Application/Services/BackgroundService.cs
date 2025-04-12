@@ -68,7 +68,7 @@ namespace Application.Services
                     return;
                 }
 
-                var stockPrice = await realTimePriceService.GetBySymbolId(targetSymbol.Id);
+                var stockPrice = await realTimePriceService.GetBySymbolId(targetSymbol.SymbolId);
                 if (stockPrice.Data.Any())
                 {
                     await mySymbolAnalyzingService.Analyze(stockPrice.Data.First(), targetSymbol);

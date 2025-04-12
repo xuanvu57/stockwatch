@@ -49,7 +49,7 @@ namespace stockwatch.Pages
 
             if (targetSymbol is not null)
             {
-                mySymbolSettingView.InitReferenceSymbolInfo(targetSymbol);
+                mySymbolSettingView.SetReferenceSymbolInfo(targetSymbol);
 
                 StartWatching();
             }
@@ -89,8 +89,8 @@ namespace stockwatch.Pages
             targetSymbol = mySymbolSettingView.CreateReferenceSymbolInfo();
             await referenceSymbolRepository.Save(targetSymbol);
 
-            await toastManagerService.Show(messageService.GetMessage(MessageConstants.MSG_StartFollowingSymbol, targetSymbol.Id));
-            mySymbolAnalyzingResultView.ClearLatestData(targetSymbol.Id);
+            await toastManagerService.Show(messageService.GetMessage(MessageConstants.MSG_StartFollowingSymbol, targetSymbol.SymbolId));
+            mySymbolAnalyzingResultView.ClearLatestData();
 
             StartWatching();
         }

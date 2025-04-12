@@ -32,6 +32,7 @@ namespace stockwatch
             builder.Services.RegisterLogger(FileSystem.AppDataDirectory);
             builder.Services.RegisterDependencies(typeof(MauiProgram).Assembly);
             builder.Services.RegisterMauiPagesAsScopedService(typeof(MauiProgram).Assembly);
+            builder.Services.RegisterFirestoreDb();
 
             LanguageRegister.SetLanguage();
 

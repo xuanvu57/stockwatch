@@ -313,6 +313,15 @@ namespace stockwatch.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot access resource to delete data.
+        /// </summary>
+        internal static string MSG_CannotAccessResourceToDeleteData {
+            get {
+                return ResourceManager.GetString("MSG_CannotAccessResourceToDeleteData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot access resource to read data.
         /// </summary>
         internal static string MSG_CannotAccessResourceToReadData {

@@ -14,7 +14,7 @@ namespace Application.Dtos
                 null :
                 new()
                 {
-                    SymbolId = latestPrice.Id,
+                    SymbolId = latestPrice.SymbolId,
                     Price = latestPrice.Price,
                     HighestPrice = 0,
                     LowestPrice = 0,
@@ -28,7 +28,8 @@ namespace Application.Dtos
                 null :
                 new()
                 {
-                    Id = SymbolId,
+                    Id = string.Empty,
+                    SymbolId = SymbolId,
                     Price = Price,
                     RefPrice = RefPrice.Value,
                     AtTime = AtTime,

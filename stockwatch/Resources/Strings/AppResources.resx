@@ -201,6 +201,9 @@
   <data name="MSG_AddToFavoriteSuccessfully" xml:space="preserve">
     <value>Added "{0}" to favorite list</value>
   </data>
+  <data name="MSG_CannotAccessResourceToDeleteData" xml:space="preserve">
+    <value>Cannot access resource to delete data</value>
+  </data>
   <data name="MSG_CannotAccessResourceToReadData" xml:space="preserve">
     <value>Cannot access resource to read data</value>
   </data>
