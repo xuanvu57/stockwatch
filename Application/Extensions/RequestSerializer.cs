@@ -6,11 +6,13 @@ namespace Application.Extensions
 {
     public static class RequestSerializer
     {
-        public static string Serialize<T>(T request, RequestInputTypes requestInputType = RequestInputTypes.JsonBody) where T : class
+        private readonly static JsonSerializerOptions serializeOptions = new() { PropertyNameCaseInsensitive = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+
+        public static string Serialize<T>(T request, RequestInputTypes requestInputType) where T : class
         {
             if (requestInputType == RequestInputTypes.JsonBody)
             {
-                return JsonSerializer.Serialize(request);
+                return JsonSerializer.Serialize(request, serializeOptions);
             }
             else
             {

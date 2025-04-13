@@ -1,4 +1,5 @@
 ﻿using Application.Attributes;
+using Application.Constants;
 using Infrastructure.Repositories.Bases;
 using Infrastructure.Repositories.Bases.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,14 +51,13 @@ namespace Infrastructure.Configurations
         {
             if (OperatingSystem.IsAndroid())
             {
-                const int minAndroidVersionSupportFirebase = 29;
-                if (OperatingSystem.IsAndroidVersionAtLeast(minAndroidVersionSupportFirebase))
+                if (OperatingSystem.IsAndroidVersionAtLeast(ApplicationConsts.MinAndroidVersionSupportFirebaseSdk))
                 {
                     serviceCollection.AddScoped(typeof(IBaseRepository<>), typeof(FirestoreBaseRepository<>));
                 }
                 else
                 {
-                    serviceCollection.AddScoped(typeof(IBaseRepository<>), typeof(FileBaseRepository<>));
+                    serviceCollection.AddScoped(typeof(IBaseRepository<>), typeof(FirestoreRestApiBaseRepositoryy<>));
                 }
             }
             else

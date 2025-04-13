@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Firebase.Firestore.Converters.Interfaces
+﻿namespace Infrastructure.Clients.Firebase.Firestore.Converters.Interfaces
 {
     public interface IDataTypeConverterFactory
     {

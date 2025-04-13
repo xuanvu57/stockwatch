@@ -32,7 +32,7 @@ namespace Infrastructure.Clients.Ssi
                 ConsumerSecret = ssiSettings.ConsumerSecrect
             };
 
-            var content = new StringContent(RequestSerializer.Serialize(request), Encoding.UTF8, "application/json");
+            var content = new StringContent(RequestSerializer.Serialize(request, RequestInputTypes.JsonBody), Encoding.UTF8, "application/json");
 
             var client = new HttpClient()
             {

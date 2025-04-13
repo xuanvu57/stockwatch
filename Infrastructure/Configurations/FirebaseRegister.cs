@@ -1,5 +1,5 @@
 ﻿using Google.Cloud.Firestore;
-using Infrastructure.Firebase.Firestore.Settings;
+using Infrastructure.Clients.Firebase.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text.Json;

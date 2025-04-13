@@ -16,7 +16,7 @@ namespace Infrastructure.Clients.Ssi
     [DIService(DIServiceLifetime.Scoped)]
     public class SsiClient : ISsiClient
     {
-        private readonly HttpClient client;
+        private readonly HttpClient httpClient;
         private readonly ILogger<SsiClient> logger;
         private static readonly SemaphoreSlim semaphoreSlim = new(1, 1);
 
@@ -25,7 +25,7 @@ namespace Infrastructure.Clients.Ssi
             this.logger = logger;
             var ssiSettings = configuration.GetRequiredSection(nameof(SsiSettings)).Get<SsiSettings>()!;
 
-            client = new HttpClient(new AuthenticationDelegatingHandler(ssiClientTokenManager))
+            httpClient = new HttpClient(new AuthenticationDelegatingHandler(ssiClientTokenManager))
             {
                 BaseAddress = new Uri(ssiSettings.SsiBaseAddress)
             };
@@ -99,7 +99,7 @@ namespace Infrastructure.Clients.Ssi
                 await Task.Delay(TimeSpan.FromSeconds(SsiConstants.MinSecondBetweenApiCalls));
 
                 var parameters = RequestSerializer.Serialize(request, RequestInputTypes.Parameter);
-                var response = await client.GetAsync($"{endpoint}?{parameters}");
+                var response = await httpClient.GetAsync($"{endpoint}?{parameters}");
 
                 return await response.ConvertToBaseResponse<TResponse>();
             }

@@ -3,8 +3,9 @@ using Application.Constants;
 using Application.Services.Interfaces;
 using Domain.Constants;
 using Domain.Entities.Bases;
-using Google.Cloud.Firestore;
 using Infrastructure.Clients.Firebase.Firestore.Converters.Interfaces;
+using Infrastructure.Clients.Firebase.Firestore.Interfaces;
+using Infrastructure.Clients.Firebase.Firestore.Models.Responses;
 using Infrastructure.Repositories.Bases.Interfaces;
 using Microsoft.Extensions.Logging;
 using System.ComponentModel;
@@ -13,22 +14,22 @@ using static Application.Constants.ApplicationEnums;
 
 namespace Infrastructure.Repositories.Bases
 {
-    [DIService(DIServiceLifetime.Skipped)]
-    public class FirestoreBaseRepository<TEntity>(
-        ILogger<FirestoreBaseRepository<TEntity>> logger,
+    [DIService(DIServiceLifetime.Scoped)]
+    public class FirestoreRestApiBaseRepositoryy<TEntity>(
+        ILogger<FirestoreRestApiBaseRepositoryy<TEntity>> logger,
         IToastManagerService toastManagerService,
         IMessageService messageService,
         IDataTypeConverterFactory dataTypeConverterFactory,
-        FirestoreDb firestoreDb) : IBaseRepository<TEntity>
+        IFirestoreClient firestoreClient) : IBaseRepository<TEntity>
         where TEntity : StockBaseEntity
     {
         public async Task<List<TEntity>> GetAll()
         {
             try
             {
-                var snapshot = await GetQuerySnapshot();
+                var collection = await GetCollection().ExecuteAsync();
 
-                return snapshot.Documents
+                return collection.Documents
                     .Select(x =>
                     {
                         var entity = ConvertTo(x);
@@ -49,12 +50,12 @@ namespace Infrastructure.Repositories.Bases
         {
             try
             {
-                var documentSnapshot = await GetCollection().Document(id).GetSnapshotAsync();
+                var document = await GetCollection().Document(id).ExecuteAsync();
 
-                if (documentSnapshot is null || documentSnapshot.Exists)
+                if (document is null)
                     return null;
 
-                return ConvertTo(documentSnapshot);
+                return ConvertTo(document);
             }
             catch (Exception ex)
             {
@@ -68,9 +69,9 @@ namespace Infrastructure.Repositories.Bases
         {
             try
             {
-                var documentReference = GetCollection().Document();
+                var document = GetCollection().Document();
 
-                var result = await documentReference.SetAsync(ConvertFrom(entity));
+                var result = await document.SetValueAsync(ConvertFrom(entity));
 
                 return result != null;
             }
@@ -86,11 +87,11 @@ namespace Infrastructure.Repositories.Bases
         {
             try
             {
-                var documentReference = GetCollection().Document(id);
+                var document = GetCollection().Document(id);
 
-                var result = await documentReference.DeleteAsync();
+                await document.DeleteAsync();
 
-                return result != null;
+                return true;
             }
 
             catch (Exception ex)
@@ -105,9 +106,9 @@ namespace Infrastructure.Repositories.Bases
         {
             try
             {
-                var documentReference = GetCollection().Document(entity.Id);
+                var document = GetCollection().Document(entity.Id);
 
-                var result = await documentReference.SetAsync(ConvertFrom(entity));
+                var result = await document.SetValueAsync(ConvertFrom(entity));
 
                 return result != null;
             }
@@ -119,15 +120,17 @@ namespace Infrastructure.Repositories.Bases
             }
         }
 
-        private TEntity ConvertTo(DocumentSnapshot documentSnapshot)
+        private TEntity ConvertTo(FirestoreDocumentResponse document)
         {
             var entity = Activator.CreateInstance<TEntity>() ?? throw new InvalidOperationException($"Cannot create an instance of {typeof(TEntity).Name}");
 
             var properties = entity.GetType().GetProperties();
             foreach (var property in properties)
             {
+                var field = document.Fields[property.Name];
+
                 var converter = dataTypeConverterFactory.GetConverter(property.PropertyType);
-                var propertyValue = documentSnapshot.GetValue<string>(property.Name);
+                var propertyValue = field?.FirstOrDefault().Value.ToString();
 
                 property.SetValue(entity, converter.ConvertFrom(propertyValue ?? string.Empty));
             }
@@ -151,18 +154,9 @@ namespace Infrastructure.Repositories.Bases
             return dictionary;
         }
 
-        private async Task<QuerySnapshot> GetQuerySnapshot()
+        private IFirestoreCollection GetCollection()
         {
-            var collection = GetCollection();
-            var snapshot = await collection.GetSnapshotAsync();
-
-            return snapshot;
-        }
-
-        private CollectionReference GetCollection()
-        {
-            return firestoreDb
-                .Collection(GetEntityName());
+            return firestoreClient.Collection(GetEntityName());
         }
 
         private static string GetEntityName()

@@ -1,8 +1,8 @@
 ﻿using Application.Attributes;
-using Infrastructure.Firebase.Firestore.Converters.Interfaces;
+using Infrastructure.Clients.Firebase.Firestore.Converters.Interfaces;
 using static Application.Constants.ApplicationEnums;
 
-namespace Infrastructure.Firebase.Firestore.Converters
+namespace Infrastructure.Clients.Firebase.Firestore.Converters
 {
     [DIService(DIServiceLifetime.Singleton)]
     public class DataTypeConverterFactory : IDataTypeConverterFactory

@@ -4,6 +4,7 @@
     {
         public const string CurrencyVND = "VND";
         public const int CurrencyDecimalPlace = 0;
+        public const int MinAndroidVersionSupportFirebaseSdk = 29;
 
         public static class LoggedErrorMessage
         {

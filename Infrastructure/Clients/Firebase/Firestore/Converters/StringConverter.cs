@@ -1,6 +1,6 @@
-﻿using Infrastructure.Firebase.Firestore.Converters.Interfaces;
+﻿using Infrastructure.Clients.Firebase.Firestore.Converters.Interfaces;
 
-namespace Infrastructure.Firebase.Firestore.Converters
+namespace Infrastructure.Clients.Firebase.Firestore.Converters
 {
     public class StringConverter : IDataTypeConverter
     {

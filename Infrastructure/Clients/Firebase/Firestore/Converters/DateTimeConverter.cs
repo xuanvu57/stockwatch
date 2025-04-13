@@ -1,7 +1,7 @@
-﻿using Infrastructure.Firebase.Firestore.Converters.Interfaces;
+﻿using Infrastructure.Clients.Firebase.Firestore.Converters.Interfaces;
 using System.Globalization;
 
-namespace Infrastructure.Firebase.Firestore.Converters
+namespace Infrastructure.Clients.Firebase.Firestore.Converters
 {
     public class DateTimeConverter : IDataTypeConverter
     {
@@ -28,7 +28,7 @@ namespace Infrastructure.Firebase.Firestore.Converters
             {
                 if (value == string.Empty)
                 {
-                    return (DateTime?)null;
+                    return null;
                 }
 
                 return DateTime.ParseExact(value, DateTimeFormat, CultureInfo.InvariantCulture);
