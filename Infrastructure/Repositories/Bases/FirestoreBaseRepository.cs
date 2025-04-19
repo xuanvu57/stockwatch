@@ -7,8 +7,6 @@ using Google.Cloud.Firestore;
 using Infrastructure.Clients.Firebase.Firestore.Converters.Interfaces;
 using Infrastructure.Repositories.Bases.Interfaces;
 using Microsoft.Extensions.Logging;
-using System.ComponentModel;
-using System.Reflection;
 using static Application.Constants.ApplicationEnums;
 
 namespace Infrastructure.Repositories.Bases
@@ -19,7 +17,7 @@ namespace Infrastructure.Repositories.Bases
         IToastManagerService toastManagerService,
         IMessageService messageService,
         IDataTypeConverterFactory dataTypeConverterFactory,
-        FirestoreDb firestoreDb) : IBaseRepository<TEntity>
+        FirestoreDb firestoreDb) : AbstractRepository<TEntity>, IBaseRepository<TEntity>
         where TEntity : StockBaseEntity
     {
         public async Task<List<TEntity>> GetAll()
@@ -163,13 +161,6 @@ namespace Infrastructure.Repositories.Bases
         {
             return firestoreDb
                 .Collection(GetEntityName());
-        }
-
-        private static string GetEntityName()
-        {
-            var entityName = typeof(TEntity).GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
-
-            return entityName ?? nameof(TEntity);
         }
     }
 }

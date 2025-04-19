@@ -5,8 +5,6 @@ using Domain.Constants;
 using Domain.Entities.Bases;
 using Infrastructure.Repositories.Bases.Interfaces;
 using Microsoft.Extensions.Logging;
-using System.ComponentModel;
-using System.Reflection;
 using System.Text.Json;
 using static Application.Constants.ApplicationEnums;
 
@@ -17,7 +15,7 @@ namespace Infrastructure.Repositories.Bases
         ILogger<FileBaseRepository<TEntity>> logger,
         ILocalFileService localFileService,
         IToastManagerService toastManagerService,
-        IMessageService messageService) : IBaseRepository<TEntity>
+        IMessageService messageService) : AbstractRepository<TEntity>, IBaseRepository<TEntity>
         where TEntity : StockBaseEntity
     {
         private string FilePath => Path.Combine(localFileService.GetRootDirectory(), $"{GetEntityName()}.json");
@@ -133,13 +131,6 @@ namespace Infrastructure.Repositories.Bases
                 await toastManagerService.Show($"{messageService.GetMessage(MessageConstants.MSG_CannotAccessResourceToWriteData)}, {ex.Message}");
                 return false;
             }
-        }
-
-        private static string GetEntityName()
-        {
-            var entityName = typeof(TEntity).GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
-
-            return entityName ?? nameof(TEntity);
         }
     }
 }
