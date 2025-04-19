@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:strings="clr-namespace:stockwatch.Resources.Strings"
-             xmlns:commonViews="clr-namespace:stockwatch.CommonViews"
              xmlns:childViews="clr-namespace:stockwatch.ChildViews"
              xmlns:local="clr-namespace:stockwatch.Pages"
              x:Class="stockwatch.Pages.FindPotentialSymbolPage"
@@ -18,46 +17,9 @@
         <VerticalStackLayout
             Padding="5,0"
             Spacing="10">
-            <Picker
-                x:Name="pckMarket"
-                ItemsSource="{Binding Source={x:Static local:FindPotentialSymbolPage.Markets}}"
-                SelectedIndex="0"
-                Title="{Binding Source={x:Static strings:AppResources.LBL_MarketOrSymbols}}">
-            </Picker>
 
-            <Picker
-                x:Name="pckGroupByPeriod"
-                ItemsSource="{Binding Source={x:Static local:FindPotentialSymbolPage.Periods}}"
-                SelectedIndex="0"
-                Title="{Binding Source={x:Static strings:AppResources.LBL_GroupBy}}">
-            </Picker>
-
-            <Picker
-                x:Name="pckAlgorithm"
-                ItemsSource="{Binding Source={x:Static local:FindPotentialSymbolPage.PotentialAlgorithms}}"
-                SelectedIndex="0"
-                Title="{Binding Source={x:Static strings:AppResources.LBL_AnalysisAlgorithm}}">                
-            </Picker>
-
-            <Picker
-                x:Name="pckPriceType"
-                ItemsSource="{Binding Source={x:Static local:FindPotentialSymbolPage.PriceTypes}}"
-                SelectedIndex="0"
-                IsVisible="{Binding Source={x:Reference pckAlgorithm},
-                                    Path=SelectedItem,
-                                    Converter={x:StaticResource IsNotEqualConverter},
-                                    ConverterParameter='Amplitude'}"
-                Title="{Binding Source={x:Static strings:AppResources.LBL_PriceType}}">
-            </Picker>
-
-            <commonViews:LabelEntryView
-                x:Name="entExpectedAmplitudePercentage"
-                Keyboard="Numeric"
-                TextWidth="150"
-                Text="5.00"
-                EntryPlaceholder="{Binding Source={x:Static strings:AppResources.LBL_ExpectedAmplitude}}"
-                Unit="%">
-            </commonViews:LabelEntryView>
+            <childViews:FindPotentialSymbolSettingView
+                x:Name="mySymbolSettingView" />
 
             <Button
                 x:Name="btnAnalyze"

@@ -121,6 +121,9 @@
 	  <MauiXaml Update="ChildViews\FindPotentialSymbolResultView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="ChildViews\FindPotentialSymbolSettingView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="ChildViews\MySymbolAnalyzingResultView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

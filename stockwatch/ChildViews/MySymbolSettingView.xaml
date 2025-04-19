@@ -6,10 +6,6 @@
              xmlns:commonViews="clr-namespace:stockwatch.CommonViews"
              x:Class="stockwatch.ChildViews.MySymbolSettingView"
              x:Name="mySymbolSettingView">
-    <ContentView.Resources>
-        <ResourceDictionary>
-        </ResourceDictionary>
-    </ContentView.Resources>
     <VerticalStackLayout
             Padding="10,0">
         <commonViews:LabelEntryView

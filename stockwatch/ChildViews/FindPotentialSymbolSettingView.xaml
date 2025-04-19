@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:strings="clr-namespace:stockwatch.Resources.Strings"
+             xmlns:commonViews="clr-namespace:stockwatch.CommonViews"
+             xmlns:local="clr-namespace:stockwatch.ChildViews"
+             x:Class="stockwatch.ChildViews.FindPotentialSymbolSettingView">
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <toolkit:IsNotEqualConverter x:Key="IsNotEqualConverter" />
+        </ResourceDictionary>
+    </ContentView.Resources>
+    <VerticalStackLayout
+        Padding="5,0"
+        Spacing="10">
+        <Picker
+            x:Name="pckMarket"
+            ItemsSource="{Binding Source={x:Static local:FindPotentialSymbolSettingView.Markets}}"
+            SelectedIndex="0"
+            Title="{Binding Source={x:Static strings:AppResources.LBL_MarketOrSymbols}}">
+        </Picker>
+
+        <Picker
+            x:Name="pckGroupByPeriod"
+            ItemsSource="{Binding Source={x:Static local:FindPotentialSymbolSettingView.Periods}}"
+            SelectedIndex="0"
+            Title="{Binding Source={x:Static strings:AppResources.LBL_GroupBy}}">
+        </Picker>
+
+        <Picker
+            x:Name="pckAlgorithm"
+            ItemsSource="{Binding Source={x:Static local:FindPotentialSymbolSettingView.PotentialAlgorithms}}"
+            SelectedIndex="0"
+            Title="{Binding Source={x:Static strings:AppResources.LBL_AnalysisAlgorithm}}">
+        </Picker>
+
+        <Picker
+            x:Name="pckPriceType"
+            ItemsSource="{Binding Source={x:Static local:FindPotentialSymbolSettingView.PriceTypes}}"
+            SelectedIndex="0"
+            IsVisible="{Binding Source={x:Reference pckAlgorithm},
+                                Path=SelectedItem,
+                                Converter={x:StaticResource IsNotEqualConverter},
+                                ConverterParameter='Amplitude'}"
+            Title="{Binding Source={x:Static strings:AppResources.LBL_PriceType}}">
+        </Picker>
+
+        <commonViews:LabelEntryView
+            x:Name="entExpectedAmplitudePercentage"
+            Keyboard="Numeric"
+            TextWidth="150"
+            Text="5.00"
+            EntryPlaceholder="{Binding Source={x:Static strings:AppResources.LBL_ExpectedAmplitude}}"
+            Unit="%">
+        </commonViews:LabelEntryView>
+    </VerticalStackLayout>
+</ContentView>
