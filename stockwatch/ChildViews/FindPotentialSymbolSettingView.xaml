@@ -5,7 +5,8 @@
              xmlns:strings="clr-namespace:stockwatch.Resources.Strings"
              xmlns:commonViews="clr-namespace:stockwatch.CommonViews"
              xmlns:local="clr-namespace:stockwatch.ChildViews"
-             x:Class="stockwatch.ChildViews.FindPotentialSymbolSettingView">
+             x:Class="stockwatch.ChildViews.FindPotentialSymbolSettingView"
+             x:Name="findPotentialSymbolSettingView">
     <ContentView.Resources>
         <ResourceDictionary>
             <toolkit:IsNotEqualConverter x:Key="IsNotEqualConverter" />

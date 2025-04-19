@@ -29,8 +29,8 @@
             
             <childViews:FindPotentialSymbolResultView
                 x:Name="resultView"
-                SelectedGroupByPeriod="{Binding Source={x:Reference pckGroupByPeriod}, 
-                                                Path=SelectedItem}">
+                SelectedGroupByPeriod="{Binding Source={x:Reference mySymbolSettingView}, 
+                                                Path=SelectedPeriodPicker.SelectedItem}">
             </childViews:FindPotentialSymbolResultView>
             
         </VerticalStackLayout>

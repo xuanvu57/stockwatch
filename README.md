@@ -38,7 +38,7 @@ The cross-flatform app is being built by .NET with MAUI and C#
 ## Access the folder with `FileSystem.AppDataDirectory` in the Android Emulator
 - In Visual Studio, go to Tools/Android/Android Adb Command Prompt ...
 - Enter `Adb shell`
-- Enter `run-as com.your.packagename`
+- Enter `run-as com.txv.stockwatch`
 - Enter `cd files`
 - Enter `ls` and you should find all your files
 

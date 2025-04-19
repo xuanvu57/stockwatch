@@ -16,6 +16,11 @@ public partial class FindPotentialSymbolSettingView : ContentView
     public static IEnumerable<string> PotentialAlgorithms { get; } = Enum<PotentialAlgorithm>.ToDescriptions();
     public static IEnumerable<string> PriceTypes { get; } = Enum<PriceType>.ToDescriptions();
 
+    public Picker SelectedPeriodPicker
+    {
+        get => pckGroupByPeriod;
+    }
+
     public FindPotentialSymbolSettingView()
     {
         InitializeComponent();

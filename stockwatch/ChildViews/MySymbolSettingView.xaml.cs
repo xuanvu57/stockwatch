@@ -10,7 +10,7 @@ public partial class MySymbolSettingView : ContentView
 {
     public readonly IMessageService messageService;
 
-    public int CurrencyDecimalPlace { get; } = ApplicationConsts.CurrencyDecimalPlace;
+    public static int CurrencyDecimalPlace { get; } = ApplicationConsts.CurrencyDecimalPlace;
 
     public string SymbolId
     {
