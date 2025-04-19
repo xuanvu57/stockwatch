@@ -2,6 +2,10 @@
 {
     public static class FirestoreConstants
     {
+        public static class Exception
+        {
+            public const string InitializeEntityErrorMessage = "An error occurred while initializing the entity";
+        }
         public static class Response
         {
             public const string DefaultResponseNonSuccessMessage = "There is an error with status code";

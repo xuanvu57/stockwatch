@@ -1,12 +1,11 @@
 ﻿using Application.Attributes;
-using Application.Constants;
 using Application.Services.Interfaces;
-using Domain.Constants;
 using Domain.Entities.Bases;
+using Infrastructure.Clients.Firebase.Firestore.Constants;
 using Infrastructure.Clients.Firebase.Firestore.Converters.Interfaces;
+using Infrastructure.Clients.Firebase.Firestore.Exceptions;
 using Infrastructure.Clients.Firebase.Firestore.Interfaces;
 using Infrastructure.Clients.Firebase.Firestore.Models.Responses;
-using Infrastructure.Repositories.Bases.Interfaces;
 using Microsoft.Extensions.Logging;
 using static Application.Constants.ApplicationEnums;
 
@@ -18,109 +17,63 @@ namespace Infrastructure.Repositories.Bases
         IToastManagerService toastManagerService,
         IMessageService messageService,
         IDataTypeConverterFactory dataTypeConverterFactory,
-        IFirestoreClient firestoreClient) : AbstractRepository<TEntity>, IBaseRepository<TEntity>
+        IFirestoreClient firestoreClient) : AbstractRepository<TEntity>(logger, toastManagerService, messageService)
         where TEntity : StockBaseEntity
     {
-        public async Task<List<TEntity>> GetAll()
+        protected override async Task<List<TEntity>> GetAllInternal()
         {
-            try
-            {
-                var collection = await GetCollection().ExecuteAsync();
+            var collection = await GetCollection().ExecuteAsync();
 
-                return collection.Documents
-                    .Select(x =>
-                    {
-                        var entity = ConvertTo(x);
-                        entity = entity with { Id = x.Id };
-                        return entity;
-                    })
-                    .ToList();
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, $"{ApplicationConsts.LoggedErrorMessage.ErrorMessageInReadingData} {nameof(TEntity)}");
-                await toastManagerService.Show($"{messageService.GetMessage(MessageConstants.MSG_CannotAccessResourceToReadData)}, {ex.Message}");
-                return [];
-            }
+            return collection.Documents
+                .Select(x =>
+                {
+                    var entity = ConvertTo(x);
+                    entity = entity with { Id = x.Id };
+                    return entity;
+                })
+                .ToList();
         }
 
-        public async Task<TEntity?> GetById(string id)
+        protected override async Task<TEntity?> GetByIdInternal(string id)
         {
-            try
-            {
-                var document = await GetCollection().Document(id).ExecuteAsync();
+            var document = await GetCollection().Document(id).ExecuteAsync();
 
-                if (document is null)
-                    return null;
-
-                return ConvertTo(document);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, $"{ApplicationConsts.LoggedErrorMessage.ErrorMessageInReadingData} {nameof(TEntity)}");
-                await toastManagerService.Show($"{messageService.GetMessage(MessageConstants.MSG_CannotAccessResourceToReadData)}, {ex.Message}");
+            if (document is null)
                 return null;
-            }
+
+            return ConvertTo(document);
         }
 
-        public async Task<bool> Create(TEntity entity)
+        protected override async Task<bool> CreateInternal(TEntity entity)
         {
-            try
-            {
-                var document = GetCollection().Document();
+            var document = GetCollection().Document();
 
-                var result = await document.SetValueAsync(ConvertFrom(entity));
+            var result = await document.SetValueAsync(ConvertFrom(entity));
 
-                return result != null;
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, $"{ApplicationConsts.LoggedErrorMessage.ErrorMessageInSavingData} {nameof(TEntity)}");
-                await toastManagerService.Show($"{messageService.GetMessage(MessageConstants.MSG_CannotAccessResourceToWriteData)}, {ex.Message}");
-                return false;
-            }
+            return result != null;
         }
 
-        public async Task<bool> Delete(string id)
+        protected override async Task<bool> DeleteInternal(string id)
         {
-            try
-            {
-                var document = GetCollection().Document(id);
+            var document = GetCollection().Document(id);
 
-                await document.DeleteAsync();
+            await document.DeleteAsync();
 
-                return true;
-            }
-
-            catch (Exception ex)
-            {
-                logger.LogError(ex, $"{ApplicationConsts.LoggedErrorMessage.ErrorMessageInDeletingData} {nameof(TEntity)}");
-                await toastManagerService.Show($"{messageService.GetMessage(MessageConstants.MSG_CannotAccessResourceToDeleteData)}, {ex.Message}");
-                return false;
-            }
+            return true;
         }
 
-        public async Task<bool> Update(TEntity entity)
+        protected override async Task<bool> UpdateInternal(TEntity entity)
         {
-            try
-            {
-                var document = GetCollection().Document(entity.Id);
+            var document = GetCollection().Document(entity.Id);
 
-                var result = await document.SetValueAsync(ConvertFrom(entity));
+            var result = await document.SetValueAsync(ConvertFrom(entity));
 
-                return result != null;
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, $"{ApplicationConsts.LoggedErrorMessage.ErrorMessageInSavingData} {nameof(TEntity)}");
-                await toastManagerService.Show($"{messageService.GetMessage(MessageConstants.MSG_CannotAccessResourceToWriteData)}, {ex.Message}");
-                return false;
-            }
+            return result != null;
         }
 
         private TEntity ConvertTo(FirestoreDocumentResponse document)
         {
-            var entity = Activator.CreateInstance<TEntity>() ?? throw new InvalidOperationException($"Cannot create an instance of {typeof(TEntity).Name}");
+            var entity = Activator.CreateInstance<TEntity>() ?? throw new FirestoreException($"{FirestoreConstants.Exception.InitializeEntityErrorMessage} {typeof(TEntity).Name}");
 
             var properties = entity.GetType().GetProperties();
             foreach (var property in properties)
