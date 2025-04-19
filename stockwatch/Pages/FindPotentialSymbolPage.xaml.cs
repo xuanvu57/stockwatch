@@ -26,7 +26,7 @@ public partial class FindPotentialSymbolPage : ContentPage
         var analyziedResponse = await potentialSymbolsAnalyzingService.Analyze(request);
         var potentialSymbols = analyziedResponse.Data.Select(x => PotentialSymbolModel.FromPotentialSymbol(x));
 
-        resultView.SetItemSource(potentialSymbols);
+        resultView.SetItemSource(potentialSymbols, mySymbolSettingView.SelectedPeriod);
 
         await loadingService.Hide();
     }

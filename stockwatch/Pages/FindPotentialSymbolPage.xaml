@@ -26,13 +26,10 @@
                 Text="{Binding Source={x:Static strings:AppResources.LBL_Analyze}}"
                 Clicked="OnAnalyzeButtonClicked"
                 HorizontalOptions="Fill" />
-            
+
             <childViews:FindPotentialSymbolResultView
-                x:Name="resultView"
-                SelectedGroupByPeriod="{Binding Source={x:Reference mySymbolSettingView}, 
-                                                Path=SelectedPeriodPicker.SelectedItem}">
-            </childViews:FindPotentialSymbolResultView>
-            
+                x:Name="resultView" />
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

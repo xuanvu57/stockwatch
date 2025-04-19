@@ -22,7 +22,7 @@ public partial class FindPotentialSymbolResultView : ContentView
         set => SetValue(SelectedGroupByPeriodProperty, value);
     }
 
-    private ObservableCollection<PotentialSymbolModel>? PotentialSymbols { get; set; }
+    private ObservableCollection<PotentialSymbolModel>? PotentialSymbols { get; set; } = default;
 
     private readonly IToastManagerService toastManagerService;
     private readonly IMessageService messageService;
@@ -37,8 +37,9 @@ public partial class FindPotentialSymbolResultView : ContentView
         favoriteSymbolRepository = PlatformsServiceProvider.ServiceProvider.GetRequiredService<IFavoriteSymbolRepository>();
     }
 
-    public void SetItemSource(IEnumerable<PotentialSymbolModel> potentialSymbolModels)
+    public void SetItemSource(IEnumerable<PotentialSymbolModel> potentialSymbolModels, string selectedPeriod)
     {
+        SelectedGroupByPeriod = selectedPeriod;
         PotentialSymbols = new(potentialSymbolModels);
 
         clvResult.ItemsSource = PotentialSymbols;
