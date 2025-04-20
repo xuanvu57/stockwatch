@@ -15,28 +15,28 @@
     <VerticalStackLayout
         Padding="5,0"
         Spacing="10">
-        <Picker
+        <commonViews:LabelPickerView
             x:Name="pckMarket"
             ItemsSource="{Binding Source={x:Static local:FindPotentialSymbolSettingView.Markets}}"
             SelectedIndex="0"
-            Title="{Binding Source={x:Static strings:AppResources.LBL_MarketOrSymbols}}">
-        </Picker>
+            Label="{Binding Source={x:Static strings:AppResources.LBL_MarketOrSymbols}}">
+        </commonViews:LabelPickerView>
 
-        <Picker
+        <commonViews:LabelPickerView
             x:Name="pckGroupByPeriod"
             ItemsSource="{Binding Source={x:Static local:FindPotentialSymbolSettingView.Periods}}"
             SelectedIndex="0"
-            Title="{Binding Source={x:Static strings:AppResources.LBL_GroupBy}}">
-        </Picker>
+            Label="{Binding Source={x:Static strings:AppResources.LBL_GroupBy}}">
+        </commonViews:LabelPickerView>
 
-        <Picker
+        <commonViews:LabelPickerView
             x:Name="pckAlgorithm"
             ItemsSource="{Binding Source={x:Static local:FindPotentialSymbolSettingView.PotentialAlgorithms}}"
             SelectedIndex="0"
-            Title="{Binding Source={x:Static strings:AppResources.LBL_AnalysisAlgorithm}}">
-        </Picker>
+            Label="{Binding Source={x:Static strings:AppResources.LBL_AnalysisAlgorithm}}">
+        </commonViews:LabelPickerView>
 
-        <Picker
+        <commonViews:LabelPickerView
             x:Name="pckPriceType"
             ItemsSource="{Binding Source={x:Static local:FindPotentialSymbolSettingView.PriceTypes}}"
             SelectedIndex="0"
@@ -44,15 +44,15 @@
                                 Path=SelectedItem,
                                 Converter={x:StaticResource IsNotEqualConverter},
                                 ConverterParameter='Amplitude'}"
-            Title="{Binding Source={x:Static strings:AppResources.LBL_PriceType}}">
-        </Picker>
+            Label="{Binding Source={x:Static strings:AppResources.LBL_PriceType}}">
+        </commonViews:LabelPickerView>
 
         <commonViews:LabelEntryView
             x:Name="entExpectedAmplitudePercentage"
             Keyboard="Numeric"
-            TextWidth="150"
+            TextWidth="200"
             Text="5.00"
-            EntryPlaceholder="{Binding Source={x:Static strings:AppResources.LBL_ExpectedAmplitude}}"
+            Label="{Binding Source={x:Static strings:AppResources.LBL_ExpectedAmplitude}}"
             Unit="%">
         </commonViews:LabelEntryView>
     </VerticalStackLayout>

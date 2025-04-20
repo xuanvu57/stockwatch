@@ -10,19 +10,22 @@
             Padding="10,0">
         <commonViews:LabelEntryView
             x:Name="entSymbol"
-            LabelWidth="155"
             IsEnabled="{Binding IsEnabled, Source={x:Reference mySymbolSettingView}}"
             Label="{Binding Source={x:Static strings:AppResources.LBL_SymbolID}}"
-            EntryPlaceholder="{Binding Source={x:Static strings:AppResources.LBL_ExampleOfSymbolID}}"
             EntryTextTransform="Uppercase">
+            <commonViews:LabelEntryView.EntryPlaceholder>
+                <MultiBinding StringFormat="{}{0} ({1})">
+                    <Binding Source="{x:Static strings:AppResources.LBL_SymbolID}" />
+                    <Binding Source="{x:Static strings:AppResources.LBL_ExampleOfSymbolID}" />
+                </MultiBinding>
+            </commonViews:LabelEntryView.EntryPlaceholder>
         </commonViews:LabelEntryView>
 
         <commonViews:LabelEntryView
             x:Name="entReferencePrice"
             Keyboard="Numeric"
             DecimalPlace="{Binding CurrencyDecimalPlace, Source={x:Reference mySymbolSettingView}}"
-            LabelWidth="155"
-            TextWidth="150"
+            TextWidth="200"
             IsEnabled="{Binding IsEnabled, Source={x:Reference mySymbolSettingView}}"
             Label="{Binding Source={x:Static strings:AppResources.LBL_ReferencePrice}}"
             Text="0.00"
@@ -32,8 +35,7 @@
         <commonViews:LabelEntryView
             x:Name="entCeilingPrice"
             Keyboard="Numeric"
-            LabelWidth="155"
-            TextWidth="100"
+            TextWidth="200"
             IsEnabled="{Binding IsEnabled, Source={x:Reference mySymbolSettingView}}"
             Label="{Binding Source={x:Static strings:AppResources.LBL_ExpectedPercentage}}"
             Text="5.00"
@@ -43,8 +45,7 @@
         <commonViews:LabelEntryView
             x:Name="entFloorPrice"
             Keyboard="Numeric"
-            LabelWidth="155"
-            TextWidth="100"
+            TextWidth="200"
             IsEnabled="{Binding IsEnabled, Source={x:Reference mySymbolSettingView}}"
             Label="{Binding Source={x:Static strings:AppResources.LBL_UnexpectedPercentage}}"
             Text="5.00"
