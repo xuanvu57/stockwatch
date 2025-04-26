@@ -19,7 +19,7 @@
                 x:Name="pckPicker"
                 ItemsSource="{Binding ItemsSource, Source={x:Reference labelPickerView}}"
                 SelectedIndexChanged="pckPicker_SelectedIndexChanged"
-                AbsoluteLayout.LayoutBounds="0,20,1,45"
+                AbsoluteLayout.LayoutBounds="0,15,1,40"
                 AbsoluteLayout.LayoutFlags="WidthProportional">
             </Picker>
 
@@ -27,7 +27,7 @@
                 VerticalTextAlignment="Center"
                 FontSize="13"
                 Text="{Binding Label, Source={x:Reference labelPickerView}}"
-                AbsoluteLayout.LayoutBounds="10,5,AutoSize,30">
+                AbsoluteLayout.LayoutBounds="10,0,AutoSize,25">
             </Label>
         </AbsoluteLayout>
 

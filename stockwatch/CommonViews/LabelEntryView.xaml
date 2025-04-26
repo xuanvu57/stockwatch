@@ -34,7 +34,7 @@
                 IsEnabled="{Binding IsEnabled, Source={x:Reference labelEntryView}}"
                 Focused="Entry_Focused"
                 Unfocused="Entry_Unfocused"
-                AbsoluteLayout.LayoutBounds="0,20,1,45"
+                AbsoluteLayout.LayoutBounds="0,15,1,40"
                 AbsoluteLayout.LayoutFlags="WidthProportional">
             </Entry>
 
@@ -42,7 +42,7 @@
                 VerticalTextAlignment="Center"
                 FontSize="13"
                 Text="{Binding Label, Source={x:Reference labelEntryView}}"
-                AbsoluteLayout.LayoutBounds="10,5,AutoSize,30">
+                AbsoluteLayout.LayoutBounds="10,0,AutoSize,25">
             </Label>
         </AbsoluteLayout>
         

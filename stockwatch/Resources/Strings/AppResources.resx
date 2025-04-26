@@ -126,9 +126,6 @@
   <data name="LBL_AverageAmplitude" xml:space="preserve">
     <value>Average amplitude</value>
   </data>
-  <data name="LBL_Before" xml:space="preserve">
-    <value>Before</value>
-  </data>
   <data name="LBL_ExampleOfSymbolID" xml:space="preserve">
     <value>Ex: FPT</value>
   </data>
@@ -149,6 +146,9 @@
   </data>
   <data name="LBL_Higher" xml:space="preserve">
     <value>Higher</value>
+  </data>
+  <data name="LBL_Latest" xml:space="preserve">
+    <value>Lastest</value>
   </data>
   <data name="LBL_LatestDataAtTime" xml:space="preserve">
     <value>Latest data at</value>

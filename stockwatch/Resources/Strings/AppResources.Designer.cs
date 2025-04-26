@@ -88,15 +88,6 @@ namespace stockwatch.Resources.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Before.
-        /// </summary>
-        internal static string LBL_Before {
-            get {
-                return ResourceManager.GetString("LBL_Before", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Ex: FPT.
         /// </summary>
         internal static string LBL_ExampleOfSymbolID {
@@ -156,6 +147,15 @@ namespace stockwatch.Resources.Strings {
         internal static string LBL_Higher {
             get {
                 return ResourceManager.GetString("LBL_Higher", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lastest.
+        /// </summary>
+        internal static string LBL_Latest {
+            get {
+                return ResourceManager.GetString("LBL_Latest", resourceCulture);
             }
         }
         
