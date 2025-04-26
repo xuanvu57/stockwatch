@@ -49,13 +49,6 @@ public partial class LabelEntryView : ContentView
         defaultValue: default(GridLength?),
         defaultBindingMode: BindingMode.TwoWay);
 
-    public static readonly BindableProperty LabelWidthProperty = BindableProperty.Create(
-        propertyName: nameof(LabelWidth),
-        returnType: typeof(GridLength?),
-        declaringType: typeof(LabelEntryView),
-        defaultValue: default(GridLength?),
-        defaultBindingMode: BindingMode.TwoWay);
-
     public static readonly BindableProperty KeyboardProperty = BindableProperty.Create(
         propertyName: nameof(Keyboard),
         returnType: typeof(Keyboard),
@@ -112,13 +105,6 @@ public partial class LabelEntryView : ContentView
         set => SetValue(TextWidthProperty, value);
     }
 
-    [TypeConverter(typeof(GridLengthTypeConverter))]
-    public GridLength LabelWidth
-    {
-        get => GetValue(LabelWidthProperty) as GridLength? ?? new GridLength(1, GridUnitType.Auto);
-        set => SetValue(LabelWidthProperty, value);
-    }
-
     public Keyboard Keyboard
     {
         get => (Keyboard)GetValue(KeyboardProperty);
@@ -139,6 +125,7 @@ public partial class LabelEntryView : ContentView
     private string GetFormatText()
     {
         var text = GetValue(TextProperty) as string ?? string.Empty;
+        text = text.Trim();
         if (Keyboard != Keyboard.Numeric)
             return text;
 
@@ -155,6 +142,7 @@ public partial class LabelEntryView : ContentView
     private string GetNumericText()
     {
         var text = GetValue(TextProperty) as string ?? string.Empty;
+        text = text.Trim();
         if (Keyboard != Keyboard.Numeric || string.IsNullOrEmpty(text))
             return DefaultNumericText;
 

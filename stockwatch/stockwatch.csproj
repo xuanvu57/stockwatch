@@ -130,6 +130,9 @@
 	  <MauiXaml Update="ChildViews\MySymbolSettingView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="CommonViews\LabelPickerView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\FindPotentialSymbolPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

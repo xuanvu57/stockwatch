@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="stockwatch.CommonViews.LabelPickerView"
+             x:Name="labelPickerView">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="{Binding PickerWidth, Source={x:Reference labelPickerView}}"></ColumnDefinition>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <AbsoluteLayout Grid.Column="0">
+            <Picker
+                x:Name="pckPicker"
+                ItemsSource="{Binding ItemsSource, Source={x:Reference labelPickerView}}"
+                SelectedIndexChanged="pckPicker_SelectedIndexChanged"
+                AbsoluteLayout.LayoutBounds="0,20,1,45"
+                AbsoluteLayout.LayoutFlags="WidthProportional">
+            </Picker>
+
+            <Label
+                VerticalTextAlignment="Center"
+                FontSize="13"
+                Text="{Binding Label, Source={x:Reference labelPickerView}}"
+                AbsoluteLayout.LayoutBounds="10,5,AutoSize,30">
+            </Label>
+        </AbsoluteLayout>
+
+        <Label
+            Grid.Column="1"
+            VerticalTextAlignment="Center"
+            Margin="3,10,0,0"
+            TextTransform="Lowercase"
+            Text="{Binding Unit, Source={x:Reference labelPickerView}}"/>
+    </Grid>
+</ContentView>

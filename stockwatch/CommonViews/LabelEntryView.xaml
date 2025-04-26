@@ -5,29 +5,35 @@
              x:Name="labelEntryView">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="{Binding LabelWidth, Source={x:Reference labelEntryView}}"></ColumnDefinition>
             <ColumnDefinition Width="{Binding TextWidth, Source={x:Reference labelEntryView}}"></ColumnDefinition>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Label
-            Grid.Column="0"
-            VerticalTextAlignment="Center"
-            Text="{Binding Label, Source={x:Reference labelEntryView}}"/>
-        
-        <Entry
-            x:Name="entEntry"
-            Grid.Column="1"
-            Text="{Binding Text, Source={x:Reference labelEntryView}}"
-            Keyboard="{Binding Keyboard, Source={x:Reference labelEntryView}}"
-            Placeholder="{Binding EntryPlaceholder, Source={x:Reference labelEntryView}}"
-            TextTransform="{Binding EntryTextTransform, Source={x:Reference labelEntryView}}"
-            IsEnabled="{Binding IsEnabled, Source={x:Reference labelEntryView}}"
-            Focused="Entry_Focused"
-            Unfocused="Entry_Unfocused"/>
+        <AbsoluteLayout Grid.Column="0">
+            <Entry
+                x:Name="entEntry"
+                Text="{Binding Text, Source={x:Reference labelEntryView}}"
+                Placeholder="{Binding EntryPlaceholder, Source={x:Reference labelEntryView}}"
+                Keyboard="{Binding Keyboard, Source={x:Reference labelEntryView}}"
+                TextTransform="{Binding EntryTextTransform, Source={x:Reference labelEntryView}}"
+                IsEnabled="{Binding IsEnabled, Source={x:Reference labelEntryView}}"
+                Focused="Entry_Focused"
+                Unfocused="Entry_Unfocused"
+                AbsoluteLayout.LayoutBounds="0,20,1,45"
+                AbsoluteLayout.LayoutFlags="WidthProportional">
+            </Entry>
 
+            <Label
+                VerticalTextAlignment="Center"
+                FontSize="13"
+                Text="{Binding Label, Source={x:Reference labelEntryView}}"
+                AbsoluteLayout.LayoutBounds="10,5,AutoSize,30">
+            </Label>
+        </AbsoluteLayout>
+        
         <Label
-            Grid.Column="2"
+            Grid.Column="1"
             VerticalTextAlignment="Center"
+            Margin="3,10,0,0"
             TextTransform="Lowercase"
             Text="{Binding Unit, Source={x:Reference labelEntryView}}"/>
     </Grid>
