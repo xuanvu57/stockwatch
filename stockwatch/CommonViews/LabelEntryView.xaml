@@ -10,6 +10,9 @@
         <Style x:Key="InvalidEntryStyle" TargetType="Entry">
             <Setter Property="TextColor" Value="Red" />
         </Style>
+        <Style TargetType="Label">
+            <Setter Property="TextColor" Value="Grey" />
+        </Style>
         <toolkit:NumericValidationBehavior x:Name="numericValidationBehavior" x:Key="numericValidationBehavior"
             Flags="ValidateOnValueChanged"
             InvalidStyle="{StaticResource InvalidEntryStyle}"

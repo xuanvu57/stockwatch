@@ -3,6 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="stockwatch.CommonViews.LabelPickerView"
              x:Name="labelPickerView">
+    <ContentView.Resources>
+        <Style TargetType="Label">
+            <Setter Property="TextColor" Value="Grey" />
+        </Style>
+    </ContentView.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="{Binding PickerWidth, Source={x:Reference labelPickerView}}"></ColumnDefinition>

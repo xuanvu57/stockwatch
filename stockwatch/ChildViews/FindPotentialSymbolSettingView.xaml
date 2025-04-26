@@ -51,7 +51,7 @@
         <commonViews:LabelEntryView
             x:Name="entExpectedAmplitudePercentage"
             Keyboard="Numeric"
-            TextWidth="200"
+            TextWidth="150"
             Text="5.00"
             Label="{Binding Source={x:Static strings:AppResources.LBL_ExpectedAmplitude}}"
             Unit="%">
@@ -60,7 +60,7 @@
         <commonViews:LabelEntryView
             x:Name="entMaxSymbolsFromMarket"
             Keyboard="Numeric"
-            TextWidth="200"
+            TextWidth="100"
             DecimalPlace="0"
             Text="50"
             MinNumberValue="1"
@@ -72,7 +72,7 @@
         <commonViews:LabelEntryView
             x:Name="entMonthsToAnalyze"
             Keyboard="Numeric"
-            TextWidth="200"
+            TextWidth="100"
             DecimalPlace="0"
             Text="3"
             MinNumberValue="1"
