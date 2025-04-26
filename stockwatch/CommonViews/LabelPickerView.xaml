@@ -29,7 +29,7 @@
         <Label
             Grid.Column="1"
             VerticalTextAlignment="Center"
-            Margin="3,10,0,0"
+            Margin="0,10,0,0"
             TextTransform="Lowercase"
             Text="{Binding Unit, Source={x:Reference labelPickerView}}"/>
     </Grid>
