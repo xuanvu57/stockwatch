@@ -56,5 +56,29 @@
             Label="{Binding Source={x:Static strings:AppResources.LBL_ExpectedAmplitude}}"
             Unit="%">
         </commonViews:LabelEntryView>
+
+        <commonViews:LabelEntryView
+            x:Name="entMaxSymbolsFromMarket"
+            Keyboard="Numeric"
+            TextWidth="200"
+            DecimalPlace="0"
+            Text="50"
+            MinNumberValue="1"
+            MaxNumberValue="{Binding MaxSymbolsInMarket, Source={x:Reference findPotentialSymbolSettingView}}"
+            Label="{Binding Source={x:Static strings:AppResources.LBL_LimitedBy}}"
+            Unit="{Binding Source={x:Static strings:AppResources.LBL_Symbols}}">
+        </commonViews:LabelEntryView>
+
+        <commonViews:LabelEntryView
+            x:Name="entMonthsToAnalyze"
+            Keyboard="Numeric"
+            TextWidth="200"
+            DecimalPlace="0"
+            Text="3"
+            MinNumberValue="1"
+            MaxNumberValue="{Binding MaxMonthsToAnalyze, Source={x:Reference findPotentialSymbolSettingView}}"
+            Label="{Binding Source={x:Static strings:AppResources.LBL_Before}}"
+            Unit="{Binding Source={x:Static strings:AppResources.LBL_MonthsFromNow}}">
+        </commonViews:LabelEntryView>
     </VerticalStackLayout>
 </ContentView>

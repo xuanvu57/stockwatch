@@ -23,17 +23,23 @@ namespace Application.Services
         {
             var potentialSymbolSettings = configuration.GetRequiredSection(nameof(PotentialSymbolSettings)).Get<PotentialSymbolSettings>()!;
 
+            var monthsToAnalyze = potentialSymbolSettings.MaxMonthsToAnalyze;
+            var maxSymbolsFromMarket = potentialSymbolSettings.MaxSymbolsFromMarket == 0 ? int.MaxValue : potentialSymbolSettings.MaxSymbolsFromMarket;
+
+            monthsToAnalyze = Math.Min(request.MonthsToAnalyze, monthsToAnalyze);
+            maxSymbolsFromMarket = Math.Min(request.MaxSymbolsFromMarket, maxSymbolsFromMarket);
+
             Dictionary<string, IEnumerable<StockPriceHistoryDto>> priceHistory;
             if (request.Market is null)
             {
-                priceHistory = await priceHistoryCollectingService.GetBySymbols(request.Symbols, potentialSymbolSettings.MaxMonthsToAnalyze);
+                priceHistory = await priceHistoryCollectingService.GetBySymbols(request.Symbols, monthsToAnalyze);
             }
             else
             {
                 priceHistory = await priceHistoryCollectingService.GetByMarket(
                     request.Market.Value,
-                    potentialSymbolSettings.MaxSymbolsFromMarket == 0 ? int.MaxValue : potentialSymbolSettings.MaxSymbolsFromMarket,
-                    potentialSymbolSettings.MaxMonthsToAnalyze);
+                    maxSymbolsFromMarket,
+                    monthsToAnalyze);
             }
 
             var potentialSymbols = await AnalyzeBaseOnPriceHistory(priceHistory, request);

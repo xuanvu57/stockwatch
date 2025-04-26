@@ -126,6 +126,9 @@
   <data name="LBL_AverageAmplitude" xml:space="preserve">
     <value>Average amplitude</value>
   </data>
+  <data name="LBL_Before" xml:space="preserve">
+    <value>Before</value>
+  </data>
   <data name="LBL_ExampleOfSymbolID" xml:space="preserve">
     <value>Ex: FPT</value>
   </data>
@@ -150,6 +153,9 @@
   <data name="LBL_LatestDataAtTime" xml:space="preserve">
     <value>Latest data at</value>
   </data>
+  <data name="LBL_LimitedBy" xml:space="preserve">
+    <value>Limited by</value>
+  </data>
   <data name="LBL_Lower" xml:space="preserve">
     <value>Lower</value>
   </data>
@@ -158,6 +164,9 @@
   </data>
   <data name="LBL_MatchCount" xml:space="preserve">
     <value>Match count</value>
+  </data>
+  <data name="LBL_MonthsFromNow" xml:space="preserve">
+    <value>Months from now</value>
   </data>
   <data name="LBL_MySymbol" xml:space="preserve">
     <value>My symbol</value>
@@ -185,6 +194,9 @@
   </data>
   <data name="LBL_SymbolID" xml:space="preserve">
     <value>Symbol ID</value>
+  </data>
+  <data name="LBL_Symbols" xml:space="preserve">
+    <value>Symbols</value>
   </data>
   <data name="LBL_UnexpectedPercentage" xml:space="preserve">
     <value>Unexpected percentage</value>

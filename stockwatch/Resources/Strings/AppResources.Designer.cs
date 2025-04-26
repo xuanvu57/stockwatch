@@ -88,6 +88,15 @@ namespace stockwatch.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Before.
+        /// </summary>
+        internal static string LBL_Before {
+            get {
+                return ResourceManager.GetString("LBL_Before", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ex: FPT.
         /// </summary>
         internal static string LBL_ExampleOfSymbolID {
@@ -160,6 +169,15 @@ namespace stockwatch.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Limited by.
+        /// </summary>
+        internal static string LBL_LimitedBy {
+            get {
+                return ResourceManager.GetString("LBL_LimitedBy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Lower.
         /// </summary>
         internal static string LBL_Lower {
@@ -183,6 +201,15 @@ namespace stockwatch.Resources.Strings {
         internal static string LBL_MatchCount {
             get {
                 return ResourceManager.GetString("LBL_MatchCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Months from now.
+        /// </summary>
+        internal static string LBL_MonthsFromNow {
+            get {
+                return ResourceManager.GetString("LBL_MonthsFromNow", resourceCulture);
             }
         }
         
@@ -264,6 +291,15 @@ namespace stockwatch.Resources.Strings {
         internal static string LBL_SymbolID {
             get {
                 return ResourceManager.GetString("LBL_SymbolID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Symbols.
+        /// </summary>
+        internal static string LBL_Symbols {
+            get {
+                return ResourceManager.GetString("LBL_Symbols", resourceCulture);
             }
         }
         

@@ -6,6 +6,8 @@ public partial class LabelEntryView : ContentView
 {
     const string DefaultNumericText = "0";
     const int DefaultDecimalPlace = 2;
+    const decimal DefaultMaxNumberValue = decimal.MaxValue;
+    const decimal DefaultMinNumberValue = decimal.MinValue;
 
     public static readonly BindableProperty LabelProperty = BindableProperty.Create(
         propertyName: nameof(Label),
@@ -63,6 +65,20 @@ public partial class LabelEntryView : ContentView
         defaultValue: default(int?),
         defaultBindingMode: BindingMode.TwoWay);
 
+    public static readonly BindableProperty MinNumberValueProperty = BindableProperty.Create(
+        propertyName: nameof(MinNumberValue),
+        returnType: typeof(decimal?),
+        declaringType: typeof(LabelEntryView),
+        defaultValue: default(decimal?),
+        defaultBindingMode: BindingMode.TwoWay);
+
+    public static readonly BindableProperty MaxNumberValueProperty = BindableProperty.Create(
+        propertyName: nameof(MaxNumberValue),
+        returnType: typeof(decimal?),
+        declaringType: typeof(LabelEntryView),
+        defaultValue: default(decimal?),
+        defaultBindingMode: BindingMode.TwoWay);
+
     public string Label
     {
         get => GetValue(LabelProperty) as string ?? string.Empty;
@@ -117,9 +133,54 @@ public partial class LabelEntryView : ContentView
         set => SetValue(DecimalPlaceProperty, value);
     }
 
+    public decimal MaxNumberValue
+    {
+        get => GetValue(MaxNumberValueProperty) as decimal? ?? DefaultMaxNumberValue;
+        set => SetValue(MaxNumberValueProperty, value);
+    }
+
+    public decimal MinNumberValue
+    {
+        get => GetValue(MinNumberValueProperty) as decimal? ?? DefaultMinNumberValue;
+        set => SetValue(MinNumberValueProperty, value);
+    }
+
     public LabelEntryView()
     {
         InitializeComponent();
+    }
+
+    private void Entry_Focused(object sender, FocusEventArgs e)
+    {
+        if (Keyboard == Keyboard.Numeric)
+        {
+            Text = GetNumericText();
+        }
+    }
+
+    private void Entry_Unfocused(object sendern, FocusEventArgs e)
+    {
+        if (Keyboard == Keyboard.Numeric)
+        {
+            if (entEntry.Behaviors.Contains(numericValidationBehavior))
+            {
+                var number = decimal.Parse(NumericText, Thread.CurrentThread.CurrentCulture.NumberFormat);
+                if (number < MinNumberValue)
+                {
+                    SetValue(TextProperty, MinNumberValue);
+                }
+                else if (number > MaxNumberValue)
+                {
+                    SetValue(TextProperty, MaxNumberValue);
+                }
+            }
+            Text = GetFormatText();
+        }
+    }
+
+    private void labelEntryView_Loaded(object sender, EventArgs e)
+    {
+        AttachNumericValidationBehavior();
     }
 
     private string GetFormatText()
@@ -150,19 +211,15 @@ public partial class LabelEntryView : ContentView
         return number.ToString();
     }
 
-    private void Entry_Focused(object sender, FocusEventArgs e)
+    private void AttachNumericValidationBehavior()
     {
         if (Keyboard == Keyboard.Numeric)
         {
-            Text = GetNumericText();
-        }
-    }
-
-    private void Entry_Unfocused(object sender, FocusEventArgs e)
-    {
-        if (Keyboard == Keyboard.Numeric)
-        {
-            Text = GetFormatText();
+            var hasCustomizeMinAndMaxValue = MinNumberValue != DefaultMinNumberValue || MaxNumberValue != DefaultMaxNumberValue;
+            if (hasCustomizeMinAndMaxValue)
+            {
+                entEntry.Behaviors.Add(numericValidationBehavior);
+            }
         }
     }
 }
