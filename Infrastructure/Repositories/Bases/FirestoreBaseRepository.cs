@@ -21,7 +21,7 @@ namespace Infrastructure.Repositories.Bases
     {
         protected override async Task<List<TEntity>> GetAllInternal()
         {
-            var snapshot = await GetQuerySnapshot();
+            var snapshot = await GetCollection().GetSnapshotAsync();
 
             return snapshot.Documents
                 .Select(x =>
@@ -100,14 +100,6 @@ namespace Infrastructure.Repositories.Bases
             }
 
             return dictionary;
-        }
-
-        private async Task<QuerySnapshot> GetQuerySnapshot()
-        {
-            var collection = GetCollection();
-            var snapshot = await collection.GetSnapshotAsync();
-
-            return snapshot;
         }
 
         private CollectionReference GetCollection()
