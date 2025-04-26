@@ -2,6 +2,7 @@
 using Application.Dtos;
 using Application.Services.Interfaces;
 using Domain.Entities;
+using Domain.Services;
 using static Application.Constants.ApplicationEnums;
 using static Domain.Constants.StockWatchEnums;
 
@@ -12,14 +13,13 @@ namespace Application.Services
     {
         public async Task Analyze(StockPriceInRealtimeDto stockPrice, ReferenceSymbolEntity targetSymbol)
         {
-            var floorPrice = targetSymbol.InitializedPrice * (1 - (targetSymbol.FloorPricePercentage / 100));
-            var ceilingPrice = targetSymbol.InitializedPrice * (1 + (targetSymbol.CeilingPricePercentage / 100));
+            var percentage = StockRulesService.CalculatePercentage(stockPrice.Price, targetSymbol.InitializedPrice);
 
-            if (stockPrice.Price > ceilingPrice)
+            if (percentage > targetSymbol.CeilingPricePercentage)
             {
                 await pushNotificationService.NotifyWhenExpectationReached(stockPrice, UpDownStatus.Up);
             }
-            else if (stockPrice.Price < floorPrice)
+            else if (percentage < targetSymbol.FloorPricePercentage)
             {
                 await pushNotificationService.NotifyWhenExpectationReached(stockPrice, UpDownStatus.Down);
             }
