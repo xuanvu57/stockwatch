@@ -40,6 +40,13 @@ public partial class LabelPickerView : ContentView
         defaultValue: default(object),
         defaultBindingMode: BindingMode.TwoWay);
 
+    public static readonly BindableProperty SelectedIndex1Property = BindableProperty.Create(
+        propertyName: nameof(SelectedIndex),
+        returnType: typeof(int),
+        declaringType: typeof(LabelPickerView),
+        defaultValue: default(int),
+        defaultBindingMode: BindingMode.TwoWay);
+
     public string Label
     {
         get => GetValue(LabelProperty) as string ?? string.Empty;
@@ -68,7 +75,11 @@ public partial class LabelPickerView : ContentView
     public int SelectedIndex
     {
         get { return pckPicker.SelectedIndex; }
-        set { pckPicker.SelectedIndex = value; }
+        set
+        {
+            pckPicker.SelectedIndex = value;
+            SetValue(SelectedIndex1Property, value);
+        }
     }
 
     public object SelectedItem
@@ -85,5 +96,6 @@ public partial class LabelPickerView : ContentView
     private void pckPicker_SelectedIndexChanged(object sender, EventArgs e)
     {
         SelectedItem = pckPicker.SelectedItem;
+        SelectedIndex = pckPicker.SelectedIndex;
     }
 }

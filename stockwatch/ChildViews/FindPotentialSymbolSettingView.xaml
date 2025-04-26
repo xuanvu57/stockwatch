@@ -10,6 +10,7 @@
     <ContentView.Resources>
         <ResourceDictionary>
             <toolkit:IsNotEqualConverter x:Key="IsNotEqualConverter" />
+            <x:String x:Key="PriceTypeOfAmplitude">Amplitude</x:String>
         </ResourceDictionary>
     </ContentView.Resources>
     <VerticalStackLayout
@@ -43,7 +44,7 @@
             IsVisible="{Binding Source={x:Reference pckAlgorithm},
                                 Path=SelectedItem,
                                 Converter={x:StaticResource IsNotEqualConverter},
-                                ConverterParameter='Amplitude'}"
+                                ConverterParameter={x:StaticResource PriceTypeOfAmplitude}}"
             Label="{Binding Source={x:Static strings:AppResources.LBL_PriceType}}">
         </commonViews:LabelPickerView>
 
