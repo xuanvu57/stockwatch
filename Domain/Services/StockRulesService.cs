@@ -6,6 +6,12 @@ namespace Domain.Services
     {
         public static DateOnly GetLatestAvailableDate(DateTime date)
         {
+            var dateOnly = DateOnly.FromDateTime(date);
+            return GetLatestAvailableDate(dateOnly);
+        }
+
+        public static DateOnly GetLatestAvailableDate(DateOnly date)
+        {
             var latestAvailableDate = date.DayOfWeek switch
             {
                 DayOfWeek.Saturday => date.AddDays(-1),
@@ -13,7 +19,7 @@ namespace Domain.Services
                 _ => date
             };
 
-            return DateOnly.FromDateTime(latestAvailableDate);
+            return latestAvailableDate;
         }
 
         public static decimal CalculatePercentage(decimal value, decimal referencedValue) => (100 * value / referencedValue) - 100;

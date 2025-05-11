@@ -27,7 +27,7 @@ namespace Infrastructure.Services
             var today = await dateTimeService.GetCurrentBusinessDateTime();
             var latestDate = StockRulesService.GetLatestAvailableDate(today);
 
-            var intradayOhlc = await ssiClient.IntradayOhlc(latestDate, latestDate, symbol: symbolId, pageIndex: 1, pageSize: 1);
+            var intradayOhlc = await ssiClient.IntradayOhlc(latestDate, latestDate, symbolId, pageIndex: 1, pageSize: 1);
 
             if (intradayOhlc.Status == SsiConstants.ResponseStatus.Success)
             {
@@ -48,10 +48,11 @@ namespace Infrastructure.Services
                 return latestPriceInMemory.RefPrice;
             }
 
-            var dailyStockPrice = await ssiClient.DailyStockPrice(date, date, symbol: symbolId, pageIndex: 1, pageSize: 1);
-            if (dailyStockPrice.Status == SsiConstants.ResponseStatus.Success)
+            var previousDate = StockRulesService.GetLatestAvailableDate(date.AddDays(-1));
+            var dailyStockPriceInPreviousDate = await ssiClient.DailyStockPrice(previousDate, previousDate, symbolId, pageIndex: 1, pageSize: 1);
+            if (dailyStockPriceInPreviousDate.Status == SsiConstants.ResponseStatus.Success)
             {
-                return decimal.Parse(dailyStockPrice.Data![0].RefPrice);
+                return decimal.Parse(dailyStockPriceInPreviousDate.Data![0].ClosePriceAdjusted);
             }
             else
             {
