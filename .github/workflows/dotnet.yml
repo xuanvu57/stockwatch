@@ -35,9 +35,20 @@ jobs:
     - name: Install .NET MAUI
       run: dotnet workload install maui --ignore-failed-sources
     - name: Restore dependencies
-      run: nuget restore stockwatch.sln
+      run: |
+        nuget --version
+        nuget restore stockwatch.sln
+    - name: Read project.assets.json
+      id: assets
+      uses: jaywcjlove/github-action-read-file@v2.0.0
+      with:
+        path: stockwatch/obj/project.assets.json
+    - name: Echo package.json
+      run: echo "${{ steps.assets.outputs.content }}"
     - name: Publish
-      run: dotnet publish stockwatch/stockwatch.csproj -c:Release /p:AndroidPackageFormat=apk /p:AndroidKeyStore=true /p:AndroidSigningKeyStore=stockwatch.keystore /p:AndroidSigningKeyAlias=stockwatch /p:AndroidSigningKeyPass="${{ secrets.KEYSTORE_KEYPASS }}" /p:AndroidSigningStorePass="${{ secrets.KEYSTORE_STOREPASS }}" --no-restore
+      run: |
+        dotnet nuget --version
+        dotnet publish stockwatch/stockwatch.csproj -f:net8.0-android -c:Release /p:AndroidPackageFormat=apk /p:AndroidKeyStore=true /p:AndroidSigningKeyStore=stockwatch.keystore /p:AndroidSigningKeyAlias=stockwatch /p:AndroidSigningKeyPass="${{ secrets.KEYSTORE_KEYPASS }}" /p:AndroidSigningStorePass="${{ secrets.KEYSTORE_STOREPASS }}" --no-restore
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4.6.2
       with:
