@@ -28,6 +28,8 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+    - name: Check nuget version
+      run: dotnet nuget --version
     - name: Setup Nuget
       uses: nuget/setup-nuget@v2
       with:
@@ -38,13 +40,10 @@ jobs:
       run: |
         nuget ?
         nuget restore stockwatch.sln
-    - name: Read project.assets.json
-      id: assets
-      uses: igorskyflyer/action-readfile@v1.0.0
+    - name: Upload project.assets.json
+      uses: actions/upload-artifact@v4.6.2
       with:
-        path: stockwatch/obj/project.assets.json
-    - name: Echo project.assets.json
-      run: echo "${{ steps.assets.outputs.content }}"
+        path: ./**/project.assets.json
     - name: Publish
       run: |
         dotnet nuget --version
