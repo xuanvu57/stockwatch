@@ -31,7 +31,7 @@ jobs:
     - name: Install .NET MAUI
       run: dotnet workload install maui
     - name: Build
-      run: dotnet publish stockwatch/stockwatch.csproj -f net8.0-android RuntimeIdentifiers="android-x64;android-arm64" -p:AndroidPackageFormat=apk -p:AndroidKeyStore=true -p:AndroidSigningKeyStore=stockwatch.keystore -p:AndroidSigningKeyAlias=stockwatch -p:AndroidSigningKeyPass="${{ secrets.KEYSTORE_KEYPASS }}" -p:AndroidSigningStorePass="${{ secrets.KEYSTORE_STOREPASS }}"
+      run: dotnet publish stockwatch/stockwatch.csproj -f net8.0-android -p:RuntimeIdentifiers="android-x64;android-arm64" -p:AndroidPackageFormat=apk -p:AndroidKeyStore=true -p:AndroidSigningKeyStore=stockwatch.keystore -p:AndroidSigningKeyAlias=stockwatch -p:AndroidSigningKeyPass="${{ secrets.KEYSTORE_KEYPASS }}" -p:AndroidSigningStorePass="${{ secrets.KEYSTORE_STOREPASS }}"
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4.6.2
       with:
