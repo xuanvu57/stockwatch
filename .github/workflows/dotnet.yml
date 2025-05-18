@@ -36,14 +36,14 @@ jobs:
       run: dotnet workload install maui --ignore-failed-sources
     - name: Restore dependencies
       run: |
-        nuget --version
+        nuget ?
         nuget restore stockwatch.sln
     - name: Read project.assets.json
       id: assets
-      uses: jaywcjlove/github-action-read-file@v2.0.0
+      uses: igorskyflyer/action-readfile@v1.0.0
       with:
         path: stockwatch/obj/project.assets.json
-    - name: Echo package.json
+    - name: Echo project.assets.json
       run: echo "${{ steps.assets.outputs.content }}"
     - name: Publish
       run: |
