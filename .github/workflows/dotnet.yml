@@ -19,7 +19,9 @@ jobs:
     - name: Setup Keystore File
       run: |
         echo "${{ secrets.KEYSTORE_FILE }}" > stockwatch.keystore.asc
-        gpg -d --passphrase "${{ secrets.KEYSTORE_PASSWORD_GPG }}" --batch stockwatch.keystore.asc > stockwatch.keystore
+        gpg -d --passphrase "${{ secrets.gpgStockwatch@2711 }}" --batch stockwatch.keystore.asc > stockwatch.keystore
+    - name: Setup appsettings.local.json File
+      run: echo "${{ secrets.APP_SETTINGS_FILE }}" > stockwatch/appsettings.local.json
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
