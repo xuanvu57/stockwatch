@@ -30,10 +30,8 @@ jobs:
         dotnet-version: 8.0.x
     - name: Install .NET MAUI
       run: dotnet workload install maui
-    - name: Restore dependencies
-      run: dotnet restore
     - name: Build
-      run: dotnet build stockwatch/stockwatch.csproj -c Release -f net8.0-android /p:AndroidSigningKeyStore=stockwatch.keystore /p:AndroidSigningKeyAlias=stockwatch /p:AndroidSigningKeyPass="${{ secrets.KEYSTORE_KEYPASS }}" /p:AndroidSigningStorePass="${{ secrets.KEYSTORE_STOREPASS }}" --no-restore
+      run: dotnet publish stockwatch/stockwatch.csproj -c Release -f net8.0-android -p:AndroidKeyStore=true -p:AndroidSigningKeyStore=stockwatch.keystore -p:AndroidSigningKeyAlias=stockwatch -p:AndroidSigningKeyPass="${{ secrets.KEYSTORE_KEYPASS }}" -p:AndroidSigningStorePass="${{ secrets.KEYSTORE_STOREPASS }}"
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4.6.2
       with:
