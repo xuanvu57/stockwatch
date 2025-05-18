@@ -28,16 +28,16 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-    - uses: actions/setup-java@v2
+    - name: Setup Nuget
+      uses: nuget/setup-nuget@v2
       with:
-        distribution: 'microsoft'
-        java-version: '11'
+        nuget-version: 'latest'
     - name: Install .NET MAUI
-      run: |
-        dotnet workload install android --ignore-failed-sources
-        dotnet workload install maui --ignore-failed-sources
+      run: dotnet workload install maui --ignore-failed-sources
+    - name: Restore dependencies
+      run: dotnet restore
     - name: Publish
-      run: dotnet publish stockwatch/stockwatch.csproj -f:net8.0-android -c:Release /p:AndroidPackageFormat=apk /p:AndroidKeyStore=true /p:AndroidSigningKeyStore=stockwatch.keystore /p:AndroidSigningKeyAlias=stockwatch /p:AndroidSigningKeyPass="${{ secrets.KEYSTORE_KEYPASS }}" /p:AndroidSigningStorePass="${{ secrets.KEYSTORE_STOREPASS }}"
+      run: dotnet publish stockwatch/stockwatch.csproj -f:net8.0-android -c:Release /p:AndroidPackageFormat=apk /p:AndroidKeyStore=true /p:AndroidSigningKeyStore=stockwatch.keystore /p:AndroidSigningKeyAlias=stockwatch /p:AndroidSigningKeyPass="${{ secrets.KEYSTORE_KEYPASS }}" /p:AndroidSigningStorePass="${{ secrets.KEYSTORE_STOREPASS }}" --no-restore
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4.6.2
       with:
