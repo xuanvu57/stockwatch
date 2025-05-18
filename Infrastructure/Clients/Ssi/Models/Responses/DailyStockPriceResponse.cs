@@ -1,4 +1,8 @@
-﻿namespace Infrastructure.Clients.Ssi.Models.Responses
+﻿using Application.Dtos;
+using Infrastructure.Clients.Ssi.Constants;
+using System.Globalization;
+
+namespace Infrastructure.Clients.Ssi.Models.Responses
 {
     public record DailyStockPriceResponse
     {
@@ -10,6 +14,7 @@
         public required string RefPrice { get; init; } = string.Empty;
         public required string HighestPrice { get; init; } = string.Empty;
         public required string LowestPrice { get; init; } = string.Empty;
+        public required string OpenPrice { get; init; } = string.Empty;
         public required string ClosePrice { get; init; } = string.Empty;
         public required string AveragePrice { get; init; } = string.Empty;
         public required string ClosePriceAdjusted { get; init; } = string.Empty;
@@ -32,5 +37,24 @@
         public required string TotalTradedValue { get; init; } = string.Empty;
         public required string Symbol { get; init; } = string.Empty;
         public required string Time { get; init; } = string.Empty;
+
+        public StockPriceHistoryDto ToStockPriceHistoryDto()
+        {
+            return new StockPriceHistoryDto()
+            {
+                SymbolId = Symbol,
+                AtDate = DateOnly.ParseExact(TradingDate, SsiConstants.Format.Date, CultureInfo.InvariantCulture),
+                Price = decimal.Parse(ClosePriceAdjusted),
+                HighestPrice = decimal.Parse(HighestPrice),
+                LowestPrice = decimal.Parse(LowestPrice),
+                OpenPrice = decimal.Parse(OpenPrice),
+                ClosePrice = decimal.Parse(ClosePrice),
+                ChangedPrice = decimal.Parse(PriceChange),
+                ChangedPricePercent = decimal.Parse(PerPriceChange),
+                AveragePrice = decimal.Parse(AveragePrice),
+                TotalMatchVolumn = decimal.Parse(TotalMatchVol),
+                TotalMatchValue = decimal.Parse(TotalMatchVal)
+            };
+        }
     }
 }

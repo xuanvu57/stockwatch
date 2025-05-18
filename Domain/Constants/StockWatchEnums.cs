@@ -29,6 +29,21 @@ namespace Domain.Constants
 
             [Description("Lowest price")]
             LowestPrice,
+
+            [Description("Average price")]
+            AveragePrice,
+
+            [Description("Changed price")]
+            ChangedPrice,
+
+            [Description("Price at opened time")]
+            OpenPrice,
+
+            [Description("Price at closed time")]
+            ClosePrice,
+
+            [Description("Total match volumn")]
+            TotalMatchVolumn,
         }
 
         public enum GroupPriceDataBy

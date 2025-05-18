@@ -1,4 +1,4 @@
-﻿using Application.Algorithms.PotentialSymbols.Interfaces;
+﻿using Application.Algorithms.PotentialSymbols.Fatories.Interfaces;
 using Application.Attributes;
 using Application.Dtos;
 using Application.Dtos.Bases;
@@ -8,6 +8,7 @@ using Application.Settings;
 using Domain.Repositories.Interfaces;
 using Microsoft.Extensions.Configuration;
 using static Application.Constants.ApplicationEnums;
+using static Domain.Constants.StockWatchEnums;
 
 namespace Application.Services
 {
@@ -28,18 +29,23 @@ namespace Application.Services
 
             monthsToAnalyze = Math.Min(request.MonthsToAnalyze, monthsToAnalyze);
             maxSymbolsFromMarket = Math.Min(request.MaxSymbolsFromMarket, maxSymbolsFromMarket);
+            var advancedData = IsAdvanceDataNecessary(request);
 
             Dictionary<string, IEnumerable<StockPriceHistoryDto>> priceHistory;
             if (request.Market is null)
             {
-                priceHistory = await priceHistoryCollectingService.GetBySymbols(request.Symbols, monthsToAnalyze);
+                priceHistory = await priceHistoryCollectingService.GetBySymbols(
+                    request.Symbols,
+                    monthsToAnalyze,
+                    advancedData);
             }
             else
             {
                 priceHistory = await priceHistoryCollectingService.GetByMarket(
                     request.Market.Value,
                     maxSymbolsFromMarket,
-                    monthsToAnalyze);
+                    monthsToAnalyze,
+                    advancedData);
             }
 
             var potentialSymbols = await AnalyzeBaseOnPriceHistory(priceHistory, request);
@@ -67,11 +73,6 @@ namespace Application.Services
             return potentialSymbols;
         }
 
-        private static PotentialSymbolDto UpdateFavoriteAttribute(PotentialSymbolDto symbol, IEnumerable<string> favoriteSymbolIds)
-        {
-            return symbol with { IsFavorite = favoriteSymbolIds.Contains(symbol.SymbolId) };
-        }
-
         private async Task<BaseResponse<PotentialSymbolDto>> ConvertToResponse(IEnumerable<PotentialSymbolDto> potentialSymbols)
         {
             var currentTime = await dateTimeService.GetCurrentSystemDateTime();
@@ -80,6 +81,26 @@ namespace Application.Services
                 Data = potentialSymbols is null ? [] : potentialSymbols,
                 AtTime = currentTime
             };
+        }
+
+        private static bool IsAdvanceDataNecessary(PotentialSymbolRequest request)
+        {
+            switch (request.PriceType)
+            {
+                case PriceType.Price:
+                case PriceType.OpenPrice:
+                case PriceType.ClosePrice:
+                case PriceType.HighestPrice:
+                case PriceType.LowestPrice:
+                    return false;
+                default: return true;
+            }
+            ;
+        }
+
+        private static PotentialSymbolDto UpdateFavoriteAttribute(PotentialSymbolDto symbol, IEnumerable<string> favoriteSymbolIds)
+        {
+            return symbol with { IsFavorite = favoriteSymbolIds.Contains(symbol.SymbolId) };
         }
     }
 }

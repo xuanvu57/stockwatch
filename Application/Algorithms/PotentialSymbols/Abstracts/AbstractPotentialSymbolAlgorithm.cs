@@ -40,9 +40,16 @@ namespace Application.Algorithms.PotentialSymbols.Abstracts
                 {
                     SymbolId = g.Key.SymbolId,
                     AtDate = g.Key.AtDate,
-                    Price = g.Average(x => x.Price),
                     HighestPrice = g.Max(x => x.HighestPrice),
-                    LowestPrice = g.Min(x => x.LowestPrice)
+                    LowestPrice = g.Min(x => x.LowestPrice),
+                    Price = g.Average(x => x.Price),
+                    AveragePrice = g.Average(x => x.AveragePrice),
+                    ChangedPrice = g.Average(x => x.ChangedPrice),
+                    ChangedPricePercent = g.Average(x => x.ChangedPricePercent),
+                    ClosePrice = g.Average(x => x.ClosePrice),
+                    OpenPrice = g.Average(x => x.OpenPrice),
+                    TotalMatchValue = g.Sum(x => x.TotalMatchValue),
+                    TotalMatchVolumn = g.Sum(x => x.TotalMatchVolumn),
                 });
         }
 

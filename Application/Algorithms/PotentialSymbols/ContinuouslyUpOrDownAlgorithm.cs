@@ -51,7 +51,12 @@ namespace Application.Algorithms.PotentialSymbols
             {
                 PriceType.HighestPrice => priceHistory.HighestPrice,
                 PriceType.LowestPrice => priceHistory.LowestPrice,
-                _ => priceHistory.Price
+                PriceType.AveragePrice => priceHistory.AveragePrice,
+                PriceType.OpenPrice => priceHistory.OpenPrice,
+                PriceType.ClosePrice => priceHistory.ClosePrice,
+                PriceType.ChangedPrice => priceHistory.ChangedPrice,
+                PriceType.TotalMatchVolumn => priceHistory.TotalMatchVolumn,
+                _ => priceHistory.Price,
             };
         }
     }
