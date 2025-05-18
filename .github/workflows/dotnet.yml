@@ -23,7 +23,7 @@ jobs:
     - name: Setup appsettings.local.json File
       run: |
         echo "${{ secrets.APP_SETTINGS_FILE }}" > stockwatch/appsettings.local.json.asc
-        gpg -d --passphrase "${{ secrets.GPG_PASSWORD }}" --batch appsettings.local.json.asc > appsettings.local.json
+        gpg -d --passphrase "${{ secrets.GPG_PASSWORD }}" --batch stockwatch/appsettings.local.json.asc > stockwatch/appsettings.local.json
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
