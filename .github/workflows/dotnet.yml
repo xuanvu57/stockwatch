@@ -47,7 +47,7 @@ jobs:
     - name: Publish
       run: |
         dotnet nuget --version
-        dotnet publish stockwatch/stockwatch.csproj -f:net8.0-android -c:Release /p:AndroidPackageFormat=apk /p:AndroidKeyStore=true /p:AndroidSigningKeyStore=stockwatch.keystore /p:AndroidSigningKeyAlias=stockwatch /p:AndroidSigningKeyPass="${{ secrets.KEYSTORE_KEYPASS }}" /p:AndroidSigningStorePass="${{ secrets.KEYSTORE_STOREPASS }}" --no-restore
+        dotnet publish stockwatch/stockwatch.csproj -f:net8.0-android34.0 -c:Release /p:AndroidPackageFormat=apk /p:AndroidKeyStore=true /p:AndroidSigningKeyStore=stockwatch.keystore /p:AndroidSigningKeyAlias=stockwatch /p:AndroidSigningKeyPass="${{ secrets.KEYSTORE_KEYPASS }}" /p:AndroidSigningStorePass="${{ secrets.KEYSTORE_STOREPASS }}" --no-restore
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4.6.2
       with:
