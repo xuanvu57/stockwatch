@@ -6,8 +6,8 @@ name: Build App
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  #pull_request:
+  #  branches: [ "main" ]
 
 jobs:
   build:
@@ -28,16 +28,9 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-    - name: Check nuget version
-      run: dotnet nuget --version
-    #- name: Setup Nuget
-    #  uses: nuget/setup-nuget@v2
-    #  with:
-    #    nuget-version: 'latest'
     - name: Install .NET MAUI
       run: dotnet workload install maui --ignore-failed-sources
     - name: Restore dependencies
-    #  run: nuget restore stockwatch.sln
       run: dotnet restore stockwatch/stockwatch.csproj
     - name: Publish
       run: dotnet publish stockwatch/stockwatch.csproj -f:net8.0-android -c:Release /p:AndroidPackageFormat=apk /p:AndroidKeyStore=true /p:AndroidSigningKeyStore=stockwatch.keystore /p:AndroidSigningKeyAlias=stockwatch /p:AndroidSigningKeyPass="${{ secrets.KEYSTORE_KEYPASS }}" /p:AndroidSigningStorePass="${{ secrets.KEYSTORE_STOREPASS }}" --no-restore
