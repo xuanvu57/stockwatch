@@ -98,8 +98,8 @@ namespace Infrastructure.Clients.Ssi
 
                 await Task.Delay(TimeSpan.FromSeconds(SsiConstants.MinSecondBetweenApiCalls));
 
-                var parameters = RequestSerializer.Serialize(request, RequestInputTypes.Parameter);
-                var response = await httpClient.GetAsync($"{endpoint}?{parameters}");
+                var parameterQuery = RequestSerializer.Serialize(request, RequestInputTypes.Parameter);
+                var response = await httpClient.GetAsync($"{endpoint}?{parameterQuery}");
 
                 return await response.ConvertToBaseResponse<TResponse>();
             }

@@ -403,3 +403,4 @@ appsettings.*.json
 # Ignore keystore
 *.keystore
 *.keyinfo
+*.asc

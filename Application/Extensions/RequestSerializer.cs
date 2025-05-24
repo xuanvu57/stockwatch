@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using System.Text.Json;
+﻿using System.Text.Json;
 using static Application.Constants.ApplicationEnums;
 
 namespace Application.Extensions
@@ -16,22 +15,20 @@ namespace Application.Extensions
             }
             else
             {
+                var properties = request.GetType().GetProperties();
+
                 var uriParameters = new List<string>();
-
-                var type = request.GetType();
-                IList<PropertyInfo> properties = new List<PropertyInfo>(type.GetProperties());
-
                 foreach (var property in properties)
                 {
                     var value = property.GetValue(request, null);
 
                     if (value is not null)
                     {
-                        uriParameters.Add($"{property.Name}={value}");
+                        uriParameters.Add($"{property.Name}={Uri.EscapeDataString(value.ToString() ?? string.Empty)}");
                     }
                 }
 
-                return uriParameters.Count > 0 ? string.Join("&", uriParameters) : string.Empty;
+                return string.Join("&", uriParameters);
             }
         }
     }
