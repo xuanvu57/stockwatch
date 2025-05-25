@@ -5,7 +5,7 @@ using stockwatch.Models;
 using stockwatch.Services.Providers;
 using System.Collections.ObjectModel;
 
-namespace stockwatch.ChildViews;
+namespace stockwatch.ChildViews.FindPotentialSymbol;
 
 public partial class FindPotentialSymbolResultView : ContentView
 {

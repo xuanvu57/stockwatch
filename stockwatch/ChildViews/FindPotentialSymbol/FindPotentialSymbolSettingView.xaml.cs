@@ -7,7 +7,7 @@ using stockwatch.Resources.Strings;
 using stockwatch.Services.Providers;
 using static Domain.Constants.StockWatchEnums;
 
-namespace stockwatch.ChildViews;
+namespace stockwatch.ChildViews.FindPotentialSymbol;
 
 public partial class FindPotentialSymbolSettingView : ContentView
 {

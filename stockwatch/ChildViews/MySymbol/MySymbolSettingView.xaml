@@ -4,7 +4,7 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:strings="clr-namespace:stockwatch.Resources.Strings"
              xmlns:commonViews="clr-namespace:stockwatch.CommonViews"
-             x:Class="stockwatch.ChildViews.MySymbolSettingView"
+             x:Class="stockwatch.ChildViews.MySymbol.MySymbolSettingView"
              x:Name="mySymbolSettingView">
     <VerticalStackLayout
             Padding="10,0">

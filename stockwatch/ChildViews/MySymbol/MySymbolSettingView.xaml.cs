@@ -4,7 +4,7 @@ using Domain.Constants;
 using Domain.Entities;
 using stockwatch.Services.Providers;
 
-namespace stockwatch.ChildViews;
+namespace stockwatch.ChildViews.MySymbol;
 
 public partial class MySymbolSettingView : ContentView
 {
