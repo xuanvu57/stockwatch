@@ -22,7 +22,7 @@ namespace Infrastructure.Repositories.Bases
     {
         protected override async Task<List<TEntity>> GetAllInternal()
         {
-            var collection = await GetCollection().ExecuteAsync();
+            var collection = await GetCollection().GetAsync();
 
             return collection.Documents
                 .Select(x =>
@@ -36,7 +36,7 @@ namespace Infrastructure.Repositories.Bases
 
         protected override async Task<TEntity?> GetByIdInternal(string id)
         {
-            var document = await GetCollection().Document(id).ExecuteAsync();
+            var document = await GetCollection().Document(id).GetAsync();
 
             if (document is null)
                 return null;

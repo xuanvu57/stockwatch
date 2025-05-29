@@ -126,6 +126,9 @@
   <data name="LBL_AverageAmplitude" xml:space="preserve">
     <value>Average amplitude</value>
   </data>
+  <data name="LBL_DataCollection" xml:space="preserve">
+    <value>Data collection</value>
+  </data>
   <data name="LBL_ExampleOfSymbolID" xml:space="preserve">
     <value>Ex: FPT</value>
   </data>
@@ -140,6 +143,9 @@
   </data>
   <data name="LBL_FavoriteSymbolsItem" xml:space="preserve">
     <value>&lt;Favorite symbols&gt;</value>
+  </data>
+  <data name="LBL_FromDate" xml:space="preserve">
+    <value>From date</value>
   </data>
   <data name="LBL_GroupBy" xml:space="preserve">
     <value>Group by</value>
@@ -186,6 +192,9 @@
   <data name="LBL_PriceType" xml:space="preserve">
     <value>Price type</value>
   </data>
+  <data name="LBL_Process" xml:space="preserve">
+    <value>Process</value>
+  </data>
   <data name="LBL_ReferencePrice" xml:space="preserve">
     <value>Reference price</value>
   </data>
@@ -197,6 +206,9 @@
   </data>
   <data name="LBL_Symbols" xml:space="preserve">
     <value>Symbols</value>
+  </data>
+  <data name="LBL_ToDate" xml:space="preserve">
+    <value>To date</value>
   </data>
   <data name="LBL_UnexpectedPercentage" xml:space="preserve">
     <value>Unexpected percentage</value>
@@ -221,6 +233,9 @@
   </data>
   <data name="MSG_CannotAccessResourceToWriteData" xml:space="preserve">
     <value>Cannot access resource to write data</value>
+  </data>
+  <data name="MSG_Date1MustBeGreaterThanOrEqualDate2" xml:space="preserve">
+    <value>{0} must be greater than or equal {1}</value>
   </data>
   <data name="MSG_PleaseInputSymbol" xml:space="preserve">
     <value>Please input a symbol</value>

@@ -6,6 +6,9 @@
         public const int CurrencyDecimalPlace = 0;
         public const int MinAndroidVersionSupportFirebaseSdk = 29;
 
+        public const string MySymbolWatchingBackgroundServiceName = "MySymbolWatchingBackgroundService";
+        public const string DataCollectionBackgroundServiceName = "DataCollectionBackgroundService";
+
         public static class LoggedErrorMessage
         {
             public const string ErrorMessageWhenAnalyzeMySymbolFailed = "An error occurred while analyzing your symbol";

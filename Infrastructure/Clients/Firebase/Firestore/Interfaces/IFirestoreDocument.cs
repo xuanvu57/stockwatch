@@ -4,7 +4,9 @@ namespace Infrastructure.Clients.Firebase.Firestore.Interfaces
 {
     public interface IFirestoreDocument
     {
-        Task<FirestoreDocumentResponse> ExecuteAsync();
+        IFirestoreCollection Collection(string collectionId);
+
+        Task<FirestoreDocumentResponse> GetAsync();
 
         Task<FirestoreDocumentResponse> SetValueAsync(Dictionary<string, object> fields);
 

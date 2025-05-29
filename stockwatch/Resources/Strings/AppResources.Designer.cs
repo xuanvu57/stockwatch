@@ -88,6 +88,15 @@ namespace stockwatch.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Data collection.
+        /// </summary>
+        internal static string LBL_DataCollection {
+            get {
+                return ResourceManager.GetString("LBL_DataCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ex: FPT.
         /// </summary>
         internal static string LBL_ExampleOfSymbolID {
@@ -129,6 +138,15 @@ namespace stockwatch.Resources.Strings {
         internal static string LBL_FavoriteSymbolsItem {
             get {
                 return ResourceManager.GetString("LBL_FavoriteSymbolsItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to From date.
+        /// </summary>
+        internal static string LBL_FromDate {
+            get {
+                return ResourceManager.GetString("LBL_FromDate", resourceCulture);
             }
         }
         
@@ -268,6 +286,15 @@ namespace stockwatch.Resources.Strings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Process.
+        /// </summary>
+        internal static string LBL_Process {
+            get {
+                return ResourceManager.GetString("LBL_Process", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reference price.
         /// </summary>
         internal static string LBL_ReferencePrice {
@@ -300,6 +327,15 @@ namespace stockwatch.Resources.Strings {
         internal static string LBL_Symbols {
             get {
                 return ResourceManager.GetString("LBL_Symbols", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To date.
+        /// </summary>
+        internal static string LBL_ToDate {
+            get {
+                return ResourceManager.GetString("LBL_ToDate", resourceCulture);
             }
         }
         
@@ -372,6 +408,15 @@ namespace stockwatch.Resources.Strings {
         internal static string MSG_CannotAccessResourceToWriteData {
             get {
                 return ResourceManager.GetString("MSG_CannotAccessResourceToWriteData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} must be greater than or equal {1}.
+        /// </summary>
+        internal static string MSG_Date1MustBeGreaterThanOrEqualDate2 {
+            get {
+                return ResourceManager.GetString("MSG_Date1MustBeGreaterThanOrEqualDate2", resourceCulture);
             }
         }
         

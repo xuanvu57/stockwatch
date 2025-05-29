@@ -11,8 +11,8 @@ using static Application.Constants.ApplicationEnums;
 namespace Application.Services
 {
     [DIService(DIServiceLifetime.Singleton)]
-    public class BackgroundService(
-        ILogger<BackgroundService> logger,
+    public class MySymbolWatchingBackgroundService(
+        ILogger<MySymbolWatchingBackgroundService> logger,
         IToastManagerService toastManagerService,
         IConfiguration configuration,
         IRealtimePriceService realTimePriceService,
@@ -20,6 +20,7 @@ namespace Application.Services
         IReferenceSymbolRepository referenceSymbolRepository) : IBackgroundService
     {
         public bool IsRunning { get; private set; } = false;
+        public string ServiceName => ApplicationConsts.MySymbolWatchingBackgroundServiceName;
 
         private Timer? timer;
         private readonly List<IBackgroundServiceSubscriber> subscribers = [];

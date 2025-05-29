@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="stockwatch.CommonViews.LabelDataPickerView"
+             x:Name="labelDatePickerView">
+    <ContentView.Resources>
+        <Style TargetType="Label">
+            <Setter Property="TextColor" Value="Grey" />
+        </Style>
+    </ContentView.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="{Binding PickerWidth, Source={x:Reference labelDatePickerView}}"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <AbsoluteLayout Grid.Column="0" >
+            <DatePicker
+                x:Name="dpkDate"
+                Date="{Binding SelectedDate, Source={x:Reference labelDatePickerView}}"
+                AbsoluteLayout.LayoutBounds="0,15,1,40"
+                AbsoluteLayout.LayoutFlags="WidthProportional"
+                Format="{Binding Format, Source={x:Reference labelDatePickerView}}">
+            </DatePicker>
+
+            <Label
+                VerticalTextAlignment="Center"
+                FontSize="13"
+                Text="{Binding Label, Source={x:Reference labelDatePickerView}}"
+                AbsoluteLayout.LayoutBounds="10,0,AutoSize,25">
+            </Label>
+        </AbsoluteLayout>
+    </Grid>
+</ContentView>

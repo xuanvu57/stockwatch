@@ -5,6 +5,7 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using AndroidX.Core.App;
+using Application.Constants;
 using Application.Dtos;
 using Application.Services.Interfaces;
 using stockwatch.Constants;
@@ -148,7 +149,8 @@ namespace stockwatch.Platforms.Android
 
         private void SubscribeBackgroundService()
         {
-            backgroundService = PlatformsServiceProvider.ServiceProvider.GetRequiredService<IBackgroundService>();
+            var backgroundServices = PlatformsServiceProvider.ServiceProvider.GetRequiredService<IEnumerable<IBackgroundService>>();
+            backgroundService = backgroundServices.First(x => x.ServiceName == ApplicationConsts.MySymbolWatchingBackgroundServiceName);
             if (backgroundService?.IsRunning == true)
             {
                 backgroundService.AddSubscriber(this);

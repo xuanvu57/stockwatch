@@ -12,7 +12,12 @@ namespace Infrastructure.Clients.Firebase.Firestore
         private readonly string DeleteDocumentEndpoint = $@"{collectionId}/{documentId}";
         private readonly string UpdateOrCreateDocumentEndpoint = $@"{collectionId}/{documentId}";
 
-        public Task<FirestoreDocumentResponse> ExecuteAsync()
+        public IFirestoreCollection Collection(string collectionId)
+        {
+            return new FirestoreCollection(httpClient, collectionId);
+        }
+
+        public Task<FirestoreDocumentResponse> GetAsync()
         {
             return httpClient.ExecuteGetMethod<FirestoreDocumentResponse>(GetDocumentEndpoint);
         }

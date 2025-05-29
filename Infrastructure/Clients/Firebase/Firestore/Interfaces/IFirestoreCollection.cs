@@ -4,7 +4,7 @@ namespace Infrastructure.Clients.Firebase.Firestore.Interfaces
 {
     public interface IFirestoreCollection
     {
-        Task<FirestoreCollectionResponse> ExecuteAsync();
+        Task<FirestoreCollectionResponse> GetAsync();
 
         IFirestoreDocument Document(string documentId = "");
     }

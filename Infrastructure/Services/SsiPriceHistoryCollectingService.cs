@@ -17,6 +17,13 @@ namespace Infrastructure.Services
     {
         public async Task<Dictionary<string, IEnumerable<StockPriceHistoryDto>>> GetByMarket(Market market, int maxSymbolCountFromMarket, int months, bool advancedData)
         {
+            var (fromDate, toDate) = await GetFromDateAndToDateByToDay(months);
+
+            return await GetByMarket(market, maxSymbolCountFromMarket, fromDate, toDate, advancedData);
+        }
+
+        public async Task<Dictionary<string, IEnumerable<StockPriceHistoryDto>>> GetByMarket(Market market, int maxSymbolCountFromMarket, DateOnly fromDate, DateOnly toDate, bool advancedData)
+        {
             var symbolIds = new List<string>();
 
             var pageIndex = 1;
@@ -42,16 +49,23 @@ namespace Infrastructure.Services
                 securitiesResponse = await ssiClient.Securities(market.ToString(), pageIndex, pageSize);
             }
 
-            return await GetBySymbols(symbolIds, months, advancedData);
+            return await GetBySymbols(symbolIds, fromDate, toDate, advancedData);
         }
 
         public async Task<Dictionary<string, IEnumerable<StockPriceHistoryDto>>> GetBySymbols(IEnumerable<string> symbolIds, int months, bool advancedData)
+        {
+            var (fromDate, toDate) = await GetFromDateAndToDateByToDay(months);
+
+            return await GetBySymbols(symbolIds, fromDate, toDate, advancedData);
+        }
+
+        public async Task<Dictionary<string, IEnumerable<StockPriceHistoryDto>>> GetBySymbols(IEnumerable<string> symbolIds, DateOnly fromDate, DateOnly toDate, bool advancedData)
         {
             var stockPrices = new Dictionary<string, IEnumerable<StockPriceHistoryDto>>();
 
             foreach (var symbolId in symbolIds)
             {
-                var stockPriceHistoryBySymbol = await GetBySymbol(symbolId, months, advancedData);
+                var stockPriceHistoryBySymbol = await GetBySymbol(symbolId, fromDate, toDate, advancedData);
 
                 stockPrices.Add(symbolId, stockPriceHistoryBySymbol);
             }
@@ -59,14 +73,9 @@ namespace Infrastructure.Services
             return stockPrices;
         }
 
-        private async Task<IEnumerable<StockPriceHistoryDto>> GetBySymbol(string symbolId, int months, bool advancedData)
+        private async Task<IEnumerable<StockPriceHistoryDto>> GetBySymbol(string symbolId, DateOnly fromDate, DateOnly toDate, bool advancedData)
         {
             await loadingService.Show(symbolId);
-
-            var today = await dateTimeService.GetCurrentBusinessDateTime();
-
-            var toDate = StockRulesService.GetLatestAvailableDate(today);
-            var fromDate = toDate.AddMonths(-1 * months);
 
             return advancedData
                 ? await GetDailyPrice(symbolId, fromDate, toDate)
@@ -119,6 +128,16 @@ namespace Infrastructure.Services
             }
 
             return stockPriceHistory;
+        }
+
+        private async Task<(DateOnly, DateOnly)> GetFromDateAndToDateByToDay(int months)
+        {
+            var today = await dateTimeService.GetCurrentBusinessDateTime();
+
+            var toDate = StockRulesService.GetLatestAvailableDate(today);
+            var fromDate = toDate.AddMonths(-1 * months);
+
+            return (fromDate, toDate);
         }
     }
 }

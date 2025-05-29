@@ -1,4 +1,5 @@
-﻿using Application.Dtos;
+﻿using Application.Constants;
+using Application.Dtos;
 using Application.Services.Interfaces;
 using Domain.Constants;
 using Domain.Entities;
@@ -30,7 +31,7 @@ namespace stockwatch.Pages
             IToastManagerService toastManagerService,
             IMessageService messageService,
             IReferenceSymbolRepository referenceSymbolRepository,
-            IBackgroundService backgroundService)
+            IEnumerable<IBackgroundService> backgroundServices)
         {
             InitializeComponent();
             BindingContext = this;
@@ -38,7 +39,7 @@ namespace stockwatch.Pages
             this.toastManagerService = toastManagerService;
             this.messageService = messageService;
             this.referenceSymbolRepository = referenceSymbolRepository;
-            this.backgroundService = backgroundService;
+            backgroundService = backgroundServices.First(x => x.ServiceName == ApplicationConsts.MySymbolWatchingBackgroundServiceName);
         }
 
         protected override async void OnAppearing()

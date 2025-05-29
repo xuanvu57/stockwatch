@@ -5,7 +5,7 @@
              xmlns:local="clr-namespace:stockwatch.CommonViews"
              x:Class="stockwatch.CommonViews.LabelEntryView"
              x:Name="labelEntryView"
-             Loaded="labelEntryView_Loaded">
+             Loaded="LabelEntryView_Loaded">
     <ContentView.Resources>
         <Style x:Key="InvalidEntryStyle" TargetType="Entry">
             <Setter Property="TextColor" Value="Red" />

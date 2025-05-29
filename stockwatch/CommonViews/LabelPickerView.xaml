@@ -18,7 +18,7 @@
             <Picker
                 x:Name="pckPicker"
                 ItemsSource="{Binding ItemsSource, Source={x:Reference labelPickerView}}"
-                SelectedIndexChanged="pckPicker_SelectedIndexChanged"
+                SelectedIndexChanged="PckPicker_SelectedIndexChanged"
                 AbsoluteLayout.LayoutBounds="0,15,1,40"
                 AbsoluteLayout.LayoutFlags="WidthProportional">
             </Picker>

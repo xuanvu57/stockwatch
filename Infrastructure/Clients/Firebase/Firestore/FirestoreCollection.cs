@@ -4,7 +4,7 @@ using Infrastructure.Clients.Firebase.Firestore.Models.Responses;
 
 namespace Infrastructure.Clients.Firebase.Firestore
 {
-    public class FirestoreCollection(HttpClient httpClient, string collectionId) : IFirestoreCollection
+    public class FirestoreCollection(HttpClient httpClient, params string[] collectionId) : IFirestoreCollection
     {
         private readonly string GetDocumentsEndpoint = $"{collectionId}";
 
@@ -14,7 +14,7 @@ namespace Infrastructure.Clients.Firebase.Firestore
             return firestoreDocument;
         }
 
-        public Task<FirestoreCollectionResponse> ExecuteAsync()
+        public Task<FirestoreCollectionResponse> GetAsync()
         {
             return httpClient.ExecuteGetMethod<FirestoreCollectionResponse>(GetDocumentsEndpoint);
         }

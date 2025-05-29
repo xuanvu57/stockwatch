@@ -19,5 +19,10 @@
             Icon="find_stock.png"
             ContentTemplate="{DataTemplate local:FindPotentialSymbolPage}"
             Route="FindPotentialSymbol" />
+        <ShellContent
+            Title="{Binding Source={x:Static strings:AppResources.LBL_DataCollection}}"
+            Icon="data_collection.png"
+            ContentTemplate="{DataTemplate local:DataCollectionPage}"
+            Route="DataCollection" />
     </TabBar>
 </Shell>

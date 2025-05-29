@@ -3,6 +3,7 @@
     public interface IBackgroundService
     {
         bool IsRunning { get; }
+        string ServiceName { get; }
 
         void Restart();
         void Stop();

@@ -178,7 +178,7 @@ public partial class LabelEntryView : ContentView
         }
     }
 
-    private void labelEntryView_Loaded(object sender, EventArgs e)
+    private void LabelEntryView_Loaded(object sender, EventArgs e)
     {
         AttachNumericValidationBehavior();
     }

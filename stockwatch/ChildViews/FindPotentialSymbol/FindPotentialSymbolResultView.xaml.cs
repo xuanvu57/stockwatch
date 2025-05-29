@@ -40,7 +40,7 @@ public partial class FindPotentialSymbolResultView : ContentView
     public void SetItemSource(IEnumerable<PotentialSymbolModel> potentialSymbolModels, string selectedPeriod)
     {
         SelectedGroupByPeriod = selectedPeriod;
-        PotentialSymbols = new(potentialSymbolModels);
+        PotentialSymbols = [.. potentialSymbolModels];
 
         clvResult.ItemsSource = PotentialSymbols;
     }
