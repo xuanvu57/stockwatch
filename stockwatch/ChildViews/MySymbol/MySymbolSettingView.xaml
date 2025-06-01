@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:strings="clr-namespace:stockwatch.Resources.Strings"
+             xmlns:constants="clr-namespace:stockwatch.Constants"
              xmlns:commonViews="clr-namespace:stockwatch.CommonViews"
              x:Class="stockwatch.ChildViews.MySymbol.MySymbolSettingView"
              x:Name="mySymbolSettingView">
@@ -24,7 +25,7 @@
         <commonViews:LabelEntryView
             x:Name="entReferencePrice"
             Keyboard="Numeric"
-            DecimalPlace="{Binding CurrencyDecimalPlace, Source={x:Reference mySymbolSettingView}}"
+            DecimalPlace="{Binding Source={x:Static constants:DisplayConstants.CurrencyDecimalPlace}}"
             TextWidth="200"
             IsEnabled="{Binding IsEnabled, Source={x:Reference mySymbolSettingView}}"
             Label="{Binding Source={x:Static strings:AppResources.LBL_ReferencePrice}}"

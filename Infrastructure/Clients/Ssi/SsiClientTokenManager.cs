@@ -1,10 +1,10 @@
 ﻿using Application.Attributes;
 using Application.Extensions;
-using Infrastructure.Clients.Settings;
 using Infrastructure.Clients.Ssi.Constants;
 using Infrastructure.Clients.Ssi.Extensions;
 using Infrastructure.Clients.Ssi.Interfaces;
 using Infrastructure.Clients.Ssi.Models.Requests;
+using Infrastructure.Clients.Ssi.Settings;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;

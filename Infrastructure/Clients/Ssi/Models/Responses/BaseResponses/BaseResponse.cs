@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Clients.Ssi.Models.Responses
+﻿namespace Infrastructure.Clients.Ssi.Models.Responses.BaseResponses
 {
     public record BaseResponse<TData> where TData : class
     {

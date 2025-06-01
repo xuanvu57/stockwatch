@@ -8,12 +8,16 @@
     <ContentView.Resources>
         <ResourceDictionary>
             <x:Decimal x:Key="Threshold">0</x:Decimal>
+            <Color x:Key="GreaterThanOrEqualThresholdColor">Green</Color>
+            <Color x:Key="SmallerThanThresholdColor">Red</Color>
+            <Color x:Key="DefaultThresholdColor">Black</Color>
+            
             <toolkit:CompareConverter x:Key="PercentageTextColorConverter"
                 ComparisonOperator="GreaterOrEqual"
                 ComparingValue="{x:StaticResource Threshold}"
-                TrueObject="Green"
-                FalseObject="Red" 
-                DefaultConvertReturnValue="Black"/>
+                TrueObject="{StaticResource GreaterThanOrEqualThresholdColor}"
+                FalseObject="{StaticResource SmallerThanThresholdColor}"
+                DefaultConvertReturnValue="{StaticResource DefaultThresholdColor}"/>
         </ResourceDictionary>
     </ContentView.Resources>
     

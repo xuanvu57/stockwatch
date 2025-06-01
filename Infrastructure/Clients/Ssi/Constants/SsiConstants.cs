@@ -2,6 +2,7 @@
 {
     public static class SsiConstants
     {
+        public const string AuthorizationRequestHeader = "Authorization";
         public const string AuthorizationSchema = "Bearer";
         public const int MinSecondBetweenApiCalls = 1;
 
@@ -38,6 +39,18 @@
         {
             public const string Date = "dd/MM/yyyy";
             public const string Time = "HH:mm:ss";
+        }
+
+        public static class StreamMethods
+        {
+            public const string Broadcast = "Broadcast";
+            public const string SwtichChannels = "SwitchChannels";
+        }
+
+        public static class StreamChannels
+        {
+            public const string X_Trade = "X-TRADE";
+            public const string B = "B";
         }
     }
 }

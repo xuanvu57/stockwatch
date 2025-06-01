@@ -1,4 +1,3 @@
-using Application.Constants;
 using Application.Services.Interfaces;
 using Domain.Constants;
 using Domain.Entities;
@@ -9,8 +8,6 @@ namespace stockwatch.ChildViews.MySymbol;
 public partial class MySymbolSettingView : ContentView
 {
     public readonly IMessageService messageService;
-
-    public int CurrencyDecimalPlace { get; } = ApplicationConsts.CurrencyDecimalPlace;
 
     public string SymbolId
     {

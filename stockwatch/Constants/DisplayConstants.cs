@@ -1,8 +1,11 @@
-﻿namespace stockwatch.Constants
+﻿using Application.Constants;
+
+namespace stockwatch.Constants
 {
     internal static class DisplayConstants
     {
         public const double MinimumDistanceToConsiderMoving = 12;
+        public const int CurrencyDecimalPlace = ApplicationConsts.CurrencyDecimalPlace;
 
         public const string ArrowUp = "↑";
         public const string ArrowDown = "↓";

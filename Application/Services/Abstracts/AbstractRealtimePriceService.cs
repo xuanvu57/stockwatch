@@ -34,6 +34,8 @@ namespace Application.Services.Abstracts
         }
 
         protected abstract Task<StockPriceInRealtimeDto?> GetCurrentPriceInMarketBySymbolId(string symbolId);
+        public virtual Task ConnectAsync() => Task.CompletedTask;
+        public virtual Task DisconnectAsync() => Task.CompletedTask;
 
         private async Task UpdateLatestPriceInDB(StockPriceInRealtimeDto currentPriceInMarket)
         {
