@@ -41,13 +41,13 @@ namespace Infrastructure.Services
 
             async Task OnDataReceivedHandler(string data)
             {
+                ssiStreamClient.OnDataReceivedHandler -= OnDataReceivedHandler;
+
                 var broadcastResponse = data.ConvertToStreamResponse<BroadcastResponse>();
                 var broadcastXTradeResponse = broadcastResponse.Content.ConvertToStreamResponse<BroadcastXTradeResponse>();
                 var realtimeStockPriceDto = await Convert(broadcastXTradeResponse);
 
                 taskCompletionSource.TrySetResult(realtimeStockPriceDto);
-
-                ssiStreamClient.OnDataReceivedHandler -= OnDataReceivedHandler;
             }
 
             ssiStreamClient.OnDataReceivedHandler += OnDataReceivedHandler;
