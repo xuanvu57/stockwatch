@@ -1,12 +1,13 @@
 ﻿using Application.Attributes;
 using Application.Extensions;
-using Infrastructure.Clients.Settings;
 using Infrastructure.Clients.Ssi.Constants;
 using Infrastructure.Clients.Ssi.DelegatingHandlers;
 using Infrastructure.Clients.Ssi.Extensions;
 using Infrastructure.Clients.Ssi.Interfaces;
 using Infrastructure.Clients.Ssi.Models.Requests;
 using Infrastructure.Clients.Ssi.Models.Responses;
+using Infrastructure.Clients.Ssi.Models.Responses.BaseResponses;
+using Infrastructure.Clients.Ssi.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using static Application.Constants.ApplicationEnums;
