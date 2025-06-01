@@ -33,9 +33,11 @@ namespace Application.Services.Abstracts
             return await ConvertToResponse(currentPriceInMarket);
         }
 
-        protected abstract Task<StockPriceInRealtimeDto?> GetCurrentPriceInMarketBySymbolId(string symbolId);
         public virtual Task ConnectAsync() => Task.CompletedTask;
+
         public virtual Task DisconnectAsync() => Task.CompletedTask;
+
+        protected abstract Task<StockPriceInRealtimeDto?> GetCurrentPriceInMarketBySymbolId(string symbolId);
 
         private async Task UpdateLatestPriceInDB(StockPriceInRealtimeDto currentPriceInMarket)
         {

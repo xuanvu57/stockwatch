@@ -16,7 +16,6 @@ namespace Infrastructure.Clients.Ssi
         public event OnDataReceived? OnDataReceivedHandler;
 
         private readonly ISsiClientTokenManager ssiClientTokenManager;
-        private readonly SsiSettings ssiSettings;
 
         private readonly HubConnection hubConnection;
         private readonly IHubProxy hubProxy;
@@ -24,7 +23,7 @@ namespace Infrastructure.Clients.Ssi
         public SsiStreamClient(IConfiguration configuration, ISsiClientTokenManager ssiClientTokenManager)
         {
             this.ssiClientTokenManager = ssiClientTokenManager;
-            ssiSettings = configuration.GetRequiredSection(nameof(SsiSettings)).Get<SsiSettings>()!;
+            var ssiSettings = configuration.GetRequiredSection(nameof(SsiSettings)).Get<SsiSettings>()!;
 
             var hubEndpoint = $"{ssiSettings.SsiStreamBaseAddress}{ssiSettings.HubEndpoint}";
 

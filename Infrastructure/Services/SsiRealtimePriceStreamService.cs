@@ -11,21 +11,13 @@ using static Application.Constants.ApplicationEnums;
 
 namespace Infrastructure.Services
 {
-    [DIService(DIServiceLifetime.Scoped)]
-    public class SsiRealtimePriceStreamService : AbstractRealtimePriceService
-    {
-        private readonly ISsiStreamClient ssiStreamClient;
-        private StockPriceInRealtimeDto? realtimeStockPriceDto;
-
-        public SsiRealtimePriceStreamService(
+    [DIService(DIServiceLifetime.Singleton)]
+    public class SsiRealtimePriceStreamService(
             ISsiStreamClient ssiStreamClient,
             IDateTimeService dateTimeService,
-            ILatestPriceRepository latestPriceRepository) : base(dateTimeService, latestPriceRepository)
-        {
-            this.ssiStreamClient = ssiStreamClient;
-
-            this.ssiStreamClient.OnDataReceivedHandler += SsiStreamClient_OnDataReceivedHandler;
-        }
+            ILatestPriceRepository latestPriceRepository) : AbstractRealtimePriceService(dateTimeService, latestPriceRepository)
+    {
+        private const int MaxSecondToWaitForStreamEvent = 5;
 
         override protected async Task<StockPriceInRealtimeDto?> GetCurrentPriceInMarketBySymbolId(string symbolId)
         {
@@ -45,26 +37,26 @@ namespace Infrastructure.Services
 
         private async Task<StockPriceInRealtimeDto?> GetCurrentPriceBySymbolIdFromSsi(string symbolId)
         {
-            realtimeStockPriceDto = null;
+            var taskCompletionSource = new TaskCompletionSource<StockPriceInRealtimeDto?>();
+
+            async Task OnDataReceivedHandler(string data)
+            {
+                var broadcastResponse = data.ConvertToStreamResponse<BroadcastResponse>();
+                var broadcastXTradeResponse = broadcastResponse.Content.ConvertToStreamResponse<BroadcastXTradeResponse>();
+                var realtimeStockPriceDto = await Convert(broadcastXTradeResponse);
+
+                taskCompletionSource.TrySetResult(realtimeStockPriceDto);
+
+                ssiStreamClient.OnDataReceivedHandler -= OnDataReceivedHandler;
+            }
+
+            ssiStreamClient.OnDataReceivedHandler += OnDataReceivedHandler;
 
             var xTradehannel = $"{SsiConstants.StreamChannels.X_Trade}:{symbolId}";
             await ssiStreamClient.SwitchChannel(xTradehannel);
 
-            var secondToWaitForResponse = 5;
-            while (realtimeStockPriceDto is null && secondToWaitForResponse > 0)
-            {
-                Thread.Sleep(1000);
-                secondToWaitForResponse--;
-            }
-
-            return realtimeStockPriceDto;
-        }
-
-        private async Task SsiStreamClient_OnDataReceivedHandler(string data)
-        {
-            var broadcastResponse = data.ConvertToStreamResponse<BroadcastResponse>();
-            var broadcastXTradeResponse = broadcastResponse.Content.ConvertToStreamResponse<BroadcastXTradeResponse>();
-            realtimeStockPriceDto = await Convert(broadcastXTradeResponse);
+            var completedTask = await Task.WhenAny(taskCompletionSource.Task, Task.Delay(TimeSpan.FromSeconds(MaxSecondToWaitForStreamEvent)));
+            return completedTask == taskCompletionSource.Task ? taskCompletionSource.Task.Result : null;
         }
 
         private async Task<StockPriceInRealtimeDto> Convert(BroadcastXTradeResponse broadcastXTradeResponse)
