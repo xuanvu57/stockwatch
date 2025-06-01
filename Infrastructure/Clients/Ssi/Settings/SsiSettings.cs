@@ -2,7 +2,6 @@
 {
     public record SsiSettings
     {
-
         public required string SsiBaseAddress { get; init; }
         public required string SsiStreamBaseAddress { get; init; }
         public required string HubEndpoint { get; init; }
