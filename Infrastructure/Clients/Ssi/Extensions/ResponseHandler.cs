@@ -1,6 +1,7 @@
 ﻿using Infrastructure.Clients.Ssi.Constants;
 using Infrastructure.Clients.Ssi.Exceptions;
 using Infrastructure.Clients.Ssi.Models.Responses;
+using Infrastructure.Clients.Ssi.Models.Responses.BaseResponses;
 using System.Net;
 using System.Text.Json;
 
@@ -37,6 +38,11 @@ namespace Infrastructure.Clients.Ssi.Extensions
             }
 
             throw new SsiException($"{SsiConstants.Response.DefaultResponseNonSuccessMessage} {response.StatusCode}");
+        }
+
+        public static T ConvertToStreamResponse<T>(this string response) where T : class
+        {
+            return JsonSerializer.Deserialize<T>(response, serializeOptions)!;
         }
     }
 }

@@ -2,7 +2,7 @@ using Application.Dtos;
 using stockwatch.Constants;
 using stockwatch.Models;
 
-namespace stockwatch.ChildViews;
+namespace stockwatch.ChildViews.MySymbol;
 
 public partial class MySymbolAnalyzingResultView : ContentView
 {

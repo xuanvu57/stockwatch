@@ -11,7 +11,7 @@ using static Application.Constants.ApplicationEnums;
 
 namespace Infrastructure.Services
 {
-    [DIService(DIServiceLifetime.Scoped)]
+    [DIService(DIServiceLifetime.Skipped)]
     public class SsiRealtimePriceService(
         ISsiClient ssiClient,
         IDateTimeService dateTimeService,

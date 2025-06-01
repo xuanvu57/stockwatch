@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Clients.Ssi.Models.Responses;
+using Infrastructure.Clients.Ssi.Models.Responses.BaseResponses;
 
 namespace Infrastructure.Clients.Ssi.Interfaces
 {

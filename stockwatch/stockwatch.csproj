@@ -118,19 +118,22 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="ChildViews\FindPotentialSymbolResultView.xaml">
+	  <MauiXaml Update="ChildViews\FindPotentialSymbol\FindPotentialSymbolResultView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="ChildViews\FindPotentialSymbolSettingView.xaml">
+	  <MauiXaml Update="ChildViews\FindPotentialSymbol\FindPotentialSymbolSettingView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="ChildViews\MySymbolAnalyzingResultView.xaml">
+	  <MauiXaml Update="ChildViews\MySymbol\MySymbolAnalyzingResultView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="ChildViews\MySymbolSettingView.xaml">
+	  <MauiXaml Update="ChildViews\MySymbol\MySymbolSettingView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="CommonViews\LabelPickerView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\DataCollectionPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\FindPotentialSymbolPage.xaml">
