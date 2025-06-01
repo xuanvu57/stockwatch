@@ -36,7 +36,7 @@ namespace Application.Services
 
         public void Stop()
         {
-            realTimePriceService.DisconnectAsync().Wait();
+            realTimePriceService.DisconnectAsync();
 
             timer?.Change(Timeout.Infinite, 0);
             IsRunning = false;
