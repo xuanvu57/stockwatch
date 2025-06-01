@@ -36,10 +36,10 @@ namespace Application.Services
 
         public void Stop()
         {
-            realTimePriceService.DisconnectAsync().Wait();
-
             timer?.Change(Timeout.Infinite, 0);
             IsRunning = false;
+
+            realTimePriceService.DisconnectAsync();
         }
 
         public void AddSubscriber(IBackgroundServiceSubscriber subscriber)
